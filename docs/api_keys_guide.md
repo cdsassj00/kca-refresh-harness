@@ -2,8 +2,36 @@
 
 상태: **초안**. 포털 메뉴 이름·승인 시간은 2026-09 기준 기억과 공개 안내를 바탕으로 적었으며, P0 단계에서 각 포털을 실제로 열어 확인하고 `python scripts/evidence.py doctor`로 호출까지 검증한 뒤 확정본으로 바꾼다.
 
-## 0. 공통 규칙
-- 키는 프로젝트 루트 `.env`에만 적는다. `.env`는 `.gitignore`에 들어가며, UI나 보고서에 키가 노출되지 않는다.
+## 0. OpenRouter (독립 프로그램 필수) · Tavily · Exa
+
+독립 프로그램(`app/`)은 **OpenRouter 키 하나만 있으면** 돌아간다. 아래 1~3절의 근거 소스 키는 모두 선택이다. Claude Code 하네스 방식은 OpenRouter 키가 필요 없다.
+
+### 0-1. OpenRouter — `OPENROUTER_API_KEY` (독립 프로그램 필수)
+- 발급처: https://openrouter.ai
+- 절차: **가입**(Google·GitHub·이메일) → 오른쪽 위 계정 메뉴 → **Keys** → **Create Key** → 이름 입력(예: `kca-refresh`) → **Credit limit**(이 키가 쓸 수 있는 금액 상한, 월 예산으로 두기를 권장) 입력 → 생성 → `sk-or-…` 로 시작하는 키를 **그 자리에서 복사**(다시 볼 수 없음)
+- 결제: 선불 크레딧. **Credits** 메뉴에서 카드로 충전(소액부터). 잔액이 0이면 호출이 거부된다.
+- 넣는 곳: 브라우저 **[설정]** 화면의 `OPENROUTER_API_KEY` → 저장 → **연결 확인**. 또는 `app/.env`에 `OPENROUTER_API_KEY=sk-or-…`
+- 모델: 같은 키로 OpenRouter의 모든 모델을 쓴다. [설정]의 모델 목록에서 고른다. 단가는 모델마다 다르며 목록에 표시된다.
+- 데이터: 계정 설정 › **Privacy**에서 학습에 쓰는 공급자 허용 여부와 로그 보관을 정할 수 있다. 기관 방침에 맞춰 확인한다.
+- 직접 연결: OpenRouter를 거치지 않고 특정 제공사(OpenAI 호환)나 사내 서버를 쓰려면 [설정]의 `LLM_BASE_URL`을 그 주소로, `OPENROUTER_API_KEY` 자리에 그 제공사 키를 넣는다.
+- 소요: 즉시
+
+### 0-2. Tavily 웹 검색 — `TAVILY_API_KEY` (선택, 검색 품질 향상)
+- 발급처: https://app.tavily.com
+- 절차: 가입 → 대시보드 **API Keys** → 키 복사(`tvly-…`). 무료 구간(월 호출 한도)이 있고 넘으면 유료.
+- 용도: 사건·실적 검색(`web_search` 도구). 없으면 Exa → NAVER → OpenRouter 웹 플러그인 순으로 대체된다.
+- 소요: 즉시
+
+### 0-3. Exa 웹 검색 — `EXA_API_KEY` (선택)
+- 발급처: https://dashboard.exa.ai
+- 절차: 가입 → **API Keys** → Create → 키 복사. 무료 크레딧 후 종량제.
+- 용도: 리서치 특화 검색(논문·기사 카테고리 필터). Tavily가 없을 때 두 번째 순위.
+- 소요: 즉시
+
+셋 다 [설정] 화면에서 넣고 **doctor** 표의 `llm`·`search` 행으로 확인한다.
+
+## 공통 규칙 (근거 소스 키)
+- 키는 `.env`에만 적는다. Claude Code 하네스는 프로젝트 루트 `.env`, 독립 프로그램은 `app/.env`(브라우저 [설정]에서 저장하면 여기에 쓰인다). 둘 다 `.gitignore`에 들어가며, UI나 보고서에 키가 노출되지 않는다.
 - 키가 없는 소스는 하네스가 자동으로 건너뛴다. 아래 순서대로 발급하면 빨리 효과가 난다.
 - 발급 후 `python scripts/evidence.py doctor` 를 실행하면 소스별 연결 상태가 표로 나온다.
 - 대부분 무료이며 개인 계정으로 신청 가능하다. "기관" 표시가 있는 것만 기관 구독이 필요하다.
@@ -82,7 +110,7 @@
 - **Scopus (Elsevier)** — `ELSEVIER_API_KEY`, `ELSEVIER_INSTTOKEN`: https://dev.elsevier.com. 기관 구독 IP 또는 InstToken 필요.
 - **Web of Science (Clarivate)** — `WOS_API_KEY`: https://developer.clarivate.com. Starter는 제한적 무료, Expanded는 구독.
 - **Dimensions** — `DIMENSIONS_API_KEY`: 구독.
-- **Exa / Tavily / Perplexity Sonar** — `EXA_API_KEY` / `TAVILY_API_KEY` / `PERPLEXITY_API_KEY`: 각 사이트에서 결제 후 키. 리서치 특화 웹검색(논문 카테고리 필터).
+- **Exa / Tavily / Perplexity Sonar** — `EXA_API_KEY` / `TAVILY_API_KEY` / `PERPLEXITY_API_KEY`: 각 사이트에서 결제 후 키. 리서치 특화 웹검색(논문 카테고리 필터). Tavily·Exa 발급 절차는 0절.
 - **SerpAPI (Google Scholar)** — `SERPAPI_API_KEY`: 결제 후 키.
 - **DBpia / BigKinds** — `DBPIA_API_KEY` / `BIGKINDS_API_KEY`: 기관 계약·별도 신청.
 

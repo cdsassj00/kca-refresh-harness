@@ -1,4 +1,7 @@
-# 받는 사람이 설정할 것 (체크리스트)
+# Claude Code 하네스 설정 (받는 사람 체크리스트)
+
+> **독립 프로그램(브라우저 화면, Claude 구독 불필요)을 쓰려면 이 문서 대신 [app/SETUP.md](app/SETUP.md) 를 보세요.**
+> 이 문서는 **Claude Code 로 실행하는 방식**의 설정입니다. 두 방식의 차이는 [README.md](README.md) 맨 위 표.
 
 이 저장소를 받은 뒤 아래 순서대로 하면 됩니다. 1~3은 필수, 4는 선택, 5~6은 확인입니다. 소요 15분.
 
@@ -30,7 +33,7 @@
 - [ ] 결과 보기: `reports/R02/07_report/comparison_table.html`(대조표), `report.md`(현행화 보고서), `registry.csv`(현황판).
 
 ## 6. 내 부서 보고서 넣기
-- [ ] 보고서를 **PDF**로 준비합니다. HWP·HWPX·DOCX는 한글이나 워드에서 "PDF로 저장"으로 변환합니다(직접 입력은 다음 버전).
+- [ ] 보고서를 **PDF**로 준비합니다. HWP·HWPX·DOCX는 한글이나 워드에서 "PDF로 저장"으로 변환합니다(HWPX·DOCX 직접 접수는 독립 프로그램 `app/`에서 됩니다).
 - [ ] `python scripts\intake.py R08 "C:\경로\보고서.pdf"` → ID는 `R` + 두 자리 숫자로 겹치지 않게.
 - [ ] Claude Code에서 `/refresh-run R08`.
 - [ ] 원문과 산출물은 `reports/R08/`에 내 PC에만 남습니다. 공유하려면 `07_report/`의 HTML·Markdown만 보내면 됩니다.
@@ -40,6 +43,7 @@
 - [ ] 공용 지식베이스 `kb/events/`에는 공개 사건과 출처만 기록합니다. 내부 정보는 넣지 않습니다.
 
 ## Claude Code가 아닌 도구를 쓰는 경우
+- **Claude 구독이 없거나 다른 모델을 쓰고 싶으면**: 독립 프로그램 `app\run_app.bat`. OpenRouter 키 하나로 브라우저에서 같은 3단계를 돌립니다. [app/SETUP.md](app/SETUP.md)
 - Codex·Antigravity·Cursor·Gemini CLI: 이 폴더를 열면 `AGENTS.md`가 절차를 안내합니다. `prompts/00~08`을 순서대로 따르고 산출물을 `reports/<ID>/`의 정해진 자리에 저장하면 같은 계산기·렌더가 동작합니다. 블라인드 단계는 원문을 열지 않은 새 세션에서 하세요.
 - ChatGPT 웹만 있는 경우: `AGENTS.md`의 수동 모드. 프롬프트를 단계별로 붙여 넣고 결과를 파일로 저장합니다.
 

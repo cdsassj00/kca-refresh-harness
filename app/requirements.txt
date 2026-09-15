@@ -1,0 +1,32 @@
+# 독립 프로그램(app/) 의존 패키지. run_app.bat / run_app.sh 가 자동 설치한다.
+# 수동 설치: app/ 에서  python -m pip install -r requirements.txt
+
+# 웹 서버 (브라우저 화면 + /api)
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+
+# HTTP 클라이언트 (OpenRouter 호출, 검색 공급자, 웹 페이지 열람)
+requests>=2.32
+httpx>=0.27
+
+# 설정·형식 검사 (루트 scripts/ 와 공통)
+python-dotenv>=1.0
+jsonschema>=4.22
+PyYAML>=6.0
+defusedxml>=0.7
+
+# 문서 파싱 (pdf / hwpx / docx) 와 웹 본문 추출
+pypdf>=4.0
+markitdown>=0.1
+trafilatura>=1.12
+beautifulsoup4>=4.12
+
+# 자체 점검
+pytest>=8.2
+
+# ---- 선택 ----
+# 구 한글(.hwp, 5.0 바이너리) 직접 접수가 필요할 때만 설치한다. 없으면 접수 화면이
+# "HWP는 pyhwp 설치 또는 PDF 변환 필요"라고 안내한다. 한글에서 "PDF로 저장" 또는
+# "HWPX로 저장" 후 넣는 쪽이 더 안정적이다.
+# pyhwp

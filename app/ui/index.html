@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>KCA 연구보고서 현행화</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B6E8F'/%3E%3Ctext x='16' y='22' font-size='17' font-weight='700' text-anchor='middle' fill='%23fff' font-family='serif'%3E再%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ===== 왼쪽 세로 내비 ===== -->
+  <aside class="nav" aria-label="주 메뉴">
+    <a class="brand" href="#dashboard">
+      <span class="brand-mark" aria-hidden="true">再</span>
+      <span class="brand-text"><b>결론 재도출</b><small>KCA 연구보고서 현행화</small></span>
+    </a>
+    <nav>
+      <ul class="nav-list">
+        <li><a href="#dashboard" data-view="dashboard"><span class="nav-ico" aria-hidden="true">▦</span><span class="nav-label">대시보드</span></a></li>
+        <li><a href="#intake" data-view="intake"><span class="nav-ico" aria-hidden="true">⇪</span><span class="nav-label">접수</span></a></li>
+        <li><a href="#run" data-view="run"><span class="nav-ico" aria-hidden="true">▶</span><span class="nav-label">실행</span></a></li>
+        <li><a href="#table" data-view="table"><span class="nav-ico" aria-hidden="true">☰</span><span class="nav-label">결론 대조표</span></a></li>
+        <li><a href="#impact" data-view="impact"><span class="nav-ico" aria-hidden="true">⇶</span><span class="nav-label">영향 지도</span></a></li>
+        <li><a href="#outputs" data-view="outputs"><span class="nav-ico" aria-hidden="true">▤</span><span class="nav-label">산출물</span></a></li>
+        <li><a href="#kb" data-view="kb"><span class="nav-ico" aria-hidden="true">◷</span><span class="nav-label">지식베이스</span></a></li>
+        <li><a href="#settings" data-view="settings"><span class="nav-ico" aria-hidden="true">⚙</span><span class="nav-label">설정</span></a></li>
+      </ul>
+    </nav>
+    <div class="nav-foot">
+      <div class="health" id="navHealth"><span class="dot dot-na"></span><span class="nav-label">서버 확인 중</span></div>
+      <div class="nav-label version" id="navVersion"></div>
+    </div>
+  </aside>
+
+  <!-- ===== 상단 바 ===== -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1 class="page-title" id="pageTitle">대시보드</h1>
+      <span class="badge badge-mock" id="mockBadge" hidden>모의 데이터</span>
+    </div>
+    <div class="topbar-right">
+      <label class="report-picker">
+        <span>현재 보고서</span>
+        <select id="reportSelect" aria-label="현재 보고서 선택"></select>
+      </label>
+      <span class="badge" id="topMaturity" hidden></span>
+    </div>
+  </header>
+
+  <!-- ===== 본문 ===== -->
+  <main class="main" id="main">
+
+    <!-- 알림 영역 -->
+    <div class="toasts" id="toasts" aria-live="polite"></div>
+
+    <!-- ---------- 1. 대시보드 ---------- -->
+    <section class="view" id="view-dashboard" hidden>
+      <div class="stat-strip" id="dashStats"></div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>보고서</h2>
+          <div class="panel-tools">
+            <a class="btn btn-sm" href="#intake">새 보고서 접수</a>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="tbl" id="dashReports">
+            <thead><tr>
+              <th>ID</th><th>제목</th><th>발간</th><th class="num">경과</th><th>성숙도</th><th>판정 요약</th><th>갱신</th><th></th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="empty" id="dashReportsEmpty" hidden>접수된 보고서가 없습니다. 「접수」에서 파일을 올려 시작하세요.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-head"><h2>연결 상태</h2><div class="panel-tools"><button class="btn btn-sm" id="dashDoctorBtn" type="button">연결 확인</button></div></div>
+          <table class="tbl tbl-kv" id="dashStatus"><tbody></tbody></table>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>최근 실행</h2><div class="panel-tools"><a class="btn btn-sm" href="#run">실행 화면</a></div></div>
+          <div class="table-wrap">
+            <table class="tbl" id="dashRuns">
+              <thead><tr><th>작업</th><th>보고서</th><th>상태</th><th>단계</th><th>시작</th><th class="num">비용</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="empty" id="dashRunsEmpty" hidden>아직 실행 기록이 없습니다.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 2. 접수 ---------- -->
+    <section class="view" id="view-intake" hidden>
+      <div class="two-col two-col-wide">
+        <div class="panel">
+          <div class="panel-head"><h2>파일 올리기</h2></div>
+          <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="파일을 끌어다 놓거나 클릭해 선택">
+            <input type="file" id="fileInput" accept=".pdf,.hwpx,.hwp,.docx,.txt,.md" hidden>
+            <div class="dz-icon" aria-hidden="true">⇪</div>
+            <div class="dz-text"><b>여기에 파일을 끌어다 놓으세요</b><br>또는 클릭해서 선택 · pdf / hwpx / hwp / docx / txt</div>
+            <div class="dz-file" id="dzFile" hidden></div>
+          </div>
+          <form class="form" id="intakeForm" autocomplete="off">
+            <div class="form-row">
+              <label for="intakeId">보고서 ID</label>
+              <input type="text" id="intakeId" name="report_id" placeholder="R08" pattern="R\d{2,}" spellcheck="false">
+              <small class="hint" id="intakeIdHint">비워 두면 서버가 다음 번호를 붙입니다.</small>
+            </div>
+            <div class="form-row">
+              <label for="intakeTitle">제목</label>
+              <input type="text" id="intakeTitle" name="title" placeholder="보고서 제목">
+            </div>
+            <div class="form-row">
+              <label for="intakePublished">발간연월</label>
+              <input type="month" id="intakePublished" name="published" placeholder="2023-04">
+            </div>
+            <div class="progress" id="intakeProgress" hidden><div class="progress-bar" style="width:0%"></div><span class="progress-label">0%</span></div>
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit" id="intakeSubmit" disabled>업로드</button>
+              <button class="btn" type="button" id="intakeReset">비우기</button>
+            </div>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>파싱 결과</h2></div>
+          <div class="empty" id="intakeResultEmpty">업로드하면 쪽수·글자 수·형식이 여기 표시됩니다.</div>
+          <div id="intakeResult" hidden>
+            <div class="callout callout-warn" id="intakeScanWarn" hidden>텍스트가 없는 쪽이 절반을 넘습니다(스캔본 추정). OCR 없이는 결론 추출 품질이 떨어질 수 있습니다.</div>
+            <table class="tbl tbl-kv"><tbody id="intakeMeta"></tbody></table>
+            <div class="form-actions">
+              <a class="btn btn-primary" id="intakeGoRun" href="#run">이 보고서 실행하기</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 3. 실행 ---------- -->
+    <section class="view" id="view-run" hidden>
+      <div class="run-grid">
+        <div class="panel run-config">
+          <div class="panel-head"><h2>실행 설정</h2></div>
+          <form id="runForm" autocomplete="off">
+            <div class="form-row">
+              <label for="runReport">보고서</label>
+              <select id="runReport"></select>
+            </div>
+
+            <fieldset class="fieldset">
+              <legend>층</legend>
+              <label class="check"><input type="checkbox" name="layers" value="L0" checked> ① 바뀐 것 찾기 <small>(L0)</small></label>
+              <label class="check"><input type="checkbox" name="layers" value="L1" checked> ② 숫자 다시 맞춰보기 <small>(L1)</small></label>
+              <label class="check"><input type="checkbox" name="layers" value="L2" checked> ③ 결론 다시 내보기 <small>(L2)</small></label>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend>옵션</legend>
+              <label class="check"><input type="checkbox" id="optBlind" checked> 블라인드 재수행 켬</label>
+              <div class="inline-row indent">
+                <label for="optRepeats">반복 횟수</label>
+                <input type="number" id="optRepeats" min="1" max="5" value="1" class="w-sm">
+              </div>
+              <label class="check"><input type="checkbox" id="optSurvey" checked> 재설문 설계서 작성</label>
+              <label class="check"><input type="checkbox" id="optExperiment" checked> 재실험 계획서 작성</label>
+              <label class="check"><input type="checkbox" id="optSim"> 합성 시뮬레이션</label>
+              <div class="inline-row indent" id="optSimRow" hidden>
+                <label for="optSimPanel">패널 크기</label>
+                <input type="number" id="optSimPanel" min="50" max="5000" value="200" class="w-sm">
+              </div>
+              <div class="callout callout-warn" id="optSimWarn" hidden>합성 시뮬레이션 결과는 실제 조사가 아닙니다. 모든 산출물에 C등급과 「시뮬레이션」 표기가 강제되며 판정 근거로 쓰이지 않습니다.</div>
+            </fieldset>
+
+            <div class="form-row">
+              <label for="runProvider">검색 공급자</label>
+              <select id="runProvider">
+                <option value="auto">자동(키 있는 첫 공급자)</option>
+                <option value="tavily">Tavily</option>
+                <option value="exa">Exa</option>
+                <option value="naver">네이버 뉴스</option>
+                <option value="openrouter_online">OpenRouter 웹 플러그인</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="runModel">모델</label>
+              <input type="text" id="runModel" list="modelList" placeholder="settings.json의 모델 사용" spellcheck="false">
+              <datalist id="modelList"></datalist>
+              <small class="hint" id="runModelHint"></small>
+            </div>
+            <div class="form-row">
+              <label for="runForce">강제 재실행 시작 단계</label>
+              <select id="runForce">
+                <option value="">없음(있는 산출물은 건너뜀)</option>
+              </select>
+            </div>
+            <div class="form-row form-row-2">
+              <div><label for="runSince">기간 시작</label><input type="date" id="runSince"></div>
+              <div><label for="runUntil">기간 끝</label><input type="date" id="runUntil"></div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit" id="runSubmit">실행</button>
+              <button class="btn btn-danger" type="button" id="runCancel" disabled>취소</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="run-status">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>진행</h2>
+              <div class="panel-tools"><span class="badge" id="jobBadge">대기</span><code class="mono muted" id="jobId"></code></div>
+            </div>
+            <ol class="stepper" id="stepper"></ol>
+            <div class="tally" id="tally">
+              <div><span class="tally-k">입력 토큰</span><b class="num" id="tallyIn">0</b></div>
+              <div><span class="tally-k">출력 토큰</span><b class="num" id="tallyOut">0</b></div>
+              <div><span class="tally-k">비용(USD)</span><b class="num" id="tallyCost">0.0000</b></div>
+              <div><span class="tally-k">경과</span><b class="num" id="tallyElapsed">00:00</b></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <h2>로그</h2>
+              <div class="panel-tools">
+                <label class="check check-sm"><input type="checkbox" id="logAutoscroll" checked> 자동 스크롤</label>
+                <button class="btn btn-sm" type="button" id="logClear">지우기</button>
+              </div>
+            </div>
+            <pre class="log" id="log" aria-live="polite"></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 4. 결론 대조표 ---------- -->
+    <section class="view" id="view-table" hidden>
+      <div class="panel panel-flush">
+        <div class="table-head">
+          <div class="summary-badges" id="tblSummary"></div>
+          <div class="tabs" role="tablist">
+            <button class="tab is-active" role="tab" data-tab="conclusion" aria-selected="true">결론 대조표</button>
+            <button class="tab" role="tab" data-tab="body" aria-selected="false">본문 대조표</button>
+          </div>
+        </div>
+        <div class="filters" id="tblFilters">
+          <label>판정 <select id="fVerdict"><option value="">전체</option></select></label>
+          <label>종류 <select id="fKind"><option value="">전체</option></select></label>
+          <label>상태 <select id="fStatus"><option value="">전체</option></select></label>
+          <label>다음 조치 <select id="fAction"><option value="">전체</option></select></label>
+          <label class="grow">검색 <input type="search" id="fSearch" placeholder="결론 ID·문장·사유"></label>
+          <span class="muted" id="fCount"></span>
+        </div>
+        <div class="empty" id="tblEmpty" hidden></div>
+        <div class="table-wrap" id="tblConclusionWrap">
+          <table class="tbl tbl-compare" id="tblConclusion">
+            <thead><tr>
+              <th>결론 · 위치</th><th>현행 (원 보고서)</th><th>현행화(안)</th><th>판정 · 사유</th><th>등급</th><th>상태</th><th>다음 조치</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="table-wrap" id="tblBodyWrap" hidden>
+          <table class="tbl tbl-compare" id="tblBody">
+            <thead><tr>
+              <th>위치</th><th>현행</th><th>현행화(안)</th><th>변경 · 사유</th><th>근거</th><th>등급</th><th>상태 · 연결 결론</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="footnote">등급 A 공식 통계·법령·학술지 / B 언론·업계 / C 추정·시뮬레이션·블라인드 결론. 「현행」열은 원문 요지이며 고치지 않습니다.</p>
+      </div>
+
+      <aside class="drawer" id="drawer" aria-label="결론 상세" hidden>
+        <div class="drawer-head">
+          <div><code class="mono" id="drawerId"></code><span class="badge" id="drawerVerdict"></span></div>
+          <button class="btn btn-icon" type="button" id="drawerClose" aria-label="닫기">×</button>
+        </div>
+        <div class="drawer-body">
+          <div class="drawer-loc muted" id="drawerLoc"></div>
+          <div class="three-col">
+            <div class="col"><h3>원 결론 <small>K</small></h3><p id="drawerOld"></p></div>
+            <div class="col"><h3>추적 재도출 <small>K′</small></h3><p id="drawerNew"></p></div>
+            <div class="col"><h3>블라인드 <small>K″</small></h3><p id="drawerBlind"></p></div>
+          </div>
+          <h3>달라진 이유</h3>
+          <div class="chips" id="drawerLocus"></div>
+          <p id="drawerReason"></p>
+          <h3>근거</h3>
+          <ul class="evidence" id="drawerEvidence"></ul>
+          <h3>상류 전제 · 사건</h3>
+          <ul class="upstream" id="drawerUpstream"></ul>
+          <div class="form-actions">
+            <a class="btn btn-sm" href="#impact" id="drawerToImpact">영향 지도에서 보기</a>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ---------- 5. 영향 지도 ---------- -->
+    <section class="view" id="view-impact" hidden>
+      <div class="impact-grid">
+        <div class="panel panel-flush">
+          <div class="panel-head">
+            <h2>사건 → 전제 → 결론 → 제언</h2>
+            <div class="panel-tools">
+              <span class="legend"><i class="sw sw-good"></i>동일·강화 <i class="sw sw-warn"></i>부분수정·약화 <i class="sw sw-bad"></i>뒤집힘 <i class="sw sw-new"></i>신규 <i class="sw sw-na"></i>판정불가·잠정</span>
+              <button class="btn btn-sm" type="button" id="impactReset">선택 해제</button>
+            </div>
+          </div>
+          <div class="empty" id="impactEmpty" hidden></div>
+          <div class="svg-wrap" id="impactWrap">
+            <svg id="impactSvg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="사건·전제·결론·제언 영향 지도"></svg>
+          </div>
+        </div>
+        <aside class="panel impact-detail" id="impactDetail">
+          <div class="panel-head"><h2>상세</h2></div>
+          <div class="empty" id="impactDetailEmpty">노드를 클릭하면 내용과 연결이 여기 표시됩니다.</div>
+          <div id="impactDetailBody" hidden></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ---------- 6. 산출물 ---------- -->
+    <section class="view" id="view-outputs" hidden>
+      <div class="outputs-grid">
+        <div class="panel panel-flush">
+          <div class="panel-head">
+            <div class="tabs" role="tablist">
+              <button class="tab is-active" role="tab" data-out="report" aria-selected="true">현행화 보고서</button>
+              <button class="tab" role="tab" data-out="table" aria-selected="false">대조표 HTML</button>
+            </div>
+            <div class="panel-tools">
+              <a class="btn btn-sm" id="outOpenNew" href="#" target="_blank" rel="noopener">새 창에서 열기</a>
+              <a class="btn btn-sm" id="outDownload" href="#" download>내려받기</a>
+            </div>
+          </div>
+          <div class="empty" id="outEmpty" hidden></div>
+          <iframe class="preview" id="outFrame" title="산출물 미리보기" sandbox="allow-same-origin"></iframe>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>파일</h2></div>
+          <div class="empty" id="outFilesEmpty" hidden></div>
+          <div id="outFiles"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 7. 지식베이스 ---------- -->
+    <section class="view" id="view-kb" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>사건 타임라인</h2>
+          <div class="panel-tools">
+            <label>도메인 <select id="kbDomain"><option value="">전체</option></select></label>
+            <label>검색 <input type="search" id="kbSearch" placeholder="제목·요약"></label>
+            <span class="muted" id="kbCount"></span>
+          </div>
+        </div>
+        <div class="empty" id="kbEmpty" hidden></div>
+        <ol class="timeline" id="kbTimeline"></ol>
+      </div>
+    </section>
+
+    <!-- ---------- 8. 설정 ---------- -->
+    <section class="view" id="view-settings" hidden>
+      <div class="two-col two-col-wide">
+        <div class="panel">
+          <div class="panel-head"><h2>키</h2><div class="panel-tools"><span class="muted">값은 .env에만 저장되고 화면에는 마스킹되어 표시됩니다.</span></div></div>
+          <form id="envForm" autocomplete="off">
+            <table class="tbl tbl-kv" id="envTable"><tbody></tbody></table>
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit">저장</button>
+              <button class="btn" type="button" id="doctorBtn">연결 확인</button>
+            </div>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>모델 · 실행 기본값</h2></div>
+          <form id="settingsForm" autocomplete="off">
+            <div class="form-row">
+              <label for="setModelSearch">모델 검색</label>
+              <input type="search" id="setModelSearch" placeholder="이름·ID로 거르기" spellcheck="false">
+              <small class="hint" id="setModelCount"></small>
+            </div>
+            <div class="form-row">
+              <label for="setModel">현재 모델</label>
+              <select id="setModel"></select>
+            </div>
+            <div class="form-row">
+              <label for="setModelCheap">저렴 모델 <small>(분류·브리프 단계)</small></label>
+              <select id="setModelCheap"><option value="">(현재 모델과 같게)</option></select>
+            </div>
+            <div class="form-row">
+              <label for="setProvider">검색 공급자</label>
+              <select id="setProvider">
+                <option value="auto">자동</option>
+                <option value="tavily">Tavily</option>
+                <option value="exa">Exa</option>
+                <option value="naver">네이버 뉴스</option>
+                <option value="openrouter_online">OpenRouter 웹 플러그인</option>
+              </select>
+            </div>
+            <div class="form-row form-row-2">
+              <div><label for="setTemp">온도</label><input type="number" id="setTemp" min="0" max="2" step="0.05" value="0.2"></div>
+              <div><label for="setSteps">최대 단계</label><input type="number" id="setSteps" min="1" max="200" value="25"></div>
+            </div>
+            <div class="form-row form-row-2">
+              <div><label for="setMaxChars">원문 최대 글자 수</label><input type="number" id="setMaxChars" min="10000" step="10000" value="120000"></div>
+              <div><label for="setLang">언어</label><select id="setLang"><option value="ko">한국어</option><option value="en">English</option></select></div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit">저장</button>
+              <button class="btn" type="button" id="modelsRefresh">모델 목록 다시 조회</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>연결 진단</h2><div class="panel-tools"><span class="muted" id="doctorAt"></span></div></div>
+        <div class="empty" id="doctorEmpty">「연결 확인」을 누르면 LLM·검색·소스·파서 상태가 표시됩니다.</div>
+        <div class="table-wrap">
+          <table class="tbl" id="doctorTable" hidden>
+            <thead><tr><th>구분</th><th>이름</th><th>계층</th><th>종류</th><th>필요 키</th><th>설정</th><th>상태</th><th>상세</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 라우트 없음 -->
+    <section class="view" id="view-404" hidden>
+      <div class="panel"><div class="empty">없는 화면입니다. 왼쪽 메뉴에서 선택하세요.</div></div>
+    </section>
+
+  </main>
+</div>
+
+<script src="mock.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

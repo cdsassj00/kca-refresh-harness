@@ -4,8 +4,29 @@
     {
       "name": "explainer",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8766", "--directory", "docs/explainer"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8766",
+        "--directory",
+        "docs/explainer"
+      ],
       "port": 8766
+    },
+    {
+      "name": "app",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "server.main:app",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8765"
+      ],
+      "cwd": "app",
+      "port": 8765
     }
   ]
 }

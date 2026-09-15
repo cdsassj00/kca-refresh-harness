@@ -1,13 +1,28 @@
 # KCA 연구보고서 결론 재도출·현행화 하네스
 
-옛 연구보고서를 넣으면, 규칙과 절차 안에서 움직이는 AI 조사팀이 **발간 이후 바뀐 것**을 찾아 **결론 하나하나에 도장**(그대로 / 고칠 것 / 뒤집힘 / 재조사 필요)을 찍고, **신구 대조표**와 **다음 조치**로 내주는 도구입니다.
+옛 연구보고서를 넣으면, 규칙과 절차 안에서 움직이는 AI 조사팀이 **발간 이후 바뀐 것**을 찾고 **결론 하나하나에 도장**(그대로 / 고칠 것 / 뒤집힘 / 재조사 필요)을 찍어 **신구 대조표**와 **다음 조치**로 내주는 도구입니다.
 
 새 보고서를 대신 써 주는 도구가 **아닙니다**. 어느 결론이 아직 살아 있고, 어느 연구를 다시 해야 하는지 근거를 갖고 가려내는 도구입니다.
 
+## 두 가지 실행 방식
+
+같은 규칙·절차서·지식베이스·계산기를 두 가지 방법으로 돌릴 수 있습니다. **독립 프로그램을 기본으로 권장**합니다.
+
+| | **독립 프로그램** (권장) | **Claude Code 하네스** |
+|---|---|---|
+| 필요한 것 | Python 3.11 + **OpenRouter API 키** 하나(종량제, 선불 크레딧) | Python 3.11 + Node.js + **Claude Code 로그인**(Claude 구독 또는 기관 발급 Anthropic 키) |
+| 모델 | OpenRouter 의 어떤 모델이든(OpenAI·Anthropic·Google·오픈소스). OpenAI 호환 API 면 직접 연결도 가능 | Claude |
+| 대상 | 실무자 누구나. 브라우저 화면에서 접수·실행·열람 | Claude Code 를 이미 쓰는 사람. 터미널에서 스킬·서브에이전트로 실행 |
+| 입력 형식 | PDF · HWPX · DOCX · TXT (HWP 는 선택 설치) | PDF |
+| 시작 명령 | `app\run_app.bat` → 브라우저 `http://127.0.0.1:8765` | `setup.bat` → Claude Code 에서 `/refresh-run R01` |
+| 문서 | [app/SETUP.md](app/SETUP.md) (설정 체크리스트) · [app/README.md](app/README.md) (개요·화면·구조) | [SETUP.md](SETUP.md) (설정 체크리스트) · [AGENTS.md](AGENTS.md) (다른 도구·수동 모드) |
+
+두 방식은 **같은 `reports/<ID>/` 서랍과 `registry.csv` 를 공유**합니다. 어느 쪽으로 돌려도 같은 파일이 남고, 서로 열어 볼 수 있습니다. 어떤 파일이 어느 묶음(공통 핵심 / 하네스 / 독립 프로그램)인지: [docs/폴더_구성.md](docs/폴더_구성.md)
+
 - 쉬운 설명: [docs/하네스_구조_쉬운설명.md](docs/하네스_구조_쉬운설명.md) · 그림 설명 페이지: [docs/explainer/kca-rederivation-explainer.html](docs/explainer/kca-rederivation-explainer.html)
 - 구성과 기술 스펙: [docs/설명서_구성과_기술스펙.md](docs/설명서_구성과_기술스펙.md)
-- **받는 사람이 설정할 것: [SETUP.md](SETUP.md)**
-- 설계서: [docs/superpowers/specs/2026-09-15-kca-refresh-harness-design.md](docs/superpowers/specs/2026-09-15-kca-refresh-harness-design.md)
+- API 키 발급: [docs/api_keys_guide.md](docs/api_keys_guide.md) (0절 OpenRouter)
+- 설계서: [docs/superpowers/specs/2026-09-15-kca-refresh-harness-design.md](docs/superpowers/specs/2026-09-15-kca-refresh-harness-design.md) · 독립 프로그램 설계·계약: [app/DESIGN.md](app/DESIGN.md)
 
 ## 무엇이 나오나 (샘플 R01, 5G 시장전망 보고서 2023)
 
@@ -31,7 +46,16 @@
 2. **숫자 다시 맞춰보기** 전망은 실적과 비교, 모형은 재계산, 제언은 채택 여부 추적.
 3. **결론 다시 내보기** 원 방법에 오늘 값을 넣어 다시 도출하고, 원문을 보지 않은 AI가 독립적으로 결론을 내서 셋을 비교해 판정.
 
-## 빠른 시작 (Windows)
+## 빠른 시작
+
+### A. 독립 프로그램 (권장, Claude Code 불필요)
+
+```bat
+app\run_app.bat
+```
+브라우저가 열리면 **[설정]** 에서 OpenRouter 키 입력 → **연결 확인** → 모델 선택. 그다음 **[대시보드]** 의 R01 을 열어 대조표를 봅니다. 자기 보고서는 **[접수]** 에 파일(PDF·HWPX·DOCX)을 끌어다 놓고 **[실행]** 에서 층(L0/L1/L2)을 골라 실행합니다. 자세한 순서와 비용·데이터 경로 안내는 [app/SETUP.md](app/SETUP.md).
+
+### B. Claude Code 하네스
 
 ```bat
 setup.bat
@@ -44,24 +68,26 @@ setup.bat
 ```bat
 python scripts\intake.py R08 "C:\경로\내보고서.pdf"
 ```
-Claude Code에서 `/refresh-run R08`. 자세한 설정은 [SETUP.md](SETUP.md).
+Claude Code에서 `/refresh-run R08`. 자세한 설정은 [SETUP.md](SETUP.md). Codex·Cursor 등 다른 도구나 웹 채팅만 있을 때는 [AGENTS.md](AGENTS.md).
 
 ## 폴더
 
-| 폴더·파일 | 역할 |
-|---|---|
-| `CLAUDE.md` | 규칙집. Claude Code가 이 폴더를 열면 자동으로 읽습니다 |
-| `prompts/` | 단계별 역할 지시서 원본 (00 접수 … 08 검토). 도구 중립 마크다운 |
-| `.claude/skills/`, `.claude/agents/` | Claude Code용 절차서와 역할 카드 (prompts를 감쌈) |
-| `AGENTS.md` | Claude Code가 아닌 도구(Codex·Antigravity·Cursor 등)와 수동 모드 안내 |
-| `scripts/` | 계산기·검사기: 접수, 근거 수집(evidence), 스키마 검증, 레지스트리, 대조표·보고서 렌더 |
-| `templates/` | 유형 분류체계, 판정 규칙, 스키마 8종, 설계서 양식 |
-| `kb/` | 지식베이스: 사건, 근거, 도메인 프로파일, 출처 등급 |
-| `reports/<ID>/` | 보고서 서랍 하나. 원문·결론 사슬·단계별 산출·대조표·보고서 |
-| `samples/pdf/` | 공개 샘플 보고서 7편 (KCA 홈페이지 공개본) |
-| `registry.csv` | 현황판: 보고서별 발간 연도, 경과 연수, 진행 단계 |
-| `docs/` | 설명서, 설계서, API 키 발급 가이드 |
-| `.env` | API 키 (내 PC에만, git 제외) |
+| 폴더·파일 | 묶음 | 역할 |
+|---|---|---|
+| `prompts/` | 공통 핵심 | 단계별 역할 지시서 원본 (00 접수 … 08 검토, 05a 브리프). 도구 중립 마크다운. 두 방식이 모두 이 파일을 그대로 읽습니다 |
+| `templates/` | 공통 핵심 | 유형 분류체계, 판정 규칙, 스키마 8종, 설계서 양식 |
+| `kb/` | 공통 핵심 | 지식베이스: 사건, 근거, 도메인 프로파일, 출처 등급 |
+| `scripts/` | 공통 핵심 | 계산기·검사기: 접수, 근거 수집(evidence), 스키마 검증, 레지스트리, 대조표·보고서 렌더 |
+| `samples/pdf/` | 공통 핵심 | 공개 샘플 보고서 7편 (KCA 홈페이지 공개본) |
+| `reports/<ID>/` | 공통 핵심 | 보고서 서랍 하나. 원문·결론 사슬·단계별 산출·대조표·보고서 |
+| `registry.csv` | 공통 핵심 | 현황판: 보고서별 발간 연도, 경과 연수, 진행 단계 |
+| `tests/` | 공통 핵심 | 계산기·스키마 자동 테스트 (`python -m pytest`) |
+| `app/` | 독립 프로그램 | 브라우저 화면판. `run_app.bat`, `engine/`, `server/`, `ui/`, `app/.env`(키) |
+| `CLAUDE.md` | Claude Code 하네스 | 규칙집. Claude Code가 이 폴더를 열면 자동으로 읽습니다 (독립 프로그램은 "규칙" 절을 시스템 프롬프트로 씁니다) |
+| `.claude/skills/`, `.claude/agents/` | Claude Code 하네스 | Claude Code용 절차서와 역할 카드 (prompts를 감쌈) |
+| `AGENTS.md` | Claude Code 하네스 | Claude Code가 아닌 도구(Codex·Antigravity·Cursor 등)와 수동 모드 안내 |
+| `setup.bat`, `.env` | Claude Code 하네스 | 설치 스크립트, 근거 소스 API 키 (내 PC에만, git 제외) |
+| `docs/` | 문서 | 설명서, 설계서, API 키 발급 가이드, 폴더 구성 |
 
 ## 근거 소스
 
@@ -69,6 +95,7 @@ Claude Code에서 `/refresh-run R08`. 자세한 설정은 [SETUP.md](SETUP.md).
 ```bat
 python scripts\evidence.py doctor
 ```
+독립 프로그램은 같은 내용을 **[설정]** 화면의 doctor 표로 보여 줍니다. 키는 하네스는 루트 `.env`, 독립 프로그램은 `app/.env` 에 둡니다.
 
 ## 하지 않는 것
 
@@ -78,9 +105,12 @@ python scripts\evidence.py doctor
 
 ## 현재 범위와 다음 단계
 
-- 지금: PDF 입력, 3단계 파이프라인(Claude Code), 대조표 HTML, 현행화 보고서 Markdown/HTML, 근거 소스 T0(무료 키 없음)
-- 다음: HWP·HWPX·DOCX 직접 입력, 국내 통계·법령·뉴스 커넥터(키 있을 때), 웹 화면(실행·열람·키 설정), 한글(HWPX) 출력, 재설문·재실험 설계서 자동 생성
+- 지금: 3단계 파이프라인(두 실행 방식), 대조표 HTML, 현행화 보고서 Markdown/HTML, 근거 소스 T0(무료 키 없음). 독립 프로그램은 PDF·HWPX·DOCX·TXT 접수와 브라우저 화면(접수·실행·열람·키 설정)까지
+- 다음: 국내 통계·법령·뉴스 커넥터(키 있을 때), 한글(HWPX) 출력, 재설문·재실험 설계서 자동 생성(L3)
 
 ## 데이터 취급
 
-내부 문서를 AI 서비스에 보내도 되는지는 **기관이 판단**합니다. 이 저장소에는 코드·규칙·공개 샘플만 있고, 여러분의 보고서 원문과 산출물은 여러분 PC의 `reports/`에만 남습니다(`.gitignore` 참고). 키는 `.env`에만 있습니다.
+내부 문서를 AI 서비스에 보내도 되는지는 **기관이 판단**합니다. 이 저장소에는 코드·규칙·공개 샘플만 있고, 여러분의 보고서 원문과 산출물은 여러분 PC의 `reports/`에만 남습니다(`.gitignore` 참고). 키는 `.env`(하네스) 또는 `app/.env`(독립 프로그램)에만 있습니다.
+
+- Claude Code 하네스: 원문 글자와 검색어가 Anthropic 으로 갑니다.
+- 독립 프로그램: 원문 글자와 검색어가 **OpenRouter → 선택한 모델 제공사**로 갑니다. OpenRouter 계정 설정(Privacy)에서 학습·로그 허용 여부를 정할 수 있고, 특정 제공사와 직접 계약한 API 로 바꾸려면 `LLM_BASE_URL` 을 바꿉니다. 자세한 표는 [app/SETUP.md](app/SETUP.md) "데이터가 어디로 가나".

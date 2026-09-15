@@ -9,3 +9,8 @@ runs/*
 !runs/.gitkeep
 reports/*/logs/
 .omc/
+# 독립 프로그램(app/)
+app/.env
+app/settings.json
+app/.venv/
+runs/uploads/
