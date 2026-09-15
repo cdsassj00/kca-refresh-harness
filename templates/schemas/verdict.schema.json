@@ -1,0 +1,7 @@
+{"$schema":"http://json-schema.org/draft-07/schema#","title":"근거 판정","type":"object",
+ "required":["claim_id","verdict","reason","evidence"],
+ "properties":{"claim_id":{"type":"string"},
+  "verdict":{"enum":["적중","과대","과소","유효","수정필요","폐기","검증불가"]},
+  "current_value":{"type":"object"},"reason":{"type":"string"},
+  "evidence":{"type":"array","minItems":1,"items":{"type":"object","required":["url","grade","retrieved_at"],
+    "properties":{"url":{"type":"string"},"grade":{"enum":["A","B","C"]},"retrieved_at":{"type":"string"},"note":{"type":"string"}}}}}}

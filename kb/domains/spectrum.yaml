@@ -1,0 +1,12 @@
+id: spectrum
+name: 전파자원·주파수
+indicators:
+  - {name: 5G 가입자 수, source: msit, locator: "과기정통부 무선통신서비스 가입 현황(월별)", unit: 명}
+  - {name: 이동통신 트래픽, source: msit, locator: "과기정통부 무선데이터 트래픽 통계", unit: TB}
+  - {name: 주파수 할당대가, source: msit, locator: "주파수 할당 공고·경매 결과 보도자료", unit: 억원}
+  - {name: 이음5G 사업자 수, source: kca, locator: "KCA 이음5G 현황", unit: 개}
+laws: [전파법, 전파법 시행령, 주파수 할당 고시]
+agencies: [과학기술정보통신부, 한국방송통신전파진흥원, 국립전파연구원, 중앙전파관리소]
+standards: [ITU-R, 3GPP, WRC 결과]
+journals: [한국통신학회논문지, 정보통신정책연구, KISDI 보고서, 전파진흥원 이슈리포트]
+news_keywords: [주파수 경매, 28GHz, 제4이동통신, 이음5G, 주파수 재할당, 6G 주파수, WRC-27]

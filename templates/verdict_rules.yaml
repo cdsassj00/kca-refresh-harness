@@ -1,0 +1,17 @@
+# 결론 판정 어휘와 수치 규칙. 비교기가 원 결론(K)·추적 재도출(K')·블라인드(K'')를 놓고 적용한다.
+verdicts:
+  - {name: 동일, rule: 방향 동일 + 수치 오차 same_within_pct 이내 + 블라인드도 같은 방향}
+  - {name: 강화, rule: 방향 동일 + 근거 등급 상승 또는 효과 크기 증가 ≥ strengthen_pct}
+  - {name: 부분수정, rule: 방향 동일 + 오차 same_within_pct 초과 ~ partial_within_pct 이내, 또는 조건·범위 변경}
+  - {name: 약화, rule: 방향 동일 + 근거 등급 하락 또는 효과 크기 감소 ≥ strengthen_pct}
+  - {name: 뒤집힘, rule: 부호·방향 반전, 또는 제언이 반대 정책으로 대체}
+  - {name: 신규결론, rule: 원 연구에 없던 결론이 K' 또는 K''에서 A/B 근거로 도출}
+  - {name: 판정불가, rule: 근거 E를 재수집할 수 없음(설문·실험·실측 필요) → R3, 설계서 첨부}
+numeric_rules:
+  same_within_pct: 10
+  partial_within_pct: 30
+  strengthen_pct: 20
+reason_locus: [P, E, M]      # 달라진 이유의 위치: 전제 / 근거 / 방법
+blind_agreement:
+  required_for_same: true    # "동일"은 블라인드 결론과도 방향이 일치해야 한다
+  disagreement_downgrade: 부분수정

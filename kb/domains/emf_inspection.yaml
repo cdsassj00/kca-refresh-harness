@@ -1,0 +1,10 @@
+id: emf_inspection
+name: 전파검사·전자파
+indicators:
+  - {name: 무선국 수, source: msit, locator: "무선국 통계(국립전파연구원·KCA)", unit: 국}
+  - {name: 전자파 민원 건수, source: kca, locator: "전자파안전정보센터 연보", unit: 건}
+laws: [전파법, 전자파 인체보호기준 고시, 무선설비규칙]
+agencies: [국립전파연구원, 한국방송통신전파진흥원 전자파안전정보센터, 중앙전파관리소]
+standards: [ICNIRP 2020, IEC 62232, ITU-T K.52]
+journals: [한국전자파학회논문지, 전파연구원 보고서]
+news_keywords: [전자파 인체보호, 무선국 검사, 5G 전자파, 전기차 충전 전자파]

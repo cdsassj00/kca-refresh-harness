@@ -1,0 +1,9 @@
+id: ict_qualification
+name: 기술자격
+indicators:
+  - {name: 국가기술자격 응시자 수(ICT), source: kca, locator: "KCA 자격검정 통계", unit: 명}
+laws: [국가기술자격법, 국가기술자격법 시행령]
+agencies: [한국방송통신전파진흥원 자격검정본부, 고용노동부, 과학기술정보통신부]
+standards: [NCS]
+journals: [직업능력개발연구, KRIVET 보고서]
+news_keywords: [정보보안기사, 국가기술자격 개편, 디지털 배지, CBT 전환]

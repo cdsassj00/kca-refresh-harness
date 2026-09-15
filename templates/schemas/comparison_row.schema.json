@@ -1,0 +1,171 @@
+{
+ "$schema": "http://json-schema.org/draft-07/schema#",
+ "title": "신구 대조표 행",
+ "type": "object",
+ "description": "결론 행(conclusion_id·kind 보유)과 본문 행(level·change_type 보유) 두 가지 모양을 한 스키마로 받는다. level이 있으면 change_type을, 없으면 conclusion_id·kind를 요구한다.",
+ "required": [
+  "row_id",
+  "location",
+  "old",
+  "new",
+  "grade",
+  "status"
+ ],
+ "if": {
+  "required": [
+   "level"
+  ]
+ },
+ "then": {
+  "required": [
+   "change_type"
+  ]
+ },
+ "else": {
+  "required": [
+   "conclusion_id",
+   "kind"
+  ]
+ },
+ "properties": {
+  "row_id": {
+   "type": "string"
+  },
+  "level": {
+   "enum": [
+    "conclusion",
+    "section",
+    "table",
+    "claim",
+    "recommendation"
+   ]
+  },
+  "conclusion_id": {
+   "type": "string"
+  },
+  "kind": {
+   "enum": [
+    "RQ",
+    "F",
+    "Fc",
+    "R"
+   ]
+  },
+  "location": {
+   "type": "string"
+  },
+  "old": {
+   "type": "string"
+  },
+  "new": {
+   "type": "string"
+  },
+  "change_type": {
+   "enum": [
+    "유지",
+    "수치갱신",
+    "서술수정",
+    "폐기",
+    "신규추가",
+    "재수행필요"
+   ]
+  },
+  "verdict": {
+   "enum": [
+    "",
+    "잠정",
+    "동일",
+    "강화",
+    "부분수정",
+    "약화",
+    "뒤집힘",
+    "신규결론",
+    "판정불가"
+   ],
+   "description": "최종 판정 7종. 빈 값 또는 '잠정'은 아직 최종 판정 전(L0 잠정 상태)"
+  },
+  "next_action": {
+   "enum": [
+    "유지",
+    "부록 갱신",
+    "재연구 발주",
+    "폐기(아카이브)",
+    "추가 조사(설계서)"
+   ]
+  },
+  "reason_locus": {
+   "type": "array",
+   "items": {
+    "enum": [
+     "P",
+     "E",
+     "M"
+    ]
+   }
+  },
+  "reason": {
+   "type": "string"
+  },
+  "evidence_ids": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  },
+  "evidence": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "url",
+     "grade"
+    ],
+    "properties": {
+     "url": {
+      "type": "string"
+     },
+     "grade": {
+      "enum": [
+       "A",
+       "B",
+       "C"
+      ]
+     },
+     "note": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "grade": {
+   "enum": [
+    "A",
+    "B",
+    "C"
+   ]
+  },
+  "status": {
+   "enum": [
+    "L0 잠정",
+    "L1 근거갱신",
+    "L2 최종",
+    "R3 설계서"
+   ]
+  },
+  "linked_conclusions": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  },
+  "upstream": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  },
+  "blind_new": {
+   "type": "string"
+  }
+ }
+}

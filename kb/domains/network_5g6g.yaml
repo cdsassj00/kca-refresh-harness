@@ -1,0 +1,10 @@
+id: network_5g6g
+name: 통신망·5G/6G·위성
+indicators:
+  - {name: 5G 기지국 수, source: msit, locator: "무선국 현황(5G)", unit: 국}
+  - {name: 저궤도 위성 서비스 가입, source: news, locator: "스타링크 국내 서비스 관련 보도", unit: 명}
+laws: [전기통신사업법, 전파법, 위성통신 관련 고시]
+agencies: [과학기술정보통신부, 국립전파연구원, 한국방송통신전파진흥원]
+standards: [3GPP Release 18/19/20, ITU-R IMT-2030, WRC-27 의제]
+journals: [한국통신학회논문지, ETRI 전자통신동향분석, IEEE Communications]
+news_keywords: [6G, 3GPP Release 19, 스타링크 한국, 위성통신 주파수, 오픈랜]

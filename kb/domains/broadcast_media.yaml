@@ -1,0 +1,12 @@
+id: broadcast_media
+name: 방송·미디어·OTT
+indicators:
+  - {name: 유료방송 가입자, source: msit, locator: "유료방송 가입자 수 검증 결과(반기)", unit: 명}
+  - {name: 방송사업 매출, source: kisdi, locator: "방송산업 실태조사·방송통계포털", unit: 억원}
+  - {name: OTT 이용률, source: kmcc, locator: "방송매체 이용행태조사", unit: "%"}
+  - {name: 홈쇼핑 송출수수료, source: kmcc, locator: "방송사업자 재산상황 공표집", unit: 억원}
+laws: [방송법, 인터넷 멀티미디어 방송사업법, 전기통신사업법, 통합미디어법(안)]
+agencies: [방송미디어통신위원회, 과학기술정보통신부, 한국방송통신전파진흥원, KISDI]
+standards: []
+journals: [방송통신연구, 한국방송학보, 정보통신정책연구, KISDI 보고서, 국회입법조사처]
+news_keywords: [OTT 규제, 티빙 웨이브 합병, 넷플릭스 광고요금제, 유료방송 가입자 감소, 통합미디어법, 홈쇼핑 송출수수료]

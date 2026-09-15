@@ -1,0 +1,9 @@
+id: kca_management
+name: 기관 경영·사업
+indicators:
+  - {name: 방송통신발전기금 규모, source: msit, locator: "방송통신발전기금 운용계획", unit: 억원}
+laws: [방송통신발전 기본법, 공공기관의 운영에 관한 법률]
+agencies: [한국방송통신전파진흥원, 과학기술정보통신부, 기획재정부]
+standards: []
+journals: [알리오 경영공시, KCA 경영전략 문서]
+news_keywords: [KCA 중장기 경영전략, 빛마루, 방송통신발전기금]

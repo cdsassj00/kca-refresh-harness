@@ -1,0 +1,8 @@
+{"$schema":"http://json-schema.org/draft-07/schema#","title":"결론(K)","type":"object",
+ "required":["conclusion_id","kind","statement","page","method","premises","evidence_refs","types"],
+ "properties":{"conclusion_id":{"type":"string","pattern":"^R\\d{2}-K-(RQ|F|Fc|R)-\\d{2}$"},
+  "kind":{"enum":["RQ","F","Fc","R"]},"statement":{"type":"string","minLength":1},"page":{"type":"integer"},
+  "method":{"type":"string"},"premises":{"type":"array","items":{"type":"string"}},
+  "evidence_refs":{"type":"array","items":{"type":"string"}},
+  "types":{"type":"array","items":{"enum":["F","M","S","P","T","B","G"]}},
+  "rerun_grade":{"enum":["R1","R2","R3"]}}}

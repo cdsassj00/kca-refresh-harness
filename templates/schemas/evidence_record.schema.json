@@ -1,0 +1,5 @@
+{"$schema":"http://json-schema.org/draft-07/schema#","title":"근거 레코드","type":"object",
+ "required":["source","id","url","title","snippet","grade","retrieved_at","query"],
+ "properties":{"source":{"type":"string"},"id":{"type":"string"},"url":{"type":"string"},"title":{"type":"string"},
+  "date":{"type":["string","null"]},"snippet":{"type":"string"},"grade":{"enum":["A","B","C"]},
+  "retrieved_at":{"type":"string"},"query":{"type":"string"},"extra":{"type":"object"}},"additionalProperties":false}

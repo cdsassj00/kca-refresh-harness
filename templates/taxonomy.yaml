@@ -1,0 +1,48 @@
+# 연구유형 분류체계. 유형은 결론의 방법(M)과 근거(E)에 붙는다. 한 보고서에 여러 유형이 혼재한다.
+types:
+  - code: F
+    name: 전망·예측형
+    signals: [시장규모 전망, 가입자 전망, 트래픽 예측, 시나리오, "년까지", CAGR]
+    strategy: 실적 수집 → 백테스트(예측 vs 실적) → 판정 → 최신 데이터로 재전망
+    verify_method: backtest
+    rerun_grade: R1
+  - code: M
+    name: 경제성·계량분석형
+    signals: [후생효과, NPV, 편익, 탄력성, 회귀, 파라미터, 할인율, 경제성 분석]
+    strategy: 수식·가정 복원 → 입력값 갱신 → 재계산 → 민감도 분석
+    verify_method: model_rerun
+    rerun_grade: R1~R2
+  - code: S
+    name: 실태조사·설문형
+    signals: [설문, 응답자, 표본, FGI, 인터뷰, "%가 응답", 실태조사]
+    strategy: 이후 공식조사로 대체 → 없으면 재설문 설계서 → 옵션 합성패널(C등급)
+    verify_method: survey_map
+    rerun_grade: R2~R3
+  - code: P
+    name: 정책·제도 대안형
+    signals: [개선방안, 법제, 제도 개선, 정책 방향, 추진체계, 제언]
+    strategy: 채택·입법·시행 추적 → 환경 변화 대비 유효성 → 유지/수정/폐기/신규
+    verify_method: policy_track
+    rerun_grade: R1
+  - code: T
+    name: 기술·표준·실험형
+    signals: [측정방법, 실험, 3GPP, ITU, 표준, 시험, 검증]
+    strategy: 표준·기술 변화 추적 → 재실험 계획서 → 계산 가능한 부분은 시뮬레이션
+    verify_method: standard_track
+    rerun_grade: R2~R3
+  - code: B
+    name: 사례·동향 조사형
+    signals: [해외 사례, 동향, 벤치마킹, 미국, 일본, EU]
+    strategy: 사례별 현재 상태 추적 → 신규 사례 추가
+    verify_method: case_refresh
+    rerun_grade: R1
+  - code: G
+    name: 기관 전략·사업 기획형
+    signals: [중장기 전략, 조직, KPI, 사업 개편, 로드맵]
+    strategy: 실행 여부·KPI 달성도 추적 → 전략 재정렬
+    verify_method: kpi_track
+    rerun_grade: R1~R2
+rerun_grades:
+  R1: 즉시 재수행(공개 데이터·데스크리서치·모델 재계산)
+  R2: 대체 재수행(프록시 데이터·유사 최신조사 대입)
+  R3: 계획만 수립(설문·실험·실측 필요 → 설계서, 판정 불가)

@@ -1,0 +1,10 @@
+{"$schema":"http://json-schema.org/draft-07/schema#","title":"논증 사슬","type":"object",
+ "required":["report_id","conclusions","premises","edges"],
+ "properties":{"report_id":{"type":"string"},
+  "conclusions":{"type":"array","items":{"$ref":"conclusion.schema.json"}},
+  "premises":{"type":"array","items":{"type":"object","required":["premise_id","statement","section","page"],
+    "properties":{"premise_id":{"type":"string","pattern":"^P-\\d{2,3}$"},"statement":{"type":"string"},
+     "section":{"type":"string"},"page":{"type":"integer"},"indicator":{"type":"string"}}}},
+  "edges":{"type":"array","items":{"type":"object","required":["from","to","relation"],
+    "properties":{"from":{"type":"string"},"to":{"type":"string"},"relation":{"enum":["premise_of","evidence_of","supports","cites"]},
+     "confidence":{"type":"number","minimum":0,"maximum":1}}}}}}

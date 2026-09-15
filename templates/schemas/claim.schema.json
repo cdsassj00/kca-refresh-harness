@@ -1,0 +1,9 @@
+{"$schema":"http://json-schema.org/draft-07/schema#","title":"주장(E 단위)","type":"object",
+ "required":["claim_id","conclusion_id","type","page","statement","verify_method"],
+ "properties":{"claim_id":{"type":"string","pattern":"^R\\d{2}-[FMSPTBG]-\\d{3}$"},"conclusion_id":{"type":"string"},
+  "type":{"enum":["F","M","S","P","T","B","G"]},"page":{"type":"integer"},"statement":{"type":"string","minLength":1},
+  "original_value":{"type":"object","properties":{"metric":{"type":"string"},"year":{"type":"integer"},
+    "value":{"type":["number","string"]},"unit":{"type":"string"}}},
+  "assumptions":{"type":"array","items":{"type":"string"}},
+  "verify_method":{"enum":["backtest","model_rerun","survey_map","policy_track","standard_track","case_refresh","kpi_track"]},
+  "data_sources_hint":{"type":"array","items":{"type":"string"}}}}
