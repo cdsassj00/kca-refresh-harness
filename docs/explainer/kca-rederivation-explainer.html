@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>같은 연구를 오늘 다시 하면</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#F4F6F9; --surface:#FFFFFF; --ink:#1A2330; --muted:#5E6B7A; --line:#D5DCE5;
+    --accent:#0B6E8F; --accent-soft:#DCEEF4; --accent-ink:#08556F;
+    --good:#2E7D4F; --good-soft:#DFF2E6; --warn:#A8690E; --warn-soft:#FBEFD6;
+    --bad:#B93A2B; --bad-soft:#FBE3DF; --na:#6F7C8A; --na-soft:#E8ECF0;
+    --shadow:0 1px 2px rgba(20,30,45,.06), 0 8px 24px rgba(20,30,45,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E141B; --surface:#151D26; --ink:#E7EDF3; --muted:#9AA7B5; --line:#2A3542;
+      --accent:#4FB3D4; --accent-soft:#123A48; --accent-ink:#8FD3EA;
+      --good:#5FCB8A; --good-soft:#163425; --warn:#E2B14A; --warn-soft:#3A2E12;
+      --bad:#F07A6A; --bad-soft:#3F1F1B; --na:#8E9BA8; --na-soft:#232C36;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E141B; --surface:#151D26; --ink:#E7EDF3; --muted:#9AA7B5; --line:#2A3542;
+    --accent:#4FB3D4; --accent-soft:#123A48; --accent-ink:#8FD3EA;
+    --good:#5FCB8A; --good-soft:#163425; --warn:#E2B14A; --warn-soft:#3A2E12;
+    --bad:#F07A6A; --bad-soft:#3F1F1B; --na:#8E9BA8; --na-soft:#232C36;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg); color:var(--ink); font-family:"IBM Plex Sans KR","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif; font-size:17px; line-height:1.65; -webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px; margin:0 auto; padding:56px 24px 96px}
+  header{padding-bottom:40px; border-bottom:1px solid var(--line); margin-bottom:8px}
+  .eyebrow{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); font-weight:500}
+  h1{font-family:"Gowun Batang","Nanum Myeongjo",serif; font-weight:700; font-size:clamp(30px,4.6vw,44px); line-height:1.25; margin:14px 0 14px; text-wrap:balance; letter-spacing:-.01em}
+  header p{margin:0; color:var(--muted); max-width:38em}
+  .scene{padding:56px 0 24px; border-bottom:1px solid var(--line)}
+  .scene:last-of-type{border-bottom:0}
+  .num{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--accent); letter-spacing:.08em}
+  h2{font-family:"Gowun Batang","Nanum Myeongjo",serif; font-weight:700; font-size:clamp(23px,3vw,30px); line-height:1.3; margin:8px 0 22px; text-wrap:balance}
+  figure{margin:0; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:22px 22px 14px; box-shadow:var(--shadow); overflow-x:auto}
+  figure svg{display:block; width:100%; height:auto; max-width:100%; font-family:"IBM Plex Sans KR","Noto Sans KR",sans-serif}
+  figcaption{margin:12px 2px 0; color:var(--muted); font-size:14px; line-height:1.55}
+  ul.pts{margin:22px 0 0; padding:0; list-style:none; display:grid; gap:10px}
+  ul.pts li{position:relative; padding-left:22px; max-width:42em}
+  ul.pts li::before{content:""; position:absolute; left:2px; top:.62em; width:9px; height:9px; border-radius:50%; background:var(--accent)}
+  ul.pts b{font-weight:700}
+  /* svg color roles */
+  .ink{fill:var(--ink)} .mut{fill:var(--muted)} .acc{fill:var(--accent)} .accs{fill:var(--accent-soft)}
+  .box{fill:var(--surface); stroke:var(--line); stroke-width:1.5}
+  .boxa{fill:var(--accent-soft); stroke:var(--accent); stroke-width:1.5}
+  .boxb{fill:var(--bad-soft); stroke:var(--bad); stroke-width:1.5}
+  .ln{stroke:var(--line); stroke-width:2; fill:none}
+  .lna{stroke:var(--accent); stroke-width:2.2; fill:none}
+  .lnb{stroke:var(--bad); stroke-width:2.2; fill:none}
+  .lnd{stroke:var(--muted); stroke-width:1.8; fill:none; stroke-dasharray:5 5}
+  .t{font-size:13px; fill:var(--ink)} .ts{font-size:11.5px; fill:var(--muted)} .tb{font-size:14px; font-weight:700; fill:var(--ink)}
+  .ta{font-size:12px; fill:var(--accent-ink); font-weight:500}
+  .tw{font-size:12.5px; font-weight:700; fill:#fff}
+  .stamp{font-size:12.5px; font-weight:700}
+  /* comparison table */
+  .tbl{width:100%; border-collapse:collapse; font-size:14.5px; min-width:760px}
+  .tbl th,.tbl td{border-top:1px solid var(--line); padding:12px 10px; vertical-align:top; text-align:left}
+  .tbl th{font-size:12px; letter-spacing:.06em; color:var(--muted); font-weight:500; border-top:0; padding-top:0}
+  .tbl td.k{font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--muted); white-space:nowrap}
+  .pill{display:inline-block; padding:3px 10px; border-radius:999px; font-size:12.5px; font-weight:700; white-space:nowrap}
+  .p-good{background:var(--good-soft); color:var(--good)} .p-warn{background:var(--warn-soft); color:var(--warn)}
+  .p-bad{background:var(--bad-soft); color:var(--bad)} .p-na{background:var(--na-soft); color:var(--na)} .p-new{background:var(--accent-soft); color:var(--accent-ink)}
+  .grade{font-family:"IBM Plex Mono",monospace; font-weight:500}
+  /* tiles */
+  .tiles{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:6px}
+  .tile{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:18px 18px 16px}
+  .tile .k{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--accent); letter-spacing:.06em}
+  .tile h3{margin:6px 0 6px; font-size:17px; font-weight:700}
+  .tile p{margin:0; color:var(--muted); font-size:14.5px; line-height:1.5}
+  .status{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:6px}
+  .status .tile ul{margin:8px 0 0; padding-left:18px; font-size:14.5px; line-height:1.7}
+  .status .tile.done h3{color:var(--good)} .status .tile.next h3{color:var(--accent-ink)}
+  @media (max-width:720px){ .tiles,.status{grid-template-columns:1fr} }
+  @media (prefers-reduced-motion:no-preference){ .pill{transition:transform .15s} }
+  a{color:var(--accent-ink)}
+  footer{margin-top:40px; color:var(--muted); font-size:13px}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">한국방송통신전파진흥원 · 연구보고서 현행화 파일럿</div>
+  <h1>같은 연구를 오늘 다시 하면, 같은 결론이 나올까?</h1>
+  <p>과거 연구보고서의 결론 하나하나를 AI가 지금 시점에서 다시 검증하는 시스템입니다. 무엇을 만들었고, 어떻게 동작하는지 그림으로 설명합니다.</p>
+</header>
+
+<!-- 1 -->
+<section class="scene">
+  <div class="num">01 · 문제</div>
+  <h2>보고서는 그대로인데, 세상은 계속 바뀌었습니다.</h2>
+  <figure>
+    <svg viewBox="0 0 900 210" role="img" aria-label="2021년 발간된 보고서 이후 2023년 28GHz 할당 취소, 2024년 제4이동통신 무산, 규제기관 개편을 거쳐 2026년 지금에 이르는 타임라인. 지금 시점에서 당시 결론이 유효한지 묻는다.">
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <g class="mut" style="color:var(--muted)"><line x1="70" y1="120" x2="830" y2="120" class="ln" marker-end="url(#ar)"/></g>
+      <!-- report -->
+      <rect x="40" y="52" width="150" height="46" rx="6" class="boxa"/>
+      <text x="115" y="72" text-anchor="middle" class="tb">연구보고서 발간</text>
+      <text x="115" y="90" text-anchor="middle" class="ts">전망 · 정책 제언</text>
+      <circle cx="115" cy="120" r="7" class="acc"/>
+      <text x="115" y="150" text-anchor="middle" class="ts">2021</text>
+      <!-- events -->
+      <circle cx="340" cy="120" r="6" class="boxb"/>
+      <text x="340" y="150" text-anchor="middle" class="ts">2023</text>
+      <text x="340" y="168" text-anchor="middle" class="t">28GHz 할당 취소</text>
+      <circle cx="530" cy="120" r="6" class="boxb"/>
+      <text x="530" y="150" text-anchor="middle" class="ts">2024</text>
+      <text x="530" y="168" text-anchor="middle" class="t">제4이동통신 무산</text>
+      <circle cx="690" cy="120" r="6" class="boxb"/>
+      <text x="690" y="150" text-anchor="middle" class="ts">2025</text>
+      <text x="690" y="168" text-anchor="middle" class="t">규제기관 개편</text>
+      <!-- now -->
+      <rect x="745" y="52" width="130" height="46" rx="6" class="box"/>
+      <text x="810" y="72" text-anchor="middle" class="tb">지금 · 2026</text>
+      <text x="810" y="90" text-anchor="middle" class="ta">그 결론, 아직 맞나?</text>
+      <text x="450" y="40" text-anchor="middle" class="ts">발간 이후 일어난 일 (예시)</text>
+    </svg>
+    <figcaption>보고서에 적힌 전망과 제언은 발간 당시의 환경 위에 서 있습니다. 환경이 바뀌면 결론도 흔들릴 수 있습니다.</figcaption>
+  </figure>
+  <ul class="pts">
+    <li><b>지시문의 질문</b>은 "최신 자료를 덧붙이자"가 아니라 "지금 다시 연구하면 어떤 결과가 나오는가"입니다.</li>
+    <li>기관 홈페이지에 공개된 연구보고서 164건 중, 전망·제언이 뚜렷한 7편을 골라 파일럿 대상으로 삼았습니다.</li>
+  </ul>
+</section>
+
+<!-- 2 -->
+<section class="scene">
+  <div class="num">02 · 핵심 아이디어</div>
+  <h2>숫자만 바꾸는 것과, 결론을 다시 내는 것은 다릅니다.</h2>
+  <figure>
+    <svg viewBox="0 0 900 250" role="img" aria-label="왼쪽은 자료 최신화: 같은 문장에서 숫자만 바뀐다. 오른쪽은 결론 재도출: 전제와 근거를 오늘 값으로 바꾼 뒤 같은 방법을 다시 적용해 결론이 유지되는지 판정한다.">
+      <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <!-- left -->
+      <text x="215" y="30" text-anchor="middle" class="tb">자료 최신화</text>
+      <text x="215" y="50" text-anchor="middle" class="ts">이번 사업이 하려는 것이 아님</text>
+      <rect x="40" y="70" width="350" height="46" rx="6" class="box"/>
+      <text x="215" y="98" text-anchor="middle" class="t">"5G 가입자는 2025년 ○○만 명에 이를 것"</text>
+      <g style="color:var(--muted)"><line x1="215" y1="118" x2="215" y2="150" class="ln" marker-end="url(#ar2)"/></g>
+      <text x="232" y="140" class="ts">숫자만 교체</text>
+      <rect x="40" y="156" width="350" height="46" rx="6" class="box"/>
+      <text x="215" y="184" text-anchor="middle" class="t">"5G 가입자는 2025년 △△만 명에 이르렀다"</text>
+      <text x="215" y="228" text-anchor="middle" class="ts">문장과 결론은 그대로</text>
+      <!-- divider -->
+      <line x1="450" y1="20" x2="450" y2="235" class="lnd"/>
+      <!-- right -->
+      <text x="675" y="30" text-anchor="middle" class="tb">결론 재도출</text>
+      <text x="675" y="50" text-anchor="middle" class="ta">이번 사업의 핵심</text>
+      <rect x="500" y="70" width="100" height="40" rx="6" class="boxa"/><text x="550" y="95" text-anchor="middle" class="t">전제(환경)</text>
+      <rect x="500" y="120" width="100" height="40" rx="6" class="boxa"/><text x="550" y="145" text-anchor="middle" class="t">근거(데이터)</text>
+      <text x="550" y="182" text-anchor="middle" class="ts">오늘 값으로 갱신</text>
+      <g style="color:var(--accent)">
+        <line x1="602" y1="90" x2="650" y2="112" class="lna" marker-end="url(#ar2)"/>
+        <line x1="602" y1="140" x2="650" y2="118" class="lna" marker-end="url(#ar2)"/>
+      </g>
+      <rect x="655" y="95" width="90" height="40" rx="6" class="box"/><text x="700" y="120" text-anchor="middle" class="t">같은 방법</text>
+      <g style="color:var(--accent)"><line x1="747" y1="115" x2="785" y2="115" class="lna" marker-end="url(#ar2)"/></g>
+      <rect x="790" y="95" width="90" height="40" rx="6" class="boxa"/><text x="835" y="120" text-anchor="middle" class="tb">결론'</text>
+      <text x="750" y="182" text-anchor="middle" class="ts">원래 결론과 비교</text>
+      <rect x="678" y="196" width="144" height="30" rx="15" class="box"/>
+      <text x="750" y="216" text-anchor="middle" class="ta">유지? 수정? 뒤집힘?</text>
+    </svg>
+    <figcaption>왼쪽은 문장에 새 숫자를 끼워 넣는 일입니다. 오른쪽은 결론을 떠받치던 전제와 근거를 오늘 값으로 바꾸고, 같은 방법을 다시 돌려 결론이 살아남는지 묻는 일입니다.</figcaption>
+  </figure>
+</section>
+
+<!-- 3 -->
+<section class="scene">
+  <div class="num">03 · 결론의 구조</div>
+  <h2>모든 결론은 사슬 위에 서 있습니다. 한 고리가 끊기면 결론이 흔들립니다.</h2>
+  <figure>
+    <svg viewBox="0 0 900 250" role="img" aria-label="전제와 근거가 방법을 거쳐 결론이 되고, 결론이 정책 제언으로 이어지는 사슬. 환경 변화 사건이 전제를 치면 그 영향이 결론과 제언까지 번진다.">
+      <defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <!-- event -->
+      <rect x="40" y="20" width="150" height="34" rx="17" class="boxb"/>
+      <text x="115" y="42" text-anchor="middle" class="t">환경 변화 사건</text>
+      <g style="color:var(--bad)"><line x1="115" y1="56" x2="115" y2="86" class="lnb" marker-end="url(#ar3)"/></g>
+      <!-- premises / evidence -->
+      <rect x="40" y="90" width="150" height="46" rx="6" class="boxb"/>
+      <text x="115" y="110" text-anchor="middle" class="tb">전제</text>
+      <text x="115" y="128" text-anchor="middle" class="ts">환경분석 장의 사실·가정</text>
+      <rect x="40" y="170" width="150" height="46" rx="6" class="box"/>
+      <text x="115" y="190" text-anchor="middle" class="tb">근거</text>
+      <text x="115" y="208" text-anchor="middle" class="ts">데이터 · 설문 · 모형 값</text>
+      <g style="color:var(--muted)">
+        <line x1="192" y1="113" x2="330" y2="145" class="ln" marker-end="url(#ar3)"/>
+        <line x1="192" y1="193" x2="330" y2="161" class="ln" marker-end="url(#ar3)"/>
+      </g>
+      <text x="262" y="112" text-anchor="middle" class="ts">위에 선다</text>
+      <!-- method -->
+      <rect x="335" y="130" width="130" height="46" rx="6" class="box"/>
+      <text x="400" y="150" text-anchor="middle" class="tb">방법</text>
+      <text x="400" y="168" text-anchor="middle" class="ts">추정 · 분석 · 비교</text>
+      <g style="color:var(--muted)"><line x1="467" y1="153" x2="530" y2="153" class="ln" marker-end="url(#ar3)"/></g>
+      <text x="498" y="143" text-anchor="middle" class="ts">적용</text>
+      <!-- conclusion -->
+      <rect x="535" y="130" width="130" height="46" rx="6" class="boxb"/>
+      <text x="600" y="150" text-anchor="middle" class="tb">결론</text>
+      <text x="600" y="168" text-anchor="middle" class="ts">발견 · 전망</text>
+      <g style="color:var(--bad)"><line x1="667" y1="153" x2="730" y2="153" class="lnb" marker-end="url(#ar3)"/></g>
+      <text x="698" y="143" text-anchor="middle" class="ts">이끌어냄</text>
+      <!-- recommendation -->
+      <rect x="735" y="130" width="130" height="46" rx="6" class="boxb"/>
+      <text x="800" y="150" text-anchor="middle" class="tb">정책 제언</text>
+      <text x="800" y="168" text-anchor="middle" class="ts">"○○을 확대해야"</text>
+      <!-- propagation path -->
+      <path d="M192 100 C 300 60, 480 60, 560 125" class="lnb" style="stroke-dasharray:6 5"/>
+      <text x="420" y="66" text-anchor="middle" class="t" style="fill:var(--bad)">영향이 번진다</text>
+    </svg>
+    <figcaption>시스템은 보고서를 읽어 결론마다 이 사슬을 복원합니다. 그래서 환경분석 장이 바뀌면 본문의 어느 결론과 제언까지 영향이 가는지 따라갈 수 있습니다.</figcaption>
+  </figure>
+  <ul class="pts">
+    <li>보고서 앞부분(환경분석)만 고치는 것이 아니라, 그 위에 선 <b>본문 결론과 제언까지</b> 추적합니다.</li>
+    <li>한 보고서에는 보통 결론이 10~30개 있고, 유형(전망·설문·경제성·정책·기술 등)이 섞여 있습니다.</li>
+  </ul>
+</section>
+
+<!-- 4 -->
+<section class="scene">
+  <div class="num">04 · 세 층</div>
+  <h2>바로 할 수 있는 것부터 하고, 층을 올라갈수록 판정이 확실해집니다.</h2>
+  <figure>
+    <svg viewBox="0 0 900 290" role="img" aria-label="세 층 계단. 0층은 모든 보고서에 즉시 적용되는 전제 갱신과 잠정 판정, 1층은 근거 데이터 갱신, 2층은 결론 재도출과 최종 판정. 설문이나 실험이 필요한 결론은 판정 불가로 두고 설계서를 붙인다.">
+      <defs><marker id="ar4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <!-- L0 -->
+      <rect x="40" y="190" width="820" height="70" rx="8" class="boxa"/>
+      <text x="62" y="216" class="tb">Layer 0 · 즉시 현행화</text>
+      <text x="62" y="238" class="t">환경 변화 사건 수집 → 전제 갱신 · 제언의 채택 여부 추적 · 이후 나온 논문 스캔</text>
+      <rect x="690" y="203" width="150" height="26" rx="13" class="box"/><text x="765" y="221" text-anchor="middle" class="ta">모든 보고서 · 잠정 판정</text>
+      <!-- L1 -->
+      <rect x="40" y="105" width="560" height="70" rx="8" class="box"/>
+      <text x="62" y="131" class="tb">Layer 1 · 근거 갱신</text>
+      <text x="62" y="153" class="t">전망은 실적과 비교 · 모형은 다시 계산 · 설문은 최신 공식조사로 대체</text>
+      <!-- L2 -->
+      <rect x="40" y="20" width="360" height="70" rx="8" class="boxa"/>
+      <text x="62" y="46" class="tb">Layer 2 · 결론 재도출</text>
+      <text x="62" y="68" class="t">추적 재도출 + 블라인드 재수행 → 최종 판정</text>
+      <!-- arrows up -->
+      <g style="color:var(--accent)">
+        <line x1="640" y1="188" x2="640" y2="180" class="lna" marker-end="url(#ar4)"/>
+        <line x1="440" y1="103" x2="440" y2="95" class="lna" marker-end="url(#ar4)"/>
+      </g>
+      <!-- R3 note -->
+      <rect x="640" y="30" width="220" height="60" rx="8" class="box" style="stroke-dasharray:5 4"/>
+      <text x="750" y="53" text-anchor="middle" class="tb" style="fill:var(--na)">설문 · 실험이 필요한 결론</text>
+      <text x="750" y="74" text-anchor="middle" class="ts">"판정 불가"로 두고 재조사 설계서를 붙임</text>
+      <text x="450" y="278" text-anchor="middle" class="ts">보고서마다 어느 층까지 올라갔는지(L0 ~ L3)를 기록합니다</text>
+    </svg>
+    <figcaption>재수행이 불가능한 보고서라도 0층은 반드시 나옵니다. 어느 전제가 무너져 어느 결론이 흔들리는지까지는 자료 조사만으로 알 수 있기 때문입니다.</figcaption>
+  </figure>
+</section>
+
+<!-- 5 -->
+<section class="scene">
+  <div class="num">05 · 판정 방법</div>
+  <h2>세 개의 결론을 나란히 놓고 비교합니다. 하나는 원문을 아예 보지 않은 AI가 냅니다.</h2>
+  <figure>
+    <svg viewBox="0 0 900 300" role="img" aria-label="원 보고서의 결론, 같은 방법을 오늘 데이터에 적용한 추적 재도출 결론, 원문을 보지 않은 AI가 독립적으로 낸 블라인드 결론을 비교기가 받아 일곱 가지 판정 중 하나를 찍는다.">
+      <defs><marker id="ar5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <!-- three cards -->
+      <rect x="40" y="24" width="250" height="84" rx="8" class="box"/>
+      <text x="165" y="50" text-anchor="middle" class="tb">① 원 보고서의 결론</text>
+      <text x="165" y="72" text-anchor="middle" class="ts">발간 당시 · 당시 데이터</text>
+      <text x="165" y="92" text-anchor="middle" class="ts">원문에서 그대로 추출</text>
+      <rect x="325" y="24" width="250" height="84" rx="8" class="boxa"/>
+      <text x="450" y="50" text-anchor="middle" class="tb">② 추적 재도출</text>
+      <text x="450" y="72" text-anchor="middle" class="ts">같은 방법 · 오늘 데이터</text>
+      <text x="450" y="92" text-anchor="middle" class="ts">무엇이 바뀌어 달라졌는지 설명</text>
+      <rect x="610" y="24" width="250" height="84" rx="8" class="boxa"/>
+      <text x="735" y="50" text-anchor="middle" class="tb">③ 블라인드 재수행</text>
+      <text x="735" y="72" text-anchor="middle" class="ts">연구질문 · 방법 · 오늘 데이터만 받음</text>
+      <text x="735" y="92" text-anchor="middle" class="ts">원문과 원 결론은 보지 못함</text>
+      <!-- arrows to comparator -->
+      <g style="color:var(--muted)">
+        <line x1="165" y1="110" x2="400" y2="160" class="ln" marker-end="url(#ar5)"/>
+        <line x1="450" y1="110" x2="450" y2="160" class="ln" marker-end="url(#ar5)"/>
+        <line x1="735" y1="110" x2="500" y2="160" class="ln" marker-end="url(#ar5)"/>
+      </g>
+      <rect x="370" y="164" width="160" height="40" rx="20" class="box"/>
+      <text x="450" y="189" text-anchor="middle" class="tb">비교기</text>
+      <g style="color:var(--accent)"><line x1="450" y1="206" x2="450" y2="228" class="lna" marker-end="url(#ar5)"/></g>
+      <!-- stamps -->
+      <g class="stamp">
+        <rect x="40" y="236" width="96" height="30" rx="15" style="fill:var(--good-soft)"/><text x="88" y="256" text-anchor="middle" style="fill:var(--good)">동일</text>
+        <rect x="146" y="236" width="96" height="30" rx="15" style="fill:var(--good-soft)"/><text x="194" y="256" text-anchor="middle" style="fill:var(--good)">강화</text>
+        <rect x="252" y="236" width="110" height="30" rx="15" style="fill:var(--warn-soft)"/><text x="307" y="256" text-anchor="middle" style="fill:var(--warn)">부분수정</text>
+        <rect x="372" y="236" width="96" height="30" rx="15" style="fill:var(--warn-soft)"/><text x="420" y="256" text-anchor="middle" style="fill:var(--warn)">약화</text>
+        <rect x="478" y="236" width="104" height="30" rx="15" style="fill:var(--bad-soft)"/><text x="530" y="256" text-anchor="middle" style="fill:var(--bad)">뒤집힘</text>
+        <rect x="592" y="236" width="118" height="30" rx="15" style="fill:var(--accent-soft)"/><text x="651" y="256" text-anchor="middle" style="fill:var(--accent-ink)">신규 결론</text>
+        <rect x="720" y="236" width="140" height="30" rx="15" style="fill:var(--na-soft)"/><text x="790" y="256" text-anchor="middle" style="fill:var(--na)">판정 불가</text>
+      </g>
+      <text x="450" y="290" text-anchor="middle" class="ts">판정마다 "왜 달라졌나"를 전제 / 근거 / 방법 중 어디에서 비롯됐는지 함께 적습니다</text>
+    </svg>
+    <figcaption>③이 핵심입니다. 원 결론을 아는 AI는 그쪽으로 끌려갈 수 있어서, 원문을 차단한 별도의 AI가 처음부터 결론을 냅니다. 세 결론이 같으면 "동일", 방향이 반대면 "뒤집힘"입니다.</figcaption>
+  </figure>
+  <ul class="pts">
+    <li><b>"뒤집힘"</b>과 <b>"신규 결론"</b>이 지시문이 말한 새로운 정책 시사점과 혁신적 대안이 나오는 자리입니다.</li>
+    <li>판정 기준은 숫자 규칙으로 적어 둡니다. 예를 들어 예측 오차 10% 이내면 동일, 부호가 뒤집히면 뒤집힘입니다.</li>
+  </ul>
+</section>
+
+<!-- 6 -->
+<section class="scene">
+  <div class="num">06 · 산출물</div>
+  <h2>결과는 신구 대조표로 나옵니다. 공공기관이 늘 보던 그 양식입니다.</h2>
+  <figure>
+    <table class="tbl" aria-label="신구 대조표 예시">
+      <thead><tr><th>결론</th><th>현행 (당시 보고서)</th><th>현행화(안)</th><th>판정</th><th>왜</th><th>등급</th></tr></thead>
+      <tbody>
+        <tr><td class="k">K-Fc-01</td><td>5G 가입자는 2025년까지 연 ○○% 늘어난다</td><td>실적 증가율이 전망보다 낮아 재전망은 하향</td><td><span class="pill p-warn">부분수정</span></td><td>근거</td><td class="grade">A</td></tr>
+        <tr><td class="k">K-R-03</td><td>28GHz 대역 활성화 지원을 확대해야 한다</td><td>대역 할당이 취소되어 제언의 전제가 사라짐</td><td><span class="pill p-bad">뒤집힘</span></td><td>전제</td><td class="grade">A</td></tr>
+        <tr><td class="k">K-F-02</td><td>기업 수요조사에서 ○○%가 도입 의향</td><td>재설문 없이는 판정 불가. 재설문 설계서 첨부</td><td><span class="pill p-na">판정 불가</span></td><td>근거 없음</td><td class="grade">–</td></tr>
+        <tr><td class="k">K-F-05</td><td>저궤도 위성은 국내 수요가 제한적</td><td>위성 서비스 국내 진입으로 수요 재평가 필요</td><td><span class="pill p-new">신규 결론</span></td><td>전제</td><td class="grade">B</td></tr>
+      </tbody>
+    </table>
+    <figcaption>형식 설명용 예시 행입니다. 실제 판정과 문장은 시스템이 실행된 뒤 채워집니다. 상단에는 결론 대조표, 부록에는 장·절 단위의 본문 대조표가 붙고, 한글(HWPX)과 웹(HTML) 두 가지로 나옵니다.</figcaption>
+  </figure>
+  <ul class="pts">
+    <li>보고서 첫 장은 <b>"결론 N개 중 동일 a · 수정 b · 뒤집힘 c · 판정 불가 d"</b> 요약으로 시작합니다.</li>
+    <li>모든 숫자에는 출처와 조회일, 그리고 증거 등급이 붙습니다. <span class="grade">A</span> 공식 통계·법령·학술지, <span class="grade">B</span> 언론·업계 보고서, <span class="grade">C</span> 추정·시뮬레이션.</li>
+  </ul>
+</section>
+
+<!-- 7 -->
+<section class="scene">
+  <div class="num">07 · 어떻게 만들었나</div>
+  <h2>AI 일꾼들에게 역할과 규칙을 주고, 숫자는 프로그램이 맡게 했습니다.</h2>
+  <figure>
+    <svg viewBox="0 0 900 400" role="img" aria-label="시스템 구성도. 웹 화면에서 실행하면 Claude Code 하네스가 보고서 PDF를 받아 규칙과 단계별 작업 지시서, 역할별 AI 일꾼으로 처리한다. 근거는 논문·통계·법령·뉴스 API에서 출처와 등급을 붙여 가져오고, 사건과 근거는 공유 지식베이스에 쌓여 다음 보고서가 재사용한다. 결과는 신구 대조표와 현행화 보고서로 나온다.">
+      <defs><marker id="ar7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <!-- UI -->
+      <rect x="250" y="16" width="400" height="44" rx="8" class="box"/>
+      <text x="450" y="35" text-anchor="middle" class="tb">웹 화면 (내 PC에서 실행)</text>
+      <text x="450" y="52" text-anchor="middle" class="ts">보고서 선택 · 층과 옵션 선택 · 실행 · 결과 열람</text>
+      <g style="color:var(--accent)"><line x1="450" y1="62" x2="450" y2="88" class="lna" marker-end="url(#ar7)"/></g>
+      <text x="470" y="80" class="ts">실행 지시</text>
+      <!-- input -->
+      <rect x="30" y="150" width="130" height="60" rx="8" class="box"/>
+      <text x="95" y="175" text-anchor="middle" class="tb">보고서 PDF</text>
+      <text x="95" y="195" text-anchor="middle" class="ts">어떤 보고서든</text>
+      <g style="color:var(--muted)"><line x1="162" y1="180" x2="238" y2="180" class="ln" marker-end="url(#ar7)"/></g>
+      <text x="200" y="170" text-anchor="middle" class="ts">투입</text>
+      <!-- harness -->
+      <rect x="245" y="92" width="410" height="176" rx="10" class="boxa"/>
+      <text x="450" y="116" text-anchor="middle" class="tb">Claude Code 하네스</text>
+      <rect x="262" y="128" width="376" height="34" rx="6" class="box"/>
+      <text x="450" y="150" text-anchor="middle" class="t">규칙집 · 출처 없는 숫자 금지, 작성자와 검토자 분리</text>
+      <rect x="262" y="170" width="184" height="42" rx="6" class="box"/>
+      <text x="354" y="188" text-anchor="middle" class="t">단계별 작업 지시서 9개</text>
+      <text x="354" y="204" text-anchor="middle" class="ts">투입 → 분류 → 사슬 → 0·1·2층 → 보고서</text>
+      <rect x="454" y="170" width="184" height="42" rx="6" class="box"/>
+      <text x="546" y="188" text-anchor="middle" class="t">역할별 AI 일꾼 11명</text>
+      <text x="546" y="204" text-anchor="middle" class="ts">조사 · 검증 · 블라인드 · 비교 · 검토</text>
+      <rect x="262" y="220" width="376" height="36" rx="6" class="box"/>
+      <text x="450" y="243" text-anchor="middle" class="t">계산 프로그램 · 백테스트 · 스키마 검증 · 문서 렌더 (사람이 재현 가능)</text>
+      <!-- sources -->
+      <rect x="690" y="92" width="190" height="112" rx="8" class="box"/>
+      <text x="785" y="116" text-anchor="middle" class="tb">근거 소스</text>
+      <text x="785" y="138" text-anchor="middle" class="t">논문 API · 통계 · 법령</text>
+      <text x="785" y="156" text-anchor="middle" class="t">의안 · 뉴스 · 웹 검색</text>
+      <text x="785" y="178" text-anchor="middle" class="ts">무료 15종 + 유료 9종</text>
+      <text x="785" y="194" text-anchor="middle" class="ts">키는 내 PC의 .env에만</text>
+      <g style="color:var(--muted)"><line x1="688" y1="150" x2="660" y2="150" class="ln" marker-end="url(#ar7)"/></g>
+      <text x="672" y="138" text-anchor="middle" class="ts">출처·등급</text>
+      <!-- KB -->
+      <rect x="245" y="300" width="410" height="52" rx="8" class="box" style="stroke-dasharray:5 4"/>
+      <text x="450" y="322" text-anchor="middle" class="tb">공유 지식베이스</text>
+      <text x="450" y="341" text-anchor="middle" class="ts">사건 · 근거 · 도메인 정보를 쌓아 두고, 다음 보고서가 다시 씀</text>
+      <g style="color:var(--muted)">
+        <line x1="420" y1="270" x2="420" y2="296" class="ln" marker-end="url(#ar7)"/>
+        <line x1="480" y1="298" x2="480" y2="272" class="ln" marker-end="url(#ar7)"/>
+      </g>
+      <text x="395" y="288" text-anchor="end" class="ts">기록</text>
+      <text x="505" y="288" class="ts">먼저 읽음</text>
+      <!-- output -->
+      <rect x="690" y="228" width="190" height="80" rx="8" class="boxa"/>
+      <text x="785" y="252" text-anchor="middle" class="tb">산출물</text>
+      <text x="785" y="274" text-anchor="middle" class="t">신구 대조표 · 현행화 보고서</text>
+      <text x="785" y="294" text-anchor="middle" class="ts">한글(HWPX) + 웹(HTML)</text>
+      <g style="color:var(--accent)"><line x1="657" y1="240" x2="686" y2="256" class="lna" marker-end="url(#ar7)"/></g>
+      <text x="450" y="388" text-anchor="middle" class="ts">"하네스"는 AI가 정해진 절차와 규칙 안에서만 일하도록 잡아 주는 틀입니다</text>
+    </svg>
+    <figcaption>Claude Code라는 AI 작업 환경 위에, 이 일에 맞는 규칙집과 단계별 작업 지시서, 역할별 AI 일꾼을 얹었습니다. 판단은 AI가, 계산과 검증은 프로그램이 맡아 결과를 사람이 재현할 수 있게 했습니다.</figcaption>
+  </figure>
+  <ul class="pts">
+    <li><b>작업 지시서(스킬)</b>는 "이 단계에서 무엇을 읽고 무엇을 남겨라"를 적은 문서입니다. 사람이 읽고 고칠 수 있습니다.</li>
+    <li><b>AI 일꾼(에이전트)</b>은 역할이 하나씩입니다. 사건 조사, 논문 스캔, 정책 추적, 전망 검증, 블라인드 재수행, 결론 비교, 최종 검토.</li>
+    <li>근거 수집은 한 통로로만 합니다. 어떤 출처에서 언제 가져왔고 등급이 무엇인지 빠짐없이 남기기 위해서입니다.</li>
+  </ul>
+</section>
+
+<!-- 8 -->
+<section class="scene">
+  <div class="num">08 · 신뢰의 선</div>
+  <h2>AI가 설문을 대신하거나 실험을 한 척하지 않습니다.</h2>
+  <div class="tiles">
+    <div class="tile"><div class="k">R1</div><h3>즉시 재수행</h3><p>공개 통계, 법령, 논문, 모형 재계산으로 지금 바로 결론을 다시 낼 수 있는 경우.</p></div>
+    <div class="tile"><div class="k">R2</div><h3>대체 재수행</h3><p>원래 데이터는 없지만 이후 나온 공식 조사나 유사 자료로 대신 검증할 수 있는 경우.</p></div>
+    <div class="tile"><div class="k">R3</div><h3>설계서만</h3><p>설문·실험·실측이 있어야 하는 경우. "판정 불가"로 두고 재설문·재실험 설계서를 붙입니다.</p></div>
+  </div>
+  <ul class="pts">
+    <li>가상의 응답자로 설문을 흉내 내는 <b>합성 시뮬레이션</b>은 옵션이며 기본은 꺼져 있습니다. 켜더라도 C등급과 "시뮬레이션" 표기가 강제됩니다.</li>
+    <li>출처 URL이 없는 숫자는 프로그램이 거부합니다. 최종 보고서는 작성한 AI가 아닌 별도의 검토 AI를 통과해야 나옵니다.</li>
+  </ul>
+</section>
+
+<!-- 9 -->
+<section class="scene">
+  <div class="num">09 · 현재 위치</div>
+  <h2>지금까지 된 것과 앞으로 할 것</h2>
+  <div class="status">
+    <div class="tile done"><h3>완료</h3><ul>
+      <li>기관 연구보고서 164건 목록 확보, 파일럿 7편 선정·다운로드</li>
+      <li>시스템 설계 확정 (결론 재도출 중심, 세 층, 블라인드 재수행, 신구 대조표, 웹 화면)</li>
+      <li>무료·유료 근거 소스 24종 정리와 발급 가이드</li>
+      <li>첫 단계 구현 계획 (골격·근거 수집·검증 도구)</li>
+    </ul></div>
+    <div class="tile next"><h3>다음 (약 10 작업일)</h3><ul>
+      <li>골격과 근거 수집 도구 → 보고서 읽기와 사슬 복원</li>
+      <li>0층 즉시 현행화로 7편 전부 잠정 판정</li>
+      <li>웹 화면 → 1층 근거 갱신 → 2층 블라인드 재수행과 최종 판정</li>
+      <li>시연: 7편 0층 화면 + 5G 시장전망 보고서 2층 결과</li>
+    </ul></div>
+  </div>
+</section>
+
+<footer>파일럿 설계 문서: docs/superpowers/specs/2026-09-15-kca-refresh-harness-design.md · 첫 구현 계획: docs/superpowers/plans/2026-09-15-p0-foundation.md</footer>
+</div>
+
+</html>

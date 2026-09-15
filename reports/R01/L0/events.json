@@ -1,0 +1,432 @@
+[
+  {
+    "event_id": "E-spectrum-2023-05-skt_28ghz_cancel",
+    "domain": "spectrum",
+    "date": "2023-05-31",
+    "title": "SKT 5G 28㎓ 대역 할당취소 처분 확정 — 이통3사 모두 28㎓ 철수, 신규사업자용 할당공고로 전환",
+    "summary": "과기정통부는 2023.5.31 SKT의 5G 28㎓ 대역 할당취소 처분을 확정했다(5.12 사전통지, 5.23 청문). 사유는 할당조건(1만5,000장치 구축) 미이행이며, 지하철 노선은 최초 할당기간 만료일인 11.30까지 예외적으로 사용을 허용했다. 2022.12 KT·LGU+ 취소에 이어 이통3사 모두 28㎓에서 철수했고, 정부는 신규사업자 진입으로 방향을 바꿔 2023.7.20 28㎓ 할당을 공고했다(언론 보도 기준 전국 단위 최저경쟁가격 약 740억원, 800㎒폭+앵커 20㎒, 이용기간 5년, 3년차 6천대 구축 의무).",
+    "affected_indicators": [
+      "28㎓ 대역 구축 장치 수",
+      "5G mmWave 서비스 가용성",
+      "주파수 할당대가·경제성 전제",
+      "신규 이동통신 사업자 진입"
+    ],
+    "sources": [
+      {
+        "url": "https://eiec.kdi.re.kr/policy/materialView.do?num=239224&pp=20&topic=P",
+        "title": "과기정통부, 에스케이티(SKT)에 5세대(5G) 28㎓ 대역 할당취소 처분 실시 (과기정통부 보도자료, KDI 경제정보센터 게재, 2023-05-31)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://eiec.kdi.re.kr/policy/materialView.do?num=241010",
+        "title": "과기정통부, 28㎓ 대역 주파수 할당 공고 (2023-07-20)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://www.thelec.kr/news/articleView.html?idxno=21351",
+        "title": "과기정통부, SKT 5G 28GHz 할당취소 확정…지하철 와이파이는? (디일렉, 2023-05-31)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://zdnet.co.kr/view/?no=20230711150051",
+        "title": "제4이통 28GHz 주파수 최저경쟁가 740억원 (ZDNet Korea, 2023-07-11)",
+        "retrieved_at": "2026-09-15"
+      }
+    ],
+    "grade": "A"
+  },
+  {
+    "event_id": "E-network_5g6g-2023-08-oran_policy_oria",
+    "domain": "network_5g6g",
+    "date": "2023-08-16",
+    "title": "오픈랜 활성화 정책 추진방안 발표 및 오픈랜 인더스트리 얼라이언스(ORIA) 출범",
+    "summary": "과기정통부는 2023.8.16 오픈랜 활성화 정책 추진방안을 발표하고 ORIA 출범 선포식을 열었다. 3대 전략은 전주기 상용화 지원 인프라 구축, 기술·표준 경쟁력 확보, 민·관 협력 기반 생태계 조성이며, 판교 테스트베드에 글로벌 제조사 장비 도입, 오픈랜 장비 국제인증체계(K-OTIC) 구축, 플러그페스트 연 2회 개최를 담았다. ORIA 운영위원은 SKT·KT·LGU+·삼성전자·LG전자·노키아·HFR·ETRI·NIA·TTA·IITP이며 SKT가 초대 대표의장을 맡았다. 정부는 오픈랜 시장이 2021년 12억달러에서 2026년 64억달러로 성장할 것으로 전망했다.",
+    "affected_indicators": [
+      "네트워크 장비 공급구조(벤더 종속)",
+      "5G·6G 망 구축비용(CAPEX) 구조",
+      "오픈랜 장비 시장 규모"
+    ],
+    "sources": [
+      {
+        "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148919026",
+        "title": "정부, 네트워크 기술경쟁 선도할 '오픈랜' 생태계 구축 지원 나선다 (대한민국 정책브리핑, 2023-08-16)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://news.mt.co.kr/mtview.php?no=2023081516100593609",
+        "title": "특정기업 벗어난 '오픈랜' 본격 시동…국내 생태계 구축한다 (머니투데이, 2023-08-15)",
+        "retrieved_at": "2026-09-15"
+      }
+    ],
+    "grade": "A"
+  },
+  {
+    "event_id": "E-network_5g6g-2023-08-6g_rnd_feasibility_pass",
+    "domain": "network_5g6g",
+    "date": "2023-08-23",
+    "title": "차세대 네트워크(6G) 산업 기술개발사업 예비타당성 조사 통과 (총 4,407.3억원)",
+    "summary": "2023.8.23 국가연구개발사업평가 총괄위원회에서 6G 산업 기술개발사업이 총사업비 4,407.3억원(국비 3,731.7억원), 사업기간 2024~2028년으로 예타를 통과했다. Upper-mid 대역(7~24GHz) 기술, 커버리지 확대, SW 중심 네트워크, 에너지 절감, 공급망 안보 등 5대 분야를 개발하며, 2026년 Pre-6G 기술 시연 개최와 6G 국제표준특허 점유율 30% 이상 확보를 목표로 한다.",
+    "affected_indicators": [
+      "6G 상용화·표준화 시점 전제",
+      "정부 네트워크 R&D 투자 규모",
+      "6G 후보 주파수 대역(Upper-mid)"
+    ],
+    "sources": [
+      {
+        "url": "https://www.korea.kr/briefing/pressReleaseView.do?newsId=156586549",
+        "title": "[보도참고] 차세대 네트워크(6G) 산업 기술개발사업 예비타당성 조사 통과 (과기정통부 보도자료, 2023-08-23)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://www.bioin.or.kr/board/division/321440",
+        "title": "차세대 네트워크(6G) 산업 기술개발사업 예비타당성 조사 통과 (BioIN 게재본, 2023-08-23)",
+        "retrieved_at": "2026-09-15"
+      }
+    ],
+    "grade": "A"
+  },
+  {
+    "event_id": "E-spectrum-2023-12-wrc23_6g_candidate_bands",
+    "domain": "spectrum",
+    "date": "2023-12-15",
+    "title": "WRC-23 폐막 — 한국 제안 6G 후보대역 3개(총 2.3㎓폭) 채택, 상위 6㎓ 대역 IMT 지정",
+    "summary": "2023.11.20~12.15 두바이에서 열린 ITU 세계전파통신회의(WRC-23)에서 한국이 제안한 6G 후보대역 4개 중 4.4-4.8㎓(일부), 7.125-8.4㎓(일부), 14.8-15.35㎓ 3개 대역, 총 2.3㎓폭이 최종 채택됐다. 한국 대표단은 과기정통부·외교부·국방부·국립전파연구원·삼성전자 등 민·관 49명으로 23개 의제에 참여했다. 상위 6㎓ 대역(6425-7125㎒)의 IMT 지정도 이뤄져 6G 주파수 확보 경로가 구체화됐다.",
+    "affected_indicators": [
+      "6G 후보 주파수 대역",
+      "중장기 주파수 공급 로드맵",
+      "상위 6㎓ 대역 정책(비면허 vs IMT)"
+    ],
+    "sources": [
+      {
+        "url": "https://overseas.mofa.go.kr/ch-geneva-ko/brd/m_20592/view.do?seq=270",
+        "title": "ITU 세계전파통신회의(WRC-23), 6G 후보 주파수 발굴 성공 (주제네바 대한민국 대표부, 2023-12-26)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://www.thelec.kr/news/articleView.html?idxno=24762",
+        "title": "6G, 주파수 후보대역 확정…韓, 3개 대역 제안 (디일렉)",
+        "retrieved_at": "2026-09-15"
+      }
+    ],
+    "grade": "A"
+  },
+  {
+    "event_id": "E-network_5g6g-2024-01-eum5g_54_sites",
+    "domain": "network_5g6g",
+    "date": "2024-01-03",
+    "title": "이음5G(5G 특화망) 2023년 말 30개 기업·기관 54개소로 확대 — 1년 만에 2배",
+    "summary": "과기정통부는 2023년 말 기준 이음5G 이용이 전국 30개 기업·기관 54개소로 전년 대비 2배 이상 늘었다고 발표했다. 2022년 제조·의료·물류 등 9개 분야 26개소에서 2023년 자동차·조선·철강·교육 등 14개 분야 54개소로 확대됐다. 정부는 제출서류·신청절차 간소화, 기간통신사업 등록 시 외국인 지분 제한 제외 등 제도를 개선했고, 15건의 실증사업과 이음5G 스몰셀 3Gbps 기술개발을 완료했다.",
+    "affected_indicators": [
+      "이음5G 사업자(기업·기관) 수",
+      "이음5G 구축 개소 수",
+      "이음5G 적용 산업 분야 수"
+    ],
+    "sources": [
+      {
+        "url": "https://eiec.kdi.re.kr/policy/materialView.do?num=246793&pg=1&pp=40",
+        "title": "이음5G, 지난 1년간 2배로 확대 (과기정통부 전파정책국 보도자료, KDI 경제정보센터 게재, 2024-01-03)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://m.ddaily.co.kr/page/view/2024010316235677091",
+        "title": "이음5G 사업자 30곳·54개소로 확대…\"1년 만에 2배 늘어\" (디지털데일리, 2024-01-03)",
+        "retrieved_at": "2026-09-15"
+      }
+    ],
+    "grade": "A"
+  },
+  {
+    "event_id": "E-spectrum-2024-07-stagex_select_and_cancel",
+    "domain": "spectrum",
+    "date": "2024-07-31",
+    "title": "제4이동통신 스테이지엑스 — 28㎓ 4,301억원 낙찰(1.31) 후 주파수 할당대상법인 선정 취소 확정(7.31)",
+    "summary": "2024.1.25~31 28㎓ 대역 경매(1단계 50라운드 후 2단계 밀봉입찰)에서 스테이지엑스가 4,301억원에 낙찰돼 할당대상법인으로 선정됐다. 그러나 필수 요건인 자본금 2,050억원 납입이 이행되지 않았고(납입액 500억원 미만), 5% 이상 주요주주 6개 중 스테이지파이브만 납입하는 등 주주구성이 신청서와 크게 달라 과기정통부는 6.14 선정 취소 방침을 밝히고 행정절차법상 청문을 거쳐 7.31 취소 처분을 확정했다. 납부된 할당대가 430억1,000만원은 반환됐으며, 정부는 연구반을 구성해 주파수 할당 제도 개선과 신규사업자 정책을 재검토하기로 했다.",
+    "affected_indicators": [
+      "이동통신 사업자 수(경쟁구조)",
+      "28㎓ 대역 활용 계획",
+      "주파수 할당대가·경매 제도"
+    ],
+    "sources": [
+      {
+        "url": "https://www.msit.go.kr/bbs/view.do?sCode=user&nttSeqNo=3184792&pageIndex=&searchTxt=&searchOpt=ALL&bbsSeqNo=94&mId=113&mPid=238",
+        "title": "'스테이지엑스' 이동통신용 주파수 할당대상법인 선정 취소 처분 확정 (과기정통부 보도자료, 2024-07-31)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://www.korea.kr/news/policyNewsView.do?newsId=156635782",
+        "title": "(주)스테이지엑스 주파수 할당 관련 발표 (대한민국 정책브리핑, 2024-06-14)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://zdnet.co.kr/view/?no=20240131215509",
+        "title": "제4이통사에 스테이지엑스...28GHz 주파수 4301억원에 낙찰 (ZDNet Korea, 2024-01-31)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://www.etnews.com/20240731000269",
+        "title": "정부, 스테이지엑스 제4이통 취소 확정 (전자신문, 2024-07-31)",
+        "retrieved_at": "2026-09-15"
+      }
+    ],
+    "grade": "A"
+  },
+  {
+    "event_id": "E-spectrum-2024-09-korea_spectrum_plan_2024_2027",
+    "domain": "spectrum",
+    "date": "2024-09-01",
+    "title": "「대한민국 스펙트럼 플랜('24~'27)」 발표 — 5G 추가 주파수 300㎒+α 경쟁 공급 검토, SKT 3.7㎓ 20㎒ 단독 할당 미실시",
+    "summary": "과기정통부는 2024.9.1 스펙트럼 플랜을 발표했다. 5G 추가 공급 후보로 3.7~4.0㎓ 300㎒, 3.3~3.4㎓ 100㎒, 2.3㎓ 90㎒, 2.6㎓ 최대 190㎒, 저대역(700㎒·800㎒·1.8㎓) 최대 40㎒를 제시하고, SKT가 요청한 3.7㎓ 20㎒ 단독 할당 대신 복수 사업자가 경쟁하는 방식으로 공급하기로 했다. 2025년 6월까지 3G·LTE 재할당 정책방향을 수립한 뒤 연계 논의하고 필요 시 2025년 하반기 공급을 검토하며, 6G 후보대역(4.4~4.8㎓, 7.125~8.4㎓, 14.8~15.35㎓)을 발굴하고 미이용 160㎒폭과 신규 438㎒폭을 디지털 혁신 서비스용으로 개방한다. 3G 조기 종료(2026년 12월 이전) 가능성도 언급됐다.",
+    "affected_indicators": [
+      "5G 추가 주파수 공급 시기·대역폭",
+      "3.7㎓ 대역 할당 방식",
+      "6G 후보대역",
+      "3G·LTE 재할당 정책"
+    ],
+    "sources": [
+      {
+        "url": "https://www.korea.kr/briefing/pressReleaseView.do?newsId=156648320",
+        "title": "과기정통부, 「대한민국 스펙트럼 계획」 발표 (과기정통부 보도자료, 2024-09-01)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://zdnet.co.kr/view/?no=20240901144214",
+        "title": "5G 주파수 300MHz+α 공급...내년 하반기 결정 (ZDNet Korea, 2024-09-01)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://www.ajunews.com/view/20240901103123844",
+        "title": "과기정통부 \"2026년 12월 이전 3G 조기종료 가능…내년 6월 세부안 발표\" (아주경제, 2024-09-01)",
+        "retrieved_at": "2026-09-15"
+      }
+    ],
+    "grade": "A"
+  },
+  {
+    "event_id": "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites",
+    "domain": "network_5g6g",
+    "date": "2024-12-18",
+    "title": "이음5G 도입 3년 — 36개 사업자 74개소 구축, 스마트공장·물류·의료로 확산",
+    "summary": "2021.12 네이버클라우드의 첫 할당 이후 3년 만에 이음5G 구축 사업자는 전국 36개 기업·기관 74개소로 늘었다(2023년 말 30개 기관 54개소). 스마트제조·물류·의료·중대재해 예방·자율주행 등에 활용되며, 과기정통부 송상훈 정보통신정책실장은 이음5G를 AI·디지털 전환을 가속하는 핵심 인프라로 평가했다. 4.7㎓ 또는 28㎓ 주파수를 특정 지역에서만 이용하는 구조는 유지됐다.",
+    "affected_indicators": [
+      "이음5G 사업자 수",
+      "이음5G 구축 개소 수",
+      "제조(스마트공장) 분야 특화망 확산"
+    ],
+    "sources": [
+      {
+        "url": "https://www.etnews.com/20241218000116",
+        "title": "이음5G 도입 3년…스마트공장·의료 등 36개 사업자 혁신인프라 지원 (전자신문, 2024-12-18)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://m.ddaily.co.kr/page/view/2024121717461528597",
+        "title": "\"와이파이와 다른 '이음5G'만의 가치 알려야\" (디지털데일리, 2024-12-17)",
+        "retrieved_at": "2026-09-15"
+      }
+    ],
+    "grade": "B"
+  },
+  {
+    "event_id": "E-spectrum-2025-01-new_entrant_policy_reform",
+    "domain": "spectrum",
+    "date": "2025-01-15",
+    "title": "신규사업자(제4이통) 정책 연구반 결과 발표 — 정부 지정 주파수 방식 폐지, 자본금 요건 상향, 할당대가 일시납 원칙",
+    "summary": "과기정통부는 2025.1.15 스테이지엑스 사례 이후 운영한 연구반 논의결과를 발표했다. 정부가 대역과 사업모델을 정해 추진하던 방식 대신 시장 수요 기반으로 사업자가 가용주파수 범위 내에서 원하는 대역을 제안하고 할당공고를 제안할 수 있는 절차를 신설한다. 전파법 시행령을 개정해 최저경쟁가격 이상의 자본금을 갖춘 자만 경매에 참여하도록 하고, 할당대가는 전액 일시 납부를 원칙으로 하되 분할납부 시 주주·투자자의 법적 구속력 있는 보증서를 요구한다. 알뜰폰 경쟁력 강화 방안도 병행 발표됐다.",
+    "affected_indicators": [
+      "신규 이동통신 사업자 진입 가능성",
+      "28㎓ 대역 정책 방향",
+      "주파수 경매 참여요건·할당대가 납부 제도"
+    ],
+    "sources": [
+      {
+        "url": "https://m.korea.kr/briefing/policyBriefingView.do?newsId=156670427",
+        "title": "알뜰폰 경쟁력 강화 방안 및 신규사업자 정책 관련 연구반 논의결과 (과기정통부 브리핑, 2025-01-15)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://zdnet.co.kr/view/?no=20250115114009",
+        "title": "제4이통 자본금 문턱 높인다...스테이지엑스 사례 방지 (ZDNet Korea, 2025-01-15)",
+        "retrieved_at": "2026-09-15"
+      }
+    ],
+    "grade": "A"
+  },
+  {
+    "event_id": "E-network_5g6g-2025-02-eum5g_smart_factory_program",
+    "domain": "network_5g6g",
+    "date": "2025-02-19",
+    "title": "2025년 부처협업형(이음5G) 스마트공장 구축 지원사업 공고 — 과기정통부·중기부 연계 지원 개시",
+    "summary": "2025.2.19 공고된 부처협업형 스마트공장 구축 지원사업은 중기부의 스마트공장 구축 지원과 과기정통부의 이음5G 기업지원(이음5G 사업자 교육 등)을 연계해 이음5G 기반 스마트공장을 구축하려는 국내 중소·중견 제조기업을 지원한다. 신청기간은 2025.2.14~3.14, 수행기관은 중소기업기술혁신협회이며 스마트공장 사업관리시스템으로 온라인 접수한다. 지원 기업 수와 예산은 공고문에 명시되지 않았다.",
+    "affected_indicators": [
+      "제조 분야 이음5G 도입 기업 수",
+      "정부 특화망 지원사업 구조(실증→부처협업 확산)",
+      "스마트공장 5G 수요"
+    ],
+    "sources": [
+      {
+        "url": "https://www.bizinfo.go.kr/sii/siia/selectSIIA200Detail.do?pblancId=PBLN_000000000104960",
+        "title": "2025년 부처협업형(이음5G(5G특화망)) 스마트공장 구축 지원사업 공고 (기업마당, 2025-02-19)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://www.industrynews.co.kr/news/articleView.html?idxno=49546",
+        "title": "이음5G, 스마트팩토리 고도화 및 물류 자동화 지원… 정부 '본격 확산' 추진 (인더스트리뉴스)",
+        "retrieved_at": "2026-09-15"
+      }
+    ],
+    "grade": "A"
+  },
+  {
+    "event_id": "E-network_5g6g-2025-05-leo_satellite_cross_border_approval_starlink_launch",
+    "domain": "network_5g6g",
+    "date": "2025-05-30",
+    "title": "저궤도 위성통신 국경 간 공급 협정 3건 승인(스타링크·원웹) — 2025.12.4 스타링크 국내 서비스 개시",
+    "summary": "과기정통부는 2025.5.30 스타링크코리아–스페이스X, 한화시스템–유텔샛원웹, 케이티샛–유텔샛원웹이 체결한 국경 간 공급 협정 3건을 전기통신사업법에 따라 모두 승인했다(서비스의 안정적 제공 가능성, 국내 통신시장 경쟁 영향, 이용자 보호 심사). 남은 절차는 전파법상 이용자 단말 적합성평가였다. 스타링크코리아는 2023.5.12 기간통신사업자로 등록된 바 있으며, 2025.12.4 국내 서비스를 개시했다(가정용 월 8만7,000원 데이터 무제한, 언론 보도 기준). 이로써 국내 통신시장에 저궤도 위성 사업자가 실제 진입했다.",
+    "affected_indicators": [
+      "저궤도 위성통신 국내 공급 사업자 수",
+      "통신시장 경쟁구조(비지상망)",
+      "도서·해상·항공 커버리지 대체 수단"
+    ],
+    "sources": [
+      {
+        "url": "https://www.korea.kr/briefing/pressReleaseView.do?newsId=156691769",
+        "title": "스페이스X, 원웹 위성통신 서비스의 국내 공급에 관한 국경 간 공급 협정 승인 (과기정통부 보도자료, 2025-05-30)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://eiec.kdi.re.kr/policy/materialView.do?num=238585&pg=&pp=20&topic=L",
+        "title": "스타링크코리아 기간통신사업자 등록 (과기정통부 보도자료, KDI 게재, 2023-05-12)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://zdnet.co.kr/view/?no=20250530102517",
+        "title": "스타링크·원웹 국내 서비스 초읽기...정부, 국경간 공급협정 승인 (ZDNet Korea, 2025-05-30)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://science.ytn.co.kr/mobile/program/view_today.php?s_mcd=0082&key=202512041110272115",
+        "title": "한국에서도 스타링크 된다...오늘 본격 개통 (YTN 사이언스, 2025-12-04)",
+        "retrieved_at": "2026-09-15"
+      }
+    ],
+    "grade": "A"
+  },
+  {
+    "event_id": "E-network_5g6g-2025-06-3gpp_rel20_6g_study_start",
+    "domain": "network_5g6g",
+    "date": "2025-06",
+    "title": "3GPP Release 20에서 6G 연구(Study) 공식 착수 — 2025.3 인천 6G 워크숍(1,600명 이상) 거쳐 6월 플래너리 승인",
+    "summary": "3GPP는 2025.3.10~11 인천에서 SA·RAN·CT 3개 TSG 의장이 공동 주재한 6G 워크숍(1,600명 이상 참석)을 열어 6G 연구 방향을 정한 뒤, 2025년 6월 프라하 플래너리(TSG#108)에서 Release 20의 6G 연구 범위를 승인하고 Rel-20 Stage 1을 동결했다. 6G 무선·코어 기술 연구는 2025년 8월부터 18~21개월간 진행되며, Release 21에서 첫 6G 규격을 만들어 2028년 말 완료·2030년 상용 배치를 목표로 한다(에릭슨 전망). Release 19는 5G-Advanced 2단계로 마무리됐다.",
+    "affected_indicators": [
+      "6G 표준화 일정(Rel-20/21)",
+      "5G-Advanced 진화 일정",
+      "6G 상용화 시점(2030년)"
+    ],
+    "sources": [
+      {
+        "url": "https://www.3gpp.org/component/content/article/6gworkshop-2025?catid=67&Itemid=101",
+        "title": "3GPP workshop on 6G (3GPP, Incheon, 2025-03-10~11)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://www.3gpp.org/news-events/3gpp-news/sa-rel20",
+        "title": "Rel-20 Planning and Progress in TSG SA (3GPP)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://www.ericsson.com/en/blog/2025/6/blog-6g-standardization-technology-step-to-publish",
+        "title": "6G standardization: The technology realization step begins (Ericsson, 2025-06)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://www.qualcomm.com/news/onq/2025/06/3gpp-release-20-completing-5g-advanced-evolution-preparing-for-global-6g-standardization",
+        "title": "3GPP Release 20: Completing the 5G Advanced evolution and preparing for global 6G standardization (Qualcomm, 2025-06)",
+        "retrieved_at": "2026-09-15"
+      }
+    ],
+    "grade": "A"
+  },
+  {
+    "event_id": "E-spectrum-2025-12-reallocation_policy_370mhz_5g_sa",
+    "domain": "spectrum",
+    "date": "2025-12-10",
+    "title": "이동통신 주파수 재할당 세부 정책방안 확정 — 3G·LTE 370㎒폭 전체 재할당, 대가 14.8% 인하(약 3조1,000억원), 5G SA 전환 의무화",
+    "summary": "과기정통부는 2025.12.10 2026년 이용기간이 만료되는 3G·LTE 주파수 370㎒폭 전체를 재할당하는 세부 정책방안을 확정했다. 1.8㎓ 20㎒·2.6㎓ 100㎒는 3년, 나머지 250㎒는 5년 이용기간이다. 재할당대가는 기준가격 약 3조6,000억원에서 14.8% 낮춘 약 3조1,000억원을 기본으로 하고, 5G 실내 무선국을 1만국 또는 2만국 이상 신규 구축하면 추가 인하해 2만국 이상 시 약 2조9,000억원 수준(언론 보도 기준)이 된다. 기구축 5G 무선국은 2026년 말까지 5G 단독모드(SA) 코어에 연결해야 하며, 2026년 6월 만료 대역은 12월 중 재할당을 신청해야 한다.",
+    "affected_indicators": [
+      "주파수 재할당 대가(주파수 경제성)",
+      "5G SA 전환 시점",
+      "3G·LTE 주파수 회수·재배치",
+      "5G 실내 무선국 수"
+    ],
+    "sources": [
+      {
+        "url": "https://www.korea.kr/news/policyNewsView.do?newsId=156734418",
+        "title": "이동통신 주파수 재할당 세부 정책방안 (과기정통부, 대한민국 정책브리핑, 2025-12-10)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://www.asiae.co.kr/article/2025121013594859477",
+        "title": "내년 만료 3G·LTE 주파수, 재할당대가 15% 낮춘다 (아시아경제, 2025-12-10)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://www.etnews.com/20250630000249",
+        "title": "과기정통부 370㎒ 폭 주파수 재할당 확정…대가논의 불붙을 듯 (전자신문, 2025-06-30)",
+        "retrieved_at": "2026-09-15"
+      }
+    ],
+    "grade": "A"
+  },
+  {
+    "event_id": "E-network_5g6g-2026-01-5g_subscribers_38_6m_growth_stall",
+    "domain": "network_5g6g",
+    "date": "2026-01",
+    "title": "5G 가입자 3,860만 8,413명(2026.1월, 알뜰폰 포함) — 전월 대비 0.4% 증가, 증가세 둔화·집계 기준 논란",
+    "summary": "과기정통부 무선통신서비스 가입 현황을 인용한 보도에 따르면 2026년 1월 기준 5G 스마트폰 가입(알뜰폰 포함)은 38,608,413명으로 전월 38,459,644명 대비 0.4% 증가에 그쳤고, 5G 트래픽은 1,237,983TB(전월비 -5.8%), 가입자당 트래픽은 33.65GB(-6.2%)였다. 5G 요금제 기준 가입은 2023.11 32,254,450명 → 2023.12 32,242,415명(-0.04%) → 2024.1 32,255,988명으로 이미 정체 국면에 들어갔으며, 단말 기준 집계가 LTE 요금제를 쓰는 5G 단말 이용자까지 포함해 실제 이용을 과대 반영한다는 지적이 제기됐다. 과기정통부는 매월 '유·무선통신서비스 가입 현황 및 무선데이터 트래픽 통계'를 게시하고 있다.",
+    "affected_indicators": [
+      "5G 가입자 수",
+      "5G 가입 증가율(월간)",
+      "5G 트래픽·가입자당 트래픽",
+      "5G 시장 포화 전제"
+    ],
+    "sources": [
+      {
+        "url": "https://m.ddaily.co.kr/page/view/2026032414550870711",
+        "title": "국내 5G 가입자, 정말 3860만명일까? [IT클로즈업] (디지털데일리, 2026-03-24)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://www.msit.go.kr/bbs/list.do?mPid=74&mId=99",
+        "title": "과학기술정보통신부 통계정보 — 유·무선통신서비스 가입 현황 및 무선데이터 트래픽 통계(월별 게시)",
+        "retrieved_at": "2026-09-15"
+      }
+    ],
+    "grade": "B"
+  },
+  {
+    "event_id": "E-network_5g6g-2026-08-ai_era_network_investment_council_5g_sa",
+    "domain": "network_5g6g",
+    "date": "2026-08-27",
+    "title": "'AI 시대 통신망 투자 촉진을 위한 민·관 협의체' 발족 — 12월 5G SA 전국 개통 추진, 연내 차세대 통신망 투자·규제 개선 종합대책",
+    "summary": "과기정통부는 2026.8.27 SKT·KT·LGU+와 'AI 시대 통신망 투자 촉진을 위한 민·관 협의체' 발족 회의를 열고 5G SA 상용화 추진 현황과 AI-RAN·6G·해저케이블·위성통신·AI 데이터센터 등 차세대 통신망 투자와 규제·세제 개선을 논의했다. 정부는 12월 5G SA 전국 개통을 추진하고 연내 '차세대 통신망 투자 및 규제 개선 종합대책'을 발표할 계획이다. 통신3사 설비투자(CAPEX)는 2019년 9조6,000억원 → 2021년 8조2,000억원 → 2023년 7조6,000억원 → 2025년 6조200억원으로 감소 추세다(뉴스토마토 보도).",
+    "affected_indicators": [
+      "통신3사 설비투자(CAPEX)",
+      "5G SA 전환·전국 개통 시점",
+      "6G·AI-RAN 투자 방향",
+      "통신 규제·세제"
+    ],
+    "sources": [
+      {
+        "url": "https://www.newstomato.com/ReadNews.aspx?no=1311728",
+        "title": "12월 5G SA 전국 개통 추진…통신망 투자 민관협의체 가동 (뉴스토마토, 2026-08-27)",
+        "retrieved_at": "2026-09-15"
+      },
+      {
+        "url": "https://www.viva100.com/article/20260827501304",
+        "title": "과기정통부-통신 3사, 민관협의체 구성… 연내 종합대책 마련 (브릿지경제, 2026-08-27)",
+        "retrieved_at": "2026-09-15"
+      }
+    ],
+    "grade": "B"
+  }
+]

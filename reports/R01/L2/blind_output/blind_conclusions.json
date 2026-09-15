@@ -1,0 +1,784 @@
+[
+  {
+    "item_id": "Q1",
+    "question": "2025년 말 기준 국내 이음5G 구축(허가·지정) 사이트 수와 사업자 수는 얼마인가. 2023년 이후 연도별 추이는.",
+    "conclusion": "2025년 말 기준 국내 이음5G는 39개 기업·기관(시설자)이 104개소를 구축·운영 중이다(KCA 공식). 연도별 누적 개소: 2022년 말 26개소(9개 분야) → 2023년 말 54개소(30개 기업·기관, 14개 분야, +108%) → 2024년 12월 74개 지역(36개 사업자, +37%) → 2025년 말 104개소(39개 시설자, +41%)로, 2022~2025년 연평균 약 59% 성장했다. 2026년 5월 말에는 111개 사이트(사업자 구축 95, 자가구축 16)로 늘었고 2026년 7월 한전KDN이 신규 할당대상법인으로 추가됐다. 주파수 이용형태로는 2025년 3월 말 기준 할당 74건·지정 19건이며, 최근 증가는 할당(사업자 구축)이 주도하고 자가구축(지정)은 정체 상태다.",
+    "method_used": "방법 1(공식 현황 확인) 적용: 과기정통부 보도자료(2024.1.3), KCA 5G특화망 페이지(2025년 말 기준 39개 시설자·104개소), 언론 보도(2024.12 36개 사업자 74개 지역, 2025.3.31 할당 74·지정 19건, 2025.12 100개소 돌파), NETMANIAS 집계(2025.9.18 27개 할당사업자 66사이트+13개 지정기관 19사이트, 2026.5말 111사이트)를 교차 대조하여 연도별 시계열을 구성했다. 공식치(과기정통부·KCA)를 우선하고 민간 집계는 보조로 썼다.",
+    "inputs": [
+      {
+        "name": "2022년 말 이음5G 개소",
+        "value": 26,
+        "unit": "개소",
+        "asof": "2022-12",
+        "source_url": "https://eiec.kdi.re.kr/policy/materialView.do?num=246793&pg=1&pp=40",
+        "grade": "A"
+      },
+      {
+        "name": "2023년 말 이음5G 기업·기관/개소",
+        "value": "30 기업·기관 / 54 개소 / 14 분야",
+        "unit": "개",
+        "asof": "2023-12",
+        "source_url": "https://eiec.kdi.re.kr/policy/materialView.do?num=246793&pg=1&pp=40",
+        "grade": "A"
+      },
+      {
+        "name": "2024년 12월 이음5G 사업자/지역",
+        "value": "36 사업자 / 74 지역",
+        "unit": "개",
+        "asof": "2024-12-18",
+        "source_url": "https://www.etnews.com/20241218000116",
+        "grade": "B"
+      },
+      {
+        "name": "2025년 3월 말 주파수 할당/지정 건수",
+        "value": "할당 74건 / 지정 19건",
+        "unit": "건",
+        "asof": "2025-03-31",
+        "source_url": "https://m.ddaily.co.kr/page/view/2025040223143380694",
+        "grade": "B"
+      },
+      {
+        "name": "2025년 말 이음5G 시설자/개소 (KCA)",
+        "value": "39 시설자 / 104 개소",
+        "unit": "개",
+        "asof": "2025-12",
+        "source_url": "https://www.kca.kr/contentsView.do?pageId=www277",
+        "grade": "A"
+      },
+      {
+        "name": "100개소 돌파(LG전자 100번째), 연평균 60% 증가",
+        "value": 100,
+        "unit": "개소",
+        "asof": "2025-12-09",
+        "source_url": "https://www.etnews.com/20251209000264",
+        "grade": "B"
+      },
+      {
+        "name": "NETMANIAS 집계: 할당사업자 27개(66사이트)+지정기관 13개(19사이트)",
+        "value": 85,
+        "unit": "사이트",
+        "asof": "2025-09-18",
+        "source_url": "https://www.netmanias.com/ko/post/oneshot/15752/5g-5g-private-5g-5g/private-5g-frequency-allocation-status-in-korea",
+        "grade": "B"
+      },
+      {
+        "name": "NETMANIAS 집계: 총 111 사이트(사업자 95, 자가 16)",
+        "value": 111,
+        "unit": "사이트",
+        "asof": "2026-05-31",
+        "source_url": "https://netmanias.com/ko/post/oneshot/16559/5g-5g-private-5g-5g/deployment-status-of-korea-s-private-5g-networks-by-region",
+        "grade": "B"
+      },
+      {
+        "name": "한전KDN 이음5G 주파수 할당대상법인 선정",
+        "value": "신규 1개사",
+        "unit": "건",
+        "asof": "2026-07-21",
+        "source_url": "https://www.seoul.co.kr/news/economy/industry/2026/07/21/20260721046004",
+        "grade": "B"
+      }
+    ],
+    "confidence": "높음",
+    "caveats": [
+      "'개소'(과기정통부·KCA)와 '사이트'(NETMANIAS)는 집계 단위가 달라 수치가 다소 차이남(2025.9 NETMANIAS 85 vs 2025.12 KCA 104).",
+      "2024년 말 값은 12월 18일 기준 언론 보도(74~76개 지역)로 공식 연말치와 1~2개소 차이 가능.",
+      "사업자 수는 할당사업자+지정기관 합계(시설자) 기준."
+    ],
+    "grade": "A"
+  },
+  {
+    "item_id": "Q2",
+    "question": "위 방법 2~3으로 계산한 국내 이음5G 누적 구축 사이트 수 전망: 2026년, 2027년, 2030년, High/Medium/Low 각각.",
+    "conclusion": "상향식(대·중견 제조공장 약 3,373개 × 고도화 스마트공장 비율 23.7%→35% × 이음5G 채택률) 후 분야 확장 배수(제조 비중 33%→26~31%)를 적용한 국내 이음5G 누적 사이트 전망은 2026년 High 155 / Medium 142 / Low 129개, 2027년 High 243 / Medium 200 / Low 165개, 2030년 High 743 / Medium 479 / Low 313개다(2025년 말 104개 기준). 이 중 스마트공장용은 2026년 43~52개, 2027년 55~76개, 2030년 98~196개다. Medium 기준 2025~2030년 연평균 성장률은 약 36%로, 최근 실적(2024~25년 +39~41%)에서 완만히 감속하는 경로다.",
+    "method_used": "방법 2: 공장 수 = 공장 보유 중견 제조기업 2,123개(실태조사 모집단 163,273×1.3%) + 대기업 제조공장 약 1,250개(추정) = 3,373개, 연 2% 증가. 고도화(중간2 이상·IoT/CPS 기반) 비율은 실태조사(중견 중간 이상 40.3%, 기초 75.5%, AI 도입 0.1%)로부터 중견 17%·대기업 35% 가중 23.7%(2025)로 두고 2030년 35%로 상승 가정 → 고도화 공장 약 800개(2025)→1,300개(2030). 현재 채택률 = 제조 사이트 34개(104×33%)/800 = 4.3%. 채택률 시나리오: Low 5.0%(2026)→7.5%(2030), Medium 5.5%→10.5%, High 6.0%→15%. 방법 3: 분야 배수 = 1/제조 비중. 국내 현황(제조 33%, NETMANIAS 2025.9)에서 출발해 GSA 글로벌 구조(제조 19.3%, 2026.6)로 부분 수렴(2030년 Low 31%·Medium 29%·High 26%)시켜 전체 사이트 = 제조 사이트 × 3.0~3.8. 2025년 값은 KCA 공식 104개소로 앵커링.",
+    "inputs": [
+      {
+        "name": "공장 보유 중소·중견 제조기업 모집단",
+        "value": 163273,
+        "unit": "개사",
+        "asof": "2023 기준(2025-04-28 발표)",
+        "source_url": "https://m.korea.kr/briefing/pressReleaseView.do?newsId=156686561&pWise=mSub&pWiseSub=C3",
+        "grade": "A"
+      },
+      {
+        "name": "모집단 중 중견기업 비중",
+        "value": 1.3,
+        "unit": "%",
+        "asof": "2023 기준",
+        "source_url": "https://www.bizinfo.go.kr/web/lay1/bbs/S1T157C163/AE/117/view.do?article_seq=84277",
+        "grade": "A"
+      },
+      {
+        "name": "스마트공장 도입률 전체/중견",
+        "value": "19.5 / 85.7",
+        "unit": "%",
+        "asof": "2024 조사",
+        "source_url": "https://m.korea.kr/briefing/pressReleaseView.do?newsId=156686561&pWise=mSub&pWiseSub=C3",
+        "grade": "A"
+      },
+      {
+        "name": "스마트공장 수준: 기초 75.5%, 중간 이상(중견 40.3%, 중기업 29.0%), 제조AI 도입 0.1%",
+        "value": "75.5 / 40.3 / 0.1",
+        "unit": "%",
+        "asof": "2024 조사",
+        "source_url": "https://www.hankyung.com/article/202504280690i",
+        "grade": "B"
+      },
+      {
+        "name": "대기업 제조공장 수(300인 이상 광업·제조업 사업체 근사)",
+        "value": 1250,
+        "unit": "개",
+        "asof": "2024 추정",
+        "source_url": "https://mods.go.kr/board.es?mid=a10301010000&bid=232&tag=&act=view&list_no=442460",
+        "grade": "C"
+      },
+      {
+        "name": "광업·제조업(10인 이상) 사업체 수",
+        "value": 73890,
+        "unit": "개",
+        "asof": "2024-12-31",
+        "source_url": "https://mods.go.kr/board.es?mid=a10301010000&bid=232&tag=&act=view&list_no=442460",
+        "grade": "A"
+      },
+      {
+        "name": "중견기업 수(2024) 및 증가율",
+        "value": "6,474 (+10.3%)",
+        "unit": "개사",
+        "asof": "2024",
+        "source_url": "https://www.motir.go.kr/kor/article/ATCL3f49a5a8c/171400/view",
+        "grade": "A"
+      },
+      {
+        "name": "국내 이음5G 분야별 비중(제조 33%, 물류 14%, R&D 18%, 교육 9%, 공공 9%, 의료 8%, 국방 4%, 기타 5%)",
+        "value": 33,
+        "unit": "%",
+        "asof": "2025-09-18",
+        "source_url": "https://www.netmanias.com/ko/post/oneshot/15752/5g-5g-private-5g-5g/private-5g-frequency-allocation-status-in-korea",
+        "grade": "B"
+      },
+      {
+        "name": "GSA 글로벌 프라이빗망 조직 수 및 제조 비중(387/2,003=19.3%; 교육 171, 광업 146, 국방 130, 시험랩 119, 전력 119)",
+        "value": 19.3,
+        "unit": "%",
+        "asof": "1Q26(2026-06)",
+        "source_url": "https://gsacom.com/paper/private-mobile-networks-june-2026/",
+        "grade": "B"
+      },
+      {
+        "name": "2025년 말 이음5G 개소(앵커)",
+        "value": 104,
+        "unit": "개소",
+        "asof": "2025-12",
+        "source_url": "https://www.kca.kr/contentsView.do?pageId=www277",
+        "grade": "A"
+      },
+      {
+        "name": "고도화 공장 수(계산)",
+        "value": {
+          "2025": 799,
+          "2026": 860,
+          "2027": 948,
+          "2028": 1074,
+          "2029": 1187,
+          "2030": 1303
+        },
+        "unit": "개",
+        "asof": "계산",
+        "source_url": "",
+        "grade": "C"
+      },
+      {
+        "name": "시나리오별 누적 사이트(계산)",
+        "value": {
+          "High": {
+            "2025": 104,
+            "2026": 155,
+            "2027": 243,
+            "2028": 365,
+            "2029": 534,
+            "2030": 743
+          },
+          "Medium": {
+            "2025": 104,
+            "2026": 142,
+            "2027": 200,
+            "2028": 279,
+            "2029": 375,
+            "2030": 479
+          },
+          "Low": {
+            "2025": 104,
+            "2026": 129,
+            "2027": 165,
+            "2028": 210,
+            "2029": 257,
+            "2030": 313
+          }
+        },
+        "unit": "개",
+        "asof": "계산",
+        "source_url": "",
+        "grade": "C"
+      },
+      {
+        "name": "시나리오별 제조(스마트공장) 사이트(계산)",
+        "value": {
+          "High": {
+            "2025": 34,
+            "2026": 52,
+            "2027": 76,
+            "2028": 107,
+            "2029": 148,
+            "2030": 196
+          },
+          "Medium": {
+            "2025": 34,
+            "2026": 47,
+            "2027": 64,
+            "2028": 86,
+            "2029": 110,
+            "2030": 137
+          },
+          "Low": {
+            "2025": 34,
+            "2026": 43,
+            "2027": 55,
+            "2028": 69,
+            "2029": 83,
+            "2030": 98
+          }
+        },
+        "unit": "개",
+        "asof": "계산",
+        "source_url": "",
+        "grade": "C"
+      }
+    ],
+    "confidence": "중간",
+    "caveats": [
+      "대기업 제조공장 수(1,250)는 300인 이상 사업체 통계를 직접 확인하지 못해 추정치(C등급)이며, ±30% 오차 시 전망치도 비례 변동.",
+      "'고도화(레벨-5)' 정의는 공식 수준 분류(기초/중간1/중간2/고도화)와 1:1 대응하지 않아 중간2 이상+IoT/CPS로 근사.",
+      "분야 배수는 국내 제조 편중 구조가 글로벌 평균으로 완전히 수렴하지 않는다고 가정(2030년 제조 비중 26~31%).",
+      "채택률 시나리오는 최근 증가율(연 39~41%)과 정부의 추가 주파수 공급·전주기 지원 계획을 반영한 판단값."
+    ],
+    "grade": "C"
+  },
+  {
+    "item_id": "Q3",
+    "question": "2026~2030년 국내 이음5G 누적 capex 규모(억원)와 가정한 사이트당 설비투자비.",
+    "conclusion": "사이트당 설비투자비를 2026년 8.0억원(약 57만달러)에서 연 7% 하락(2030년 6.0억원)으로 가정하면, 2026~2030년 신규 사이트 capex 누계는 Medium 2,522억원(Low 1,417 / High 4,245억원)이다. 운영비(누적 설치기반의 연 11%)는 5년 누계 Medium 1,234억원(Low 926 / High 1,660)으로, capex+opex 총지출은 Medium 3,756억원이다. 산업연관 파급효과(Medium)는 생산유발 7,332억원, 부가가치유발 2,644억원, 취업유발 2,205명(고용유발 1,825명)이며, High는 생산유발 11,526억원·취업유발 3,466명, Low는 4,573억원·1,375명이다.",
+    "method_used": "방법 4: 연도별 신규 사이트(Q2 시나리오) × 사이트당 capex(2026년 8.0억원, 연 -7%) = capex. 단가는 국내 5G 코어 '수억원', 실증과제 18억원/2년, 글로벌 사이트당 25만~100만달러(공장 50만~200만달러), 클라우드 코어·구독형으로 초기비용 최대 80% 절감 추세를 종합해 설정. opex = 누적 설치기반 capex(2025년 말 104개소×8.6억원=894억원 포함) × 연 11%(업계 '구축비의 10~12%'). 파급효과 = (capex+opex) × 가중 유발계수: 한국은행 2023년 산업연관표(연장표) 13부문 계수를 장비(조립가공제품 60%: 생산 2.056·부가가치 0.606·취업 4.5명·고용 3.8명), 설치(건설 15%: 2.029·0.788·9.1·7.2), 서비스·SW(생산자서비스 25%: 1.656·0.888·7.2·6.0)로 가중 → 생산 1.952, 부가가치 0.704, 취업 5.87명/10억원, 고용 4.86명/10억원.",
+    "inputs": [
+      {
+        "name": "사이트당 capex 가정(2026)",
+        "value": 8.0,
+        "unit": "억원",
+        "asof": "2026 가정",
+        "source_url": "https://www.hellot.net/news/article.html?no=114793",
+        "grade": "C"
+      },
+      {
+        "name": "글로벌 프라이빗 5G 사이트당 비용 25만~100만달러(공장 50만~200만달러)",
+        "value": "0.25~1.0 (0.5~2.0)",
+        "unit": "백만달러",
+        "asof": "2025",
+        "source_url": "https://www.metrowireless.com/blog/private-cellular-network-cost-breaking",
+        "grade": "B"
+      },
+      {
+        "name": "5G 코어 장비 '수억원', 클라우드 구독형으로 진입장벽 하락",
+        "value": "수억원",
+        "unit": "원",
+        "asof": "2025~2026",
+        "source_url": "https://www.koit.co.kr/news/articleView.html?idxno=121780",
+        "grade": "B"
+      },
+      {
+        "name": "클라우드 코어·슬림 라이선스로 초기 구축비 약 80% 절감 가능",
+        "value": 80,
+        "unit": "%",
+        "asof": "2026-09-05",
+        "source_url": "https://www.hellot.net/news/article.html?no=114793",
+        "grade": "B"
+      },
+      {
+        "name": "연간 유지·운영비 = 망 구축비의 10~12%",
+        "value": 11,
+        "unit": "%",
+        "asof": "2026-08-11",
+        "source_url": "https://www.itdaily.kr/news/articleView.html?idxno=240933",
+        "grade": "B"
+      },
+      {
+        "name": "2022년 이음5G 실증 480억원/11과제, 자유공모 과제당 18억원(2년)",
+        "value": "43.6 / 18",
+        "unit": "억원",
+        "asof": "2022",
+        "source_url": "https://www.korea.kr/news/policyNewsView.do?newsId=148902999",
+        "grade": "A"
+      },
+      {
+        "name": "BOK 2023 산업연관표 부문별 계수: 조립가공제품 생산 2.056·부가가치 0.606·취업 4.5·고용 3.8; 건설 2.029·0.788·9.1·7.2; 생산자서비스 1.656·0.888·7.2·6.0; 전산업 1.827·0.752·8.2·6.2",
+        "value": "표 참조",
+        "unit": "배, 명/10억원",
+        "asof": "2023(2025-09-24 발표)",
+        "source_url": "https://www.bok.or.kr/portal/bbs/B0000501/view.do?menuNo=201264&nttId=10093668",
+        "grade": "A"
+      },
+      {
+        "name": "가중 유발계수(계산)",
+        "value": {
+          "prod": 1.952,
+          "va": 0.704,
+          "emp": 5.87,
+          "wage_emp": 4.86
+        },
+        "unit": "배, 명/10억원",
+        "asof": "계산",
+        "source_url": "",
+        "grade": "C"
+      },
+      {
+        "name": "시나리오별 연도별 capex/opex(계산)",
+        "value": {
+          "High": [
+            {
+              "year": 2026,
+              "new_sites": 51,
+              "capex_per_site_억원": 8.0,
+              "capex_억원": 408,
+              "opex_억원": 143
+            },
+            {
+              "year": 2027,
+              "new_sites": 88,
+              "capex_per_site_억원": 7.44,
+              "capex_억원": 655,
+              "opex_억원": 215
+            },
+            {
+              "year": 2028,
+              "new_sites": 122,
+              "capex_per_site_억원": 6.92,
+              "capex_억원": 844,
+              "opex_억원": 308
+            },
+            {
+              "year": 2029,
+              "new_sites": 169,
+              "capex_per_site_억원": 6.43,
+              "capex_억원": 1087,
+              "opex_억원": 428
+            },
+            {
+              "year": 2030,
+              "new_sites": 209,
+              "capex_per_site_억원": 5.98,
+              "capex_억원": 1251,
+              "opex_억원": 565
+            }
+          ],
+          "Medium": [
+            {
+              "year": 2026,
+              "new_sites": 38,
+              "capex_per_site_억원": 8.0,
+              "capex_억원": 304,
+              "opex_억원": 132
+            },
+            {
+              "year": 2027,
+              "new_sites": 58,
+              "capex_per_site_억원": 7.44,
+              "capex_억원": 432,
+              "opex_억원": 179
+            },
+            {
+              "year": 2028,
+              "new_sites": 79,
+              "capex_per_site_억원": 6.92,
+              "capex_억원": 547,
+              "opex_억원": 239
+            },
+            {
+              "year": 2029,
+              "new_sites": 96,
+              "capex_per_site_억원": 6.43,
+              "capex_억원": 618,
+              "opex_억원": 307
+            },
+            {
+              "year": 2030,
+              "new_sites": 104,
+              "capex_per_site_억원": 5.98,
+              "capex_억원": 622,
+              "opex_억원": 376
+            }
+          ],
+          "Low": [
+            {
+              "year": 2026,
+              "new_sites": 25,
+              "capex_per_site_억원": 8.0,
+              "capex_억원": 200,
+              "opex_억원": 120
+            },
+            {
+              "year": 2027,
+              "new_sites": 36,
+              "capex_per_site_억원": 7.44,
+              "capex_억원": 268,
+              "opex_억원": 150
+            },
+            {
+              "year": 2028,
+              "new_sites": 45,
+              "capex_per_site_억원": 6.92,
+              "capex_억원": 311,
+              "opex_억원": 184
+            },
+            {
+              "year": 2029,
+              "new_sites": 47,
+              "capex_per_site_억원": 6.43,
+              "capex_억원": 302,
+              "opex_억원": 217
+            },
+            {
+              "year": 2030,
+              "new_sites": 56,
+              "capex_per_site_억원": 5.98,
+              "capex_억원": 335,
+              "opex_억원": 254
+            }
+          ]
+        },
+        "unit": "억원",
+        "asof": "계산",
+        "source_url": "",
+        "grade": "C"
+      },
+      {
+        "name": "시나리오별 합계(계산)",
+        "value": {
+          "High": {
+            "capex_total_억원": 4245,
+            "opex_total_억원": 1660,
+            "spend_total_억원": 5905,
+            "생산유발_억원": 11526,
+            "부가가치유발_억원": 4157,
+            "취업유발_명": 3466,
+            "고용유발_명": 2870
+          },
+          "Medium": {
+            "capex_total_억원": 2522,
+            "opex_total_억원": 1234,
+            "spend_total_억원": 3756,
+            "생산유발_억원": 7332,
+            "부가가치유발_억원": 2644,
+            "취업유발_명": 2205,
+            "고용유발_명": 1825
+          },
+          "Low": {
+            "capex_total_억원": 1417,
+            "opex_total_억원": 926,
+            "spend_total_억원": 2343,
+            "생산유발_억원": 4573,
+            "부가가치유발_억원": 1649,
+            "취업유발_명": 1375,
+            "고용유발_명": 1139
+          }
+        },
+        "unit": "억원, 명",
+        "asof": "계산",
+        "source_url": "",
+        "grade": "C"
+      }
+    ],
+    "confidence": "낮음",
+    "caveats": [
+      "국내 이음5G 사이트당 실제 구축비 통계는 공개되어 있지 않아 단가(8.0억원)는 국내외 간접 근거로 설정한 추정치.",
+      "클라우드 코어·구독형 확산 시 단가 하락률이 7%보다 클 수 있어 capex는 하방, 사이트 수는 상방 위험.",
+      "유발계수는 2023년 연장표 13부문 통합 계수를 지출 구성비로 가중한 근사이며, 장비 수입의존도(조립가공 수입유발 0.394)로 국내 생산유발은 명목 지출 대비 제한적.",
+      "opex는 설치기반 전체에 대한 비율이므로 사업자 매출·자가운영비를 구분하지 않음."
+    ],
+    "grade": "C"
+  },
+  {
+    "item_id": "Q4",
+    "question": "전세계 5G 가입(또는 단말) 수의 2027년 및 2030년 전망과 전체 이동통신 중 5G 비중.",
+    "conclusion": "Ericsson Mobility Report(2026년 6월판) 기준 전세계 5G 가입은 2025년 말 29억(전체 이동통신 가입의 1/3), 2026년 1분기 31억, 2분기 약 33억이며, 2027년 말에는 2025년 말 대비 12억 증가한 약 41억(전체 약 89억의 46%)으로 전망된다. 2031년 말 64억(전체의 2/3, 총 가입 약 96억) 전망을 선형 보간하면 2030년 말 5G 가입은 약 58억으로 전체의 약 62%다. 교차검증으로 GSMA Mobile Economy 2026은 2030년 5G 연결 비중 57%(약 55억)를 제시해 57~62% 범위로 수렴한다. 5G SA 가입은 2031년 약 39억(5G의 60%)이며, 2025년 말 5G 트래픽 비중 48%→2031년 85%다. 국내는 2026년 1월 5G 가입 3,861만 회선이다.",
+    "method_used": "방법 5: Ericsson Mobility Report 2026.6 보도자료·데이터 페이지(현재치, 2027년 증가분, 2031년 전망·비중)와 2025.11판(2025년 말 29억, 1/3)을 결합하고, 2027년은 '2025년 말+12억', 2030년은 2027~2031년 선형 보간으로 산출. 총 이동통신 가입은 2031년 64억÷(2/3)≈96억, 2027년 약 89억·2030년 약 94억으로 역산해 비중 계산. GSMA ME2026(2030년 57%)로 교차검증.",
+    "inputs": [
+      {
+        "name": "5G 가입 2025년 말",
+        "value": 2.9,
+        "unit": "십억",
+        "asof": "2025-12",
+        "source_url": "https://techafricanews.com/2025/12/02/ericsson-mobility-report-2025-5g-subscriptions-to-reach-2-9-billion-5g-sa-adoption-accelerates/",
+        "grade": "B"
+      },
+      {
+        "name": "5G 가입 2026년 1분기",
+        "value": 3.1,
+        "unit": "십억",
+        "asof": "2026-03",
+        "source_url": "https://www.ericsson.com/en/press-releases/2026/6/ericsson-mobility-report-5g-subscriptions-top-three-billion-as-uplink-gains-momentum",
+        "grade": "A"
+      },
+      {
+        "name": "5G 가입 2026년 2분기(약)",
+        "value": 3.3,
+        "unit": "십억",
+        "asof": "2026-06",
+        "source_url": "https://www.ericsson.com/en/reports-and-papers/mobility-report/dataforecasts/mobile-subscriptions-outlook",
+        "grade": "A"
+      },
+      {
+        "name": "2027년 말 5G 증가분(2025년 말 대비)",
+        "value": 1.2,
+        "unit": "십억",
+        "asof": "2026-06",
+        "source_url": "https://www.ericsson.com/en/reports-and-papers/mobility-report/dataforecasts/mobile-subscriptions-outlook",
+        "grade": "A"
+      },
+      {
+        "name": "5G 가입 2031년 말 및 비중",
+        "value": "6.4 (2/3)",
+        "unit": "십억",
+        "asof": "2026-06",
+        "source_url": "https://www.ericsson.com/en/press-releases/2026/6/ericsson-mobility-report-5g-subscriptions-top-three-billion-as-uplink-gains-momentum",
+        "grade": "A"
+      },
+      {
+        "name": "5G SA 가입 2031년",
+        "value": "3.9 (5G의 60%)",
+        "unit": "십억",
+        "asof": "2026-06",
+        "source_url": "https://www.ericsson.com/en/reports-and-papers/mobility-report/dataforecasts/mobile-subscriptions-outlook",
+        "grade": "A"
+      },
+      {
+        "name": "GSMA ME2026: 2030년 5G 연결 비중",
+        "value": 57,
+        "unit": "%",
+        "asof": "2026-03",
+        "source_url": "https://telecomlead.com/5g/gsma-forecast-5g-to-reach-57-of-global-mobile-connections-by-2030-driving-11-3-trillion-economic-impact-124913",
+        "grade": "B"
+      },
+      {
+        "name": "국내 5G 가입 회선",
+        "value": 38608413,
+        "unit": "회선",
+        "asof": "2026-01",
+        "source_url": "https://m.ddaily.co.kr/page/view/2026032414550870711",
+        "grade": "B"
+      },
+      {
+        "name": "2027/2030 5G 가입 및 비중(계산)",
+        "value": {
+          "2027": "4.1십억, 46%",
+          "2030": "5.8십억, 62%"
+        },
+        "unit": "십억, %",
+        "asof": "계산",
+        "source_url": "",
+        "grade": "C"
+      }
+    ],
+    "confidence": "높음",
+    "caveats": [
+      "2030년 값은 Ericsson이 공개한 연도별 표가 아닌 2027·2031 두 점의 선형 보간(추정).",
+      "총 이동통신 가입 규모(89~96억)는 '2/3' 비중에서 역산한 근사치.",
+      "가입 기준이며 단말 수 기준과는 차이 있음."
+    ],
+    "grade": "B"
+  },
+  {
+    "item_id": "Q5",
+    "question": "국내 5G 주파수 정책 방향: 고대역(24~28GHz) 활용과 중대역 추가 공급에 대해 오늘 시점에서 제시할 정책 방향 3가지.",
+    "conclusion": "2026년 9월 시점 정책 방향 3가지: (1) 고대역 28GHz는 전국망(제4이통) 재추진보다 이음5G·핫스팟 '용도별 거점' 대역으로 확정하고 6G 고대역(24GHz 이상) 후보와 통합 관리한다 — 통신3사 할당취소(2022.12/2023.5), 스테이지엑스 선정 취소 확정(2024.7) 이후 28GHz 2,400MHz는 미할당 상태이고, 정부는 이미 이음5G 28GHz 대역으로 지하철 와이파이 백홀을 이전(2023.12 할당공고 개정)했으므로, 28GHz 이음5G 할당대가·전파사용료 감면과 공동사용 확대, WRC-27 고대역 결과와 연계한 2028년 이후 용도 재검토를 권고한다. (2) 중대역 5G 추가 공급(3.7~4.0GHz 300MHz)은 '수요 확인 후 공급' 원칙(2025.12 재할당 세부방안)을 유지하되, 2026년 말 5G SA 전환 의무 완료와 5G-A·RedCap·슬라이싱 수요를 지표로 2027년 하반기까지 공급 여부·시기를 확정하고, 2028년 5G(3.5GHz) 재할당(2027.11 세부안)과 패키지로 광대역·비파편화 원칙 아래 경쟁 할당한다. (3) 6G 대비 중대역 정비: 6G 후보 4.4~4.8GHz(이음5G 4.7GHz 인접)·7.125~8.4GHz·14.8~15.35GHz 확보 로드맵을 2026~2027년 '대한민국 스펙트럼 플랜' 개정에 반영하고, 이음5G용 4.7GHz는 추가 공급(과기정통부 2025.12 계획)과 6G 후보대역 간 공존 설계를 병행하며, 상위 6GHz는 비면허 공급을 유지한다.",
+    "method_used": "방법 6: 과기정통부 2025.12.10 재할당 세부 정책방안(370MHz 재할당, SA 의무화, 실내 무선국 2만국 조건, 5G 추가공급은 수요 확실 시점), 2024.9 스펙트럼 플랜(3.7~4.0GHz 300MHz+α, 2028 5G 재할당 세부안 2027.11), 28GHz 정책 이력(할당취소·이음5G 전환·스테이지엑스 취소·제도개선), 6G 후보대역(4.4~4.8/7.125~8.4/14.8~15.35GHz), 5G SA 전환 현황(KT 완료, SKT·LGU+ 2026년 내) 및 이음5G 추가 주파수 공급 계획(2025.12)을 종합해 정성 도출.",
+    "inputs": [
+      {
+        "name": "이동통신 주파수 재할당 세부 정책방안: 370MHz 재할당, 5G SA 2026년 말 의무화, 할당대가 3.1조원(실내 2만국 시 2,900억 인하), 5G 추가공급은 수요 확실 시점",
+        "value": "2025-12-10",
+        "unit": "정책",
+        "asof": "2025-12-10",
+        "source_url": "https://www.korea.kr/news/policyNewsView.do?newsId=156734418",
+        "grade": "A"
+      },
+      {
+        "name": "스펙트럼 플랜(2024~2027): 3.7~4.0GHz 300MHz+α, 2028년 5G 재할당 세부안 2027년 11월",
+        "value": "300MHz+α",
+        "unit": "MHz",
+        "asof": "2024-09-01",
+        "source_url": "https://zdnet.co.kr/view/?no=20240901144214",
+        "grade": "B"
+      },
+      {
+        "name": "28GHz 할당취소(KT·LGU+ 2022.12, SKT 2023.5) 및 이음5G 28GHz 지하철 와이파이 전환(2023.12 할당공고 개정)",
+        "value": "2023-12-01",
+        "unit": "정책",
+        "asof": "2023-11-29",
+        "source_url": "https://www.itdaily.kr/news/articleView.html?idxno=218451",
+        "grade": "B"
+      },
+      {
+        "name": "스테이지엑스 제4이통 선정 취소 확정",
+        "value": "2024-07-31",
+        "unit": "정책",
+        "asof": "2024-07-31",
+        "source_url": "https://www.etnews.com/20240731000269",
+        "grade": "B"
+      },
+      {
+        "name": "제4이통 자본금 요건 강화 등 제도개선 추진",
+        "value": "2025-01",
+        "unit": "정책",
+        "asof": "2025-01-15",
+        "source_url": "https://zdnet.co.kr/view/?no=20250115114009",
+        "grade": "B"
+      },
+      {
+        "name": "6G 후보대역 4.4~4.8GHz, 7.125~8.4GHz, 14.8~15.35GHz(RWC-23)",
+        "value": "3개 대역",
+        "unit": "GHz",
+        "asof": "2024",
+        "source_url": "https://www.bloter.net/news/articleView.html?idxno=622337",
+        "grade": "B"
+      },
+      {
+        "name": "5G SA 전환: KT 완료, SKT·LGU+ 2026년 내, 재할당 조건",
+        "value": "2026년 말",
+        "unit": "정책",
+        "asof": "2026-05",
+        "source_url": "https://www.techm.kr/news/articleView.html?idxno=148268",
+        "grade": "B"
+      },
+      {
+        "name": "이음5G 추가 주파수 공급 추진·전주기 지원(과기정통부)",
+        "value": "계획",
+        "unit": "정책",
+        "asof": "2025-12-09",
+        "source_url": "https://www.etnews.com/20251209000264",
+        "grade": "B"
+      },
+      {
+        "name": "KISDI 상위 6GHz 대역 주파수 정책 분석",
+        "value": "2025-12",
+        "unit": "보고서",
+        "asof": "2025-12",
+        "source_url": "https://www.kisdi.re.kr/report/fileView.do?key=m2102058837181&arrMasterId=4334696&id=1919616",
+        "grade": "B"
+      }
+    ],
+    "confidence": "중간",
+    "caveats": [
+      "2026년 이후 28GHz 및 3.7GHz에 대한 과기정통부의 신규 공식 발표를 검색으로 확인하지 못해 2025년 12월 정책을 최신 공식 입장으로 간주.",
+      "제4이통 재추진 여부는 2024년 국정감사 발언(연말 발표 예정) 이후 후속 확인 실패."
+    ],
+    "grade": "B"
+  },
+  {
+    "item_id": "Q6",
+    "question": "O-RAN 기반 이음5G가 목표로 해야 할 시장(B2B/B2C)과 그 이유, 그리고 국내 O-RAN 정책 현황.",
+    "conclusion": "O-RAN 기반 이음5G는 B2C 전국망이 아니라 B2B 특화망(제조·물류·공항·철도·항만·병원·캠퍼스·공공)을 1차 목표 시장으로 삼아야 한다. 이유: (1) 이음5G는 2025년 말 104개소·2026년 5월 111사이트의 소규모·다품종 사이트로, 멀티벤더 O-RU/O-DU와 클라우드 코어·SW기지국 조합이 초기 구축비를 최대 80% 낮출 수 있어 오픈랜의 비용·유연성 이점이 가장 크게 발현된다. (2) 통신3사 상용망은 2026년 말 5G SA 전환 중이며 기존 벤더 종속 RAN이 견고해 B2C 오픈랜 교체 수요가 낮고, 오픈랜 시장은 2027년 전체 RAN의 22% 수준으로 전망돼 B2C는 6G(2030년 상용) AI-RAN 단계의 과제다. (3) 글로벌 프라이빗망 2,003개 조직 중 제조 387·교육연구 171·광업 146·국방 130·시험랩 119·전력 119로 B2B 수직시장이 오픈랜 실증·수출 레퍼런스에 적합하며, 정부 실증도 SL전자 공장(국내)·STL Japan 물류센터(일본) 병렬 실증(2026.7), 서울역·김포공항 AI-RAN 실증(2025.8), 대학 캠퍼스 AI-RAN 시범망(2026)으로 B2B 사이트에 집중돼 있다. 국내 O-RAN 정책 현황: 오픈랜 활성화 정책 추진방안·ORIA 출범(2023.8, 30개사, SKT 초대 의장), Korea OTIC 판교 개소(2023.12, 무료 국제인증), 연 2회 Plugfest, NIA 오픈랜 실증사업(경기장·전시장·공항·역사), K-오픈랜 패키지 해외 병렬 실증(2026.7), AI-RAN 글로벌 선도 프로젝트(2026.4~2030.12, 470억원, ETRI 전문연구소, 통신3사·HFR·유캐스트·클레버로직·4개 대학 참여), 2026년 차세대 네트워크 사업 약 150억원(하이퍼-AI 네트워크 80억원, 오픈랜·AI-RAN 실증단지, 5G 기반 피지컬AI 실증단지), SKT AI-RAN 선도망 구축, 한·미·영 오픈랜 공동연구가 진행 중이다.",
+    "method_used": "방법 6: 이음5G 현황(사이트 규모·분야), 비용구조(클라우드 코어 80% 절감), 통신3사 SA 전환·벤더 구조, 오픈랜 시장 전망(2026년 64억달러, 2027년 RAN의 22%), GSA 글로벌 수직시장 구조, 정부 오픈랜·AI-RAN 실증 사이트의 성격을 종합해 B2B 우선을 정성 도출. 정책 현황은 korea.kr(2023.8), NRF R&D Brief(2025.2), 2025~2026년 과기정통부·NIA·IITP 보도(ezyeconomy 2025.8, etnews 2026.2, fnnews 2026.6, ddaily 2026.7)로 확인.",
+    "inputs": [
+      {
+        "name": "오픈랜 활성화 정책 추진방안·ORIA 출범(30개사, K-OTIC, Plugfest 연 2회, 시장 2021년 12억→2026년 64억달러)",
+        "value": "2023-08-16",
+        "unit": "정책",
+        "asof": "2023-08-16",
+        "source_url": "https://www.korea.kr/news/policyNewsView.do?newsId=148919026",
+        "grade": "A"
+      },
+      {
+        "name": "Korea OTIC 판교 개소(무료 국제인증)",
+        "value": "2023-12",
+        "unit": "정책",
+        "asof": "2023-12-07",
+        "source_url": "https://www.etnews.com/20231207000034",
+        "grade": "B"
+      },
+      {
+        "name": "NRF R&D Brief O-RAN: 국내 실증(경기장·전시장), 통신3사 오픈랜 R&D, 2027년 RAN의 22%, 한·미·영 공동연구",
+        "value": "2025-02-28",
+        "unit": "보고서",
+        "asof": "2025-02-28",
+        "source_url": "https://webzine.nrf.re.kr/e-alim/alim_361/file/NRF%20R&D%20Brief-2025-10-O-RAN(Open%20Radio%20Access%20Network,%20%EA%B0%9C%EB%B0%A9%ED%98%95%20%EB%AC%B4%EC%84%A0%20%EC%A0%91%EC%86%8D%EB%A7%9D).pdf",
+        "grade": "B"
+      },
+      {
+        "name": "AI-RAN 실증 확대(서울역·김포공항, LG전자 O-DU+3개 O-RU 제조사)",
+        "value": "2025-08-18",
+        "unit": "정책",
+        "asof": "2025-08-18",
+        "source_url": "https://www.ezyeconomy.com/news/articleView.html?idxno=219510",
+        "grade": "B"
+      },
+      {
+        "name": "2026년 AI 네트워크 개발·실증사업 약 150억원(하이퍼-AI 80억원, 오픈랜·AI-RAN 실증단지, 5G 피지컬AI 실증단지)",
+        "value": 150,
+        "unit": "억원",
+        "asof": "2026-02-25",
+        "source_url": "https://www.etnews.com/20260225000329",
+        "grade": "B"
+      },
+      {
+        "name": "AI-RAN 글로벌 선도 프로젝트(2026.4~2030.12, 470억원, ETRI 전문연구소)",
+        "value": 470,
+        "unit": "억원",
+        "asof": "2026-06-09",
+        "source_url": "https://www.fnnews.com/news/202606091226490975",
+        "grade": "B"
+      },
+      {
+        "name": "NIA 국산 오픈랜·AI 패키지 국내(SL전자 공장)·일본(STL Japan 물류센터) 병렬 실증",
+        "value": "2026-07-15",
+        "unit": "정책",
+        "asof": "2026-07-15",
+        "source_url": "https://www.ddaily.co.kr/page/view/2026071509541177505",
+        "grade": "B"
+      },
+      {
+        "name": "GSA 프라이빗망 수직시장 구조(2,003개 조직; 5G 49%)",
+        "value": 2003,
+        "unit": "조직",
+        "asof": "1Q26",
+        "source_url": "https://blog.privatenetworks.technology/2026/06/private-mobile-networks-are-becoming.html",
+        "grade": "B"
+      },
+      {
+        "name": "클라우드 코어·슬림 라이선스로 초기 구축비 80% 절감",
+        "value": 80,
+        "unit": "%",
+        "asof": "2026-09-05",
+        "source_url": "https://www.hellot.net/news/article.html?no=114793",
+        "grade": "B"
+      },
+      {
+        "name": "5G SA 전환 현황(KT 완료, SKT·LGU+ 2026년 내)",
+        "value": "2026",
+        "unit": "현황",
+        "asof": "2026-05",
+        "source_url": "https://www.techm.kr/news/articleView.html?idxno=148268",
+        "grade": "B"
+      }
+    ],
+    "confidence": "중간",
+    "caveats": [
+      "오픈랜 기반 이음5G 사이트 수 등 정량 통계는 공개되지 않아 목표시장 판단은 정성적.",
+      "2026년 오픈랜 실증사업이 이음5G 주파수(4.7GHz)로 구축되는지 여부는 기사에서 확인되지 않음."
+    ],
+    "grade": "B"
+  },
+  {
+    "files_opened": [
+      "prompts/05_blind.md",
+      "reports/R01/L2/blind_input/brief.md"
+    ],
+    "note": "위 두 파일 외 프로젝트 로컬 파일은 열지 않음. 웹에서 내려받아 세션 스크래치패드에 저장·파싱한 외부 자료: 한국은행 2023년 산업연관표 보도자료 PDF(KDI 경유), 2024년 광업·제조업조사 보도자료 PDF(국가데이터처), NRF R&D Brief O-RAN PDF."
+  }
+]

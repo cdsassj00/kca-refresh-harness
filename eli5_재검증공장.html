@@ -1,0 +1,670 @@
+<title>연구보고서 재검증 공장</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;700;900&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+
+<style>
+:root{
+  --ground:#EFF2F5;
+  --surface:#FFFFFF;
+  --surface-2:#E3E9EE;
+  --ink:#16202C;
+  --ink-soft:#5B6976;
+  --line:#C3CFD9;
+  --signal:#0E6E80;
+  --good:#3C8A62;
+  --revise:#2E6FA8;
+  --warn:#C75F26;
+  --bad:#A8392C;
+  --unknown:#7C8A94;
+  --shadow:0 1px 2px rgba(22,32,44,.06), 0 8px 24px rgba(22,32,44,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F161D;
+    --surface:#18222C;
+    --surface-2:#212E39;
+    --ink:#E7EDF2;
+    --ink-soft:#96A4AF;
+    --line:#2F3D4A;
+    --signal:#3CB6C9;
+    --good:#5BB88B;
+    --revise:#5D9BD6;
+    --warn:#E8873F;
+    --bad:#D8705D;
+    --unknown:#8E9BA5;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 28px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F161D;
+  --surface:#18222C;
+  --surface-2:#212E39;
+  --ink:#E7EDF2;
+  --ink-soft:#96A4AF;
+  --line:#2F3D4A;
+  --signal:#3CB6C9;
+  --good:#5BB88B;
+  --revise:#5D9BD6;
+  --warn:#E8873F;
+  --bad:#D8705D;
+  --unknown:#8E9BA5;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 28px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"IBM Plex Sans KR", system-ui, -apple-system, "Malgun Gothic", sans-serif;
+  font-weight:400;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+
+.wrap{
+  max-width:960px;
+  margin:0 auto;
+  padding:0 24px 120px;
+}
+
+/* ---------- 머리말 ---------- */
+.masthead{
+  padding:88px 0 56px;
+  border-bottom:2px solid var(--ink);
+}
+.kicker{
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.18em;
+  color:var(--signal);
+  margin:0 0 20px;
+}
+.masthead h1{
+  font-family:"Hahmlet", "Nanum Myeongjo", serif;
+  font-weight:900;
+  font-size:clamp(40px, 7vw, 76px);
+  line-height:1.08;
+  letter-spacing:-.02em;
+  margin:0 0 24px;
+  text-wrap:balance;
+}
+.lede{
+  font-size:clamp(17px, 2vw, 20px);
+  color:var(--ink-soft);
+  max-width:34em;
+  margin:0;
+}
+
+/* ---------- 장면 ---------- */
+.scene{
+  padding:72px 0 0;
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+.scene-head{display:flex;flex-direction:column;gap:10px}
+.step{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.14em;
+  color:var(--ink-soft);
+}
+.step b{
+  font-family:"Hahmlet", serif;
+  font-size:15px;
+  color:var(--surface);
+  background:var(--signal);
+  width:26px;height:26px;
+  display:grid;place-items:center;
+  border-radius:50%;
+  letter-spacing:0;
+}
+.scene h2{
+  font-family:"Hahmlet", "Nanum Myeongjo", serif;
+  font-weight:700;
+  font-size:clamp(26px, 3.8vw, 38px);
+  line-height:1.25;
+  letter-spacing:-.015em;
+  margin:0;
+  text-wrap:balance;
+}
+.scene p{
+  font-size:17px;
+  color:var(--ink-soft);
+  max-width:38em;
+  margin:0;
+}
+.scene p strong{color:var(--ink);font-weight:700}
+
+figure{
+  margin:0;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:4px;
+  box-shadow:var(--shadow);
+  overflow-x:auto;
+  padding:28px 24px 0;
+}
+figure svg{display:block;width:100%;height:auto;min-width:640px;color:var(--ink)}
+figcaption{
+  font-size:13px;
+  color:var(--ink-soft);
+  border-top:1px solid var(--line);
+  margin-top:24px;
+  padding:14px 0 18px;
+  min-width:640px;
+}
+
+/* SVG 공용 */
+.bx{fill:var(--surface);stroke:currentColor;stroke-width:1.5}
+.bx-2{fill:var(--surface-2);stroke:currentColor;stroke-width:1.5}
+.ln{stroke:currentColor;stroke-width:1.5;fill:none}
+.ln-d{stroke:currentColor;stroke-width:1.5;fill:none;stroke-dasharray:5 4}
+.tx{font-family:"IBM Plex Sans KR",sans-serif;font-size:13px;fill:currentColor}
+.tx-s{font-family:"IBM Plex Sans KR",sans-serif;font-size:11px;fill:var(--ink-soft)}
+.tx-b{font-family:"IBM Plex Sans KR",sans-serif;font-size:13px;font-weight:700;fill:currentColor}
+.tx-h{font-family:"Hahmlet",serif;font-size:16px;font-weight:700;fill:currentColor}
+.tx-num{font-family:"Hahmlet",serif;font-size:30px;font-weight:900;fill:currentColor}
+.c-sig{color:var(--signal)}
+.c-good{color:var(--good)}
+.c-rev{color:var(--revise)}
+.c-warn{color:var(--warn)}
+.c-bad{color:var(--bad)}
+.c-unk{color:var(--unknown)}
+.fill-sig{fill:var(--signal)}
+.fill-warn{fill:var(--warn)}
+.fill-unk{fill:var(--unknown)}
+
+/* ---------- 마무리 ---------- */
+.decide{
+  margin-top:88px;
+  border-top:2px solid var(--ink);
+  padding-top:40px;
+}
+.decide h2{
+  font-family:"Hahmlet",serif;
+  font-weight:700;
+  font-size:clamp(24px,3.2vw,32px);
+  margin:0 0 8px;
+}
+.decide > p{color:var(--ink-soft);margin:0 0 28px;font-size:17px}
+.qlist{display:flex;flex-direction:column;gap:2px}
+.q{
+  display:grid;
+  grid-template-columns:minmax(120px,1fr) minmax(0,2.2fr);
+  gap:20px;
+  padding:18px 0;
+  border-top:1px solid var(--line);
+  align-items:baseline;
+}
+.q:last-child{border-bottom:1px solid var(--line)}
+.q dt{font-weight:700;font-size:15px}
+.q dd{margin:0;color:var(--ink-soft);font-size:15px}
+.q dd b{
+  color:var(--ink);
+  font-weight:700;
+  box-shadow:inset 0 -.5em 0 color-mix(in srgb, var(--signal) 22%, transparent);
+}
+@media (max-width:640px){
+  .q{grid-template-columns:1fr;gap:4px}
+  .wrap{padding:0 18px 80px}
+  .masthead{padding:56px 0 40px}
+  figure{padding:20px 16px 0}
+}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="kicker">한국방송통신전파진흥원 · 심층리서치 시연 설계</p>
+  <h1>오래된 보고서를<br>다시 검사하는 공장</h1>
+  <p class="lede">몇 해 전에 쓴 연구보고서가 지금도 맞는 말인지 어떻게 알까요? 한 권씩 사람이 읽는 대신, 보고서를 <strong>문장 단위로 뜯어서</strong> 각각 다른 검사대로 보내는 방법을 설명합니다.</p>
+</header>
+
+<!-- 장면 1 -->
+<section class="scene">
+  <div class="scene-head">
+    <span class="step"><b>1</b>무엇이 문제인가</span>
+    <h2>보고서 한 권에는 성격이 다른 말들이 섞여 있다</h2>
+  </div>
+  <figure>
+    <svg viewBox="0 0 880 300" role="img" aria-label="2021년 보고서 한 권에서 통계, 예측, 법령, 설문, 제안 다섯 종류의 문장이 나오는 그림. 각 문장은 지금도 맞는지 확인하는 방법이 서로 다르다.">
+      <!-- 보고서 -->
+      <g transform="translate(30,70)">
+        <rect class="bx" x="0" y="0" width="120" height="160" rx="3"/>
+        <rect class="bx-2" x="8" y="-8" width="120" height="160" rx="3"/>
+        <rect class="bx" x="16" y="-16" width="120" height="160" rx="3"/>
+        <text class="tx-b" x="76" y="46" text-anchor="middle">연구보고서</text>
+        <text class="tx-s" x="76" y="68" text-anchor="middle">2021년 발간</text>
+        <line class="ln" x1="40" y1="90" x2="112" y2="90" opacity=".35"/>
+        <line class="ln" x1="40" y1="104" x2="112" y2="104" opacity=".35"/>
+        <line class="ln" x1="40" y1="118" x2="90" y2="118" opacity=".35"/>
+      </g>
+
+      <!-- 갈라지는 선 -->
+      <path class="ln" d="M175 140 C 215 140, 215 34, 258 34"/>
+      <path class="ln" d="M175 140 C 215 140, 215 87, 258 87"/>
+      <path class="ln" d="M175 140 H 258"/>
+      <path class="ln" d="M175 140 C 215 140, 215 193, 258 193"/>
+      <path class="ln" d="M175 140 C 215 140, 215 246, 258 246"/>
+
+      <!-- 문장 5종 -->
+      <g>
+        <rect class="bx" x="258" y="14" width="330" height="40" rx="3"/>
+        <text class="tx" x="274" y="39">“2021년 가입자는 3,564만 명이다”</text>
+        <text class="tx-s" x="604" y="39">→ 지금 값은?</text>
+      </g>
+      <g>
+        <rect class="bx" x="258" y="67" width="330" height="40" rx="3"/>
+        <text class="tx" x="274" y="92">“2030년 시장은 12조 원이 될 것”</text>
+        <text class="tx-s" x="604" y="92">→ 그쪽으로 가고 있나?</text>
+      </g>
+      <g>
+        <rect class="bx" x="258" y="120" width="330" height="40" rx="3"/>
+        <text class="tx" x="274" y="145">“현행 전파법 제58조의2에 따르면”</text>
+        <text class="tx-s" x="604" y="145">→ 그 조문 그대로인가?</text>
+      </g>
+      <g>
+        <rect class="bx" x="258" y="173" width="330" height="40" rx="3"/>
+        <text class="tx" x="274" y="198">“응답자의 62%가 찬성했다”</text>
+        <text class="tx-s" x="604" y="198">→ 다시 물어봐야 하나?</text>
+      </g>
+      <g>
+        <rect class="bx" x="258" y="226" width="330" height="40" rx="3"/>
+        <text class="tx" x="274" y="251">“세 가지 제도 개선을 제안한다”</text>
+        <text class="tx-s" x="604" y="251">→ 채택됐나?</text>
+      </g>
+    </svg>
+    <figcaption>다섯 문장은 확인하는 방법이 전부 다릅니다. 통계는 값을 갈아끼우면 되지만, 예측은 실적과 대조해야 하고, 법령은 개정 이력을 봐야 하고, 설문은 다시 받아야 합니다.</figcaption>
+  </figure>
+  <p>그래서 “이 보고서는 무슨 유형인가”라고 물으면 답이 하나로 안 나옵니다. 한 권 안에 다섯 종류가 다 들어 있으니까요.</p>
+</section>
+
+<!-- 장면 2 -->
+<section class="scene">
+  <div class="scene-head">
+    <span class="step"><b>2</b>핵심 발견</span>
+    <h2>통째로 분류하면 3분의 1이 “애매” 칸에 빠진다</h2>
+  </div>
+  <figure>
+    <svg viewBox="0 0 880 430" role="img" aria-label="왼쪽은 보고서를 통째로 유형 분류해 164권 중 52권이 미분류 칸에 쌓이는 그림. 오른쪽은 보고서를 문장으로 쪼개 여덟 개 검사 칸에 모두 배정되어 미분류가 없는 그림.">
+      <!-- 구분선 -->
+      <line class="ln-d" x1="440" y1="20" x2="440" y2="410" opacity=".45"/>
+
+      <!-- === 왼쪽: 보고서 단위 === -->
+      <text class="tx-h" x="24" y="30">보고서를 통째로 분류</text>
+      <text class="tx-s" x="24" y="50">제목·주제로 유형을 하나 고른다</text>
+
+      <g transform="translate(24,76)">
+        <rect class="bx-2" x="0" y="0" width="72" height="54" rx="3"/>
+        <rect class="bx-2" x="6" y="-6" width="72" height="54" rx="3"/>
+        <rect class="bx" x="12" y="-12" width="72" height="54" rx="3"/>
+        <text class="tx-b" x="48" y="14" text-anchor="middle">164권</text>
+      </g>
+      <path class="ln" d="M120 90 H 168" marker-end="url(#ah)"/>
+
+      <!-- 유형 칸 3개 -->
+      <g transform="translate(180,60)">
+        <rect class="bx" x="0" y="0" width="108" height="34" rx="2"/>
+        <text class="tx" x="10" y="22">제도·법제</text>
+        <text class="tx-b" x="98" y="22" text-anchor="end">35</text>
+        <rect class="bx" x="0" y="42" width="108" height="34" rx="2"/>
+        <text class="tx" x="10" y="64">진흥·전략</text>
+        <text class="tx-b" x="98" y="64" text-anchor="end">26</text>
+        <rect class="bx" x="0" y="84" width="108" height="34" rx="2"/>
+        <text class="tx" x="10" y="106">전망·예측</text>
+        <text class="tx-b" x="98" y="106" text-anchor="end">17</text>
+        <text class="tx-s" x="0" y="140">기술 16 · 실태 10 · 운영 8</text>
+      </g>
+
+      <!-- 애매 칸 -->
+      <g class="c-warn" transform="translate(24,232)">
+        <rect x="0" y="0" width="264" height="126" rx="3" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="7 5"/>
+        <text class="tx-num" x="20" y="56" fill="currentColor">52권</text>
+        <text class="tx-b" x="20" y="82" fill="currentColor">어느 칸에도 안 들어감</text>
+        <text class="tx-s" x="20" y="104">「디지털 기후대응 연구」</text>
+        <text class="tx-s" x="20" y="120">「유료방송 재원 다각화 방안」…</text>
+      </g>
+      <text class="tx-s" x="24" y="382">게다가 31권은 두세 칸에 동시에 걸침</text>
+      <text class="tx-b c-warn" x="24" y="406" fill="currentColor">→ 절반 가까이가 처리 불가</text>
+
+      <!-- === 오른쪽: 문장 단위 === -->
+      <text class="tx-h c-sig" x="480" y="30" fill="currentColor">문장으로 쪼개서 분류</text>
+      <text class="tx-s" x="480" y="50">문장마다 검사 방법을 하나 고른다</text>
+
+      <g transform="translate(480,72)">
+        <rect class="bx" x="0" y="0" width="60" height="46" rx="3"/>
+        <text class="tx-s" x="30" y="28" text-anchor="middle">1권</text>
+      </g>
+      <path class="ln c-sig" d="M548 95 H 588" marker-end="url(#ahs)"/>
+      <g transform="translate(596,66)">
+        <rect class="bx-2" x="0" y="0" width="58" height="18" rx="2"/>
+        <rect class="bx-2" x="0" y="22" width="58" height="18" rx="2"/>
+        <rect class="bx-2" x="0" y="44" width="58" height="18" rx="2"/>
+        <text class="tx-s" x="29" y="78" text-anchor="middle">문장들</text>
+      </g>
+      <path class="ln c-sig" d="M662 95 H 700" marker-end="url(#ahs)"/>
+
+      <!-- 8개 검사칸 -->
+      <g transform="translate(480,168)">
+        <rect class="bx" x="0" y="0" width="92" height="30" rx="2"/><text class="tx-s" x="8" y="20">① 통계 숫자</text>
+        <rect class="bx" x="100" y="0" width="92" height="30" rx="2"/><text class="tx-s" x="108" y="20">② 예측치</text>
+        <rect class="bx" x="200" y="0" width="92" height="30" rx="2"/><text class="tx-s" x="208" y="20">③ 모형 결과</text>
+        <rect class="bx" x="300" y="0" width="92" height="30" rx="2"/><text class="tx-s" x="308" y="20">④ 법령 조문</text>
+        <rect class="bx" x="0" y="38" width="92" height="30" rx="2"/><text class="tx-s" x="8" y="58">⑤ 설문 결과</text>
+        <rect class="bx" x="100" y="38" width="92" height="30" rx="2"/><text class="tx-s" x="108" y="58">⑥ 정책 제안</text>
+        <rect class="bx" x="200" y="38" width="92" height="30" rx="2"/><text class="tx-s" x="208" y="58">⑦ 시장 사실</text>
+        <rect class="bx" x="300" y="38" width="92" height="30" rx="2"/><text class="tx-s" x="308" y="58">⑧ 기술 규격</text>
+      </g>
+
+      <g class="c-sig" transform="translate(480,262)">
+        <rect x="0" y="0" width="372" height="96" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <text class="tx-num" x="20" y="52" fill="currentColor">0건</text>
+        <text class="tx-b" x="20" y="78" fill="currentColor">미분류 없음 — 모든 문장이 어딘가에 속함</text>
+      </g>
+      <text class="tx-s" x="480" y="382">보고서 유형은 “어떤 문장이 몇 개 들어 있나”로 저절로 나옴</text>
+      <text class="tx-b c-sig" x="480" y="406" fill="currentColor">→ 어떤 보고서를 넣어도 돌아감</text>
+
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+        </marker>
+        <marker id="ahs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+    </svg>
+    <figcaption>실제로 KCA 연구보고서 164건의 제목을 분류해 본 결과입니다. 보고서 단위로는 52건이 미분류, 31건이 중복 분류로 떨어졌습니다. 문장 단위로 내리면 이 문제가 사라집니다.</figcaption>
+  </figure>
+  <p>이게 이 설계의 전부입니다. <strong>분류 단위를 보고서에서 문장으로 한 칸 내리는 것.</strong> 나머지는 이 결정에서 따라 나옵니다.</p>
+</section>
+
+<!-- 장면 3 -->
+<section class="scene">
+  <div class="scene-head">
+    <span class="step"><b>3</b>공장은 이렇게 돈다</span>
+    <h2>뜯고 · 찾고 · 다시 계산하고 · 도장 찍는다</h2>
+  </div>
+  <figure>
+    <svg viewBox="0 0 880 320" role="img" aria-label="보고서 PDF가 네 단계 공정을 지나며 판정이 찍힌 보고서로 나오는 컨베이어 그림. 네 단계는 문장으로 뜯기, 최신 근거 찾기, 다시 계산하기, 판정 도장 찍기이다.">
+      <!-- 벨트 -->
+      <line class="ln" x1="24" y1="176" x2="856" y2="176" opacity=".3" stroke-width="10" stroke-linecap="round"/>
+
+      <!-- 입력 -->
+      <g transform="translate(24,140)">
+        <rect class="bx" x="0" y="0" width="74" height="72" rx="3"/>
+        <text class="tx-s" x="37" y="32" text-anchor="middle">보고서</text>
+        <text class="tx-s" x="37" y="50" text-anchor="middle">PDF</text>
+      </g>
+
+      <!-- 4개 공정 -->
+      <g transform="translate(126,92)">
+        <rect class="bx" x="0" y="0" width="150" height="168" rx="3"/>
+        <circle class="fill-sig" cx="26" cy="30" r="13"/>
+        <text class="tx-b" x="26" y="35" text-anchor="middle" fill="var(--surface)">1</text>
+        <text class="tx-h" x="50" y="36">뜯기</text>
+        <text class="tx-s" x="18" y="72">보고서를 문장으로</text>
+        <text class="tx-s" x="18" y="90">쪼개고 종류를 붙임</text>
+        <line class="ln" x1="18" y1="108" x2="132" y2="108" opacity=".3"/>
+        <text class="tx-s" x="18" y="132">산출 · 문장 목록</text>
+        <text class="tx-s" x="18" y="150">각 문장의 원문 쪽수</text>
+      </g>
+
+      <g transform="translate(292,92)">
+        <rect class="bx" x="0" y="0" width="150" height="168" rx="3"/>
+        <circle class="fill-sig" cx="26" cy="30" r="13"/>
+        <text class="tx-b" x="26" y="35" text-anchor="middle" fill="var(--surface)">2</text>
+        <text class="tx-h" x="50" y="36">찾기</text>
+        <text class="tx-s" x="18" y="72">지금의 통계·법령·</text>
+        <text class="tx-s" x="18" y="90">사건을 수집</text>
+        <line class="ln" x1="18" y1="108" x2="132" y2="108" opacity=".3"/>
+        <text class="tx-s" x="18" y="132">산출 · 근거 원본</text>
+        <text class="tx-s" x="18" y="150">출처 주소와 날짜</text>
+      </g>
+
+      <g transform="translate(458,92)">
+        <rect class="bx" x="0" y="0" width="150" height="168" rx="3"/>
+        <circle class="fill-sig" cx="26" cy="30" r="13"/>
+        <text class="tx-b" x="26" y="35" text-anchor="middle" fill="var(--surface)">3</text>
+        <text class="tx-h" x="50" y="36">다시 하기</text>
+        <text class="tx-s" x="18" y="72">그때 예측이 맞았는지</text>
+        <text class="tx-s" x="18" y="90">대보고, 새로 예측</text>
+        <line class="ln" x1="18" y1="108" x2="132" y2="108" opacity=".3"/>
+        <text class="tx-s" x="18" y="132">산출 · 오차 그래프</text>
+        <text class="tx-s" x="18" y="150">새 추정치와 구간</text>
+      </g>
+
+      <g transform="translate(624,92)">
+        <rect class="bx" x="0" y="0" width="150" height="168" rx="3"/>
+        <circle class="fill-sig" cx="26" cy="30" r="13"/>
+        <text class="tx-b" x="26" y="35" text-anchor="middle" fill="var(--surface)">4</text>
+        <text class="tx-h" x="50" y="36">도장 찍기</text>
+        <text class="tx-s" x="18" y="72">문장마다 판정과</text>
+        <text class="tx-s" x="18" y="90">근거를 붙임</text>
+        <line class="ln" x1="18" y1="108" x2="132" y2="108" opacity=".3"/>
+        <text class="tx-s" x="18" y="132">산출 · 대조표</text>
+        <text class="tx-s" x="18" y="150">한글 보고서·발표자료</text>
+      </g>
+
+      <!-- 출력 -->
+      <g class="c-sig" transform="translate(790,140)">
+        <rect x="0" y="0" width="66" height="72" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <text class="tx-s" x="33" y="32" text-anchor="middle" fill="currentColor">현행화</text>
+        <text class="tx-s" x="33" y="50" text-anchor="middle" fill="currentColor">보고서</text>
+      </g>
+
+      <text class="tx-s" x="24" y="290">단계마다 결과가 파일로 남습니다 — 중간에 멈춰서 확인하고, 그 단계만 다시 돌릴 수 있습니다.</text>
+    </svg>
+    <figcaption>실제 구현은 일곱 단계지만, 하는 일은 이 네 가지입니다. 사람이 판단할 곳(무엇을 찾을지, 어떻게 해석할지)과 기계가 계산할 곳(숫자 대조, 오차 계산)이 나뉘어 있습니다.</figcaption>
+  </figure>
+</section>
+
+<!-- 장면 4 -->
+<section class="scene">
+  <div class="scene-head">
+    <span class="step"><b>4</b>결과는 도장 다섯 개</span>
+    <h2>문장 하나하나에 판정이 찍힌다</h2>
+  </div>
+  <figure>
+    <svg viewBox="0 0 880 250" role="img" aria-label="판정 도장 다섯 종류: 유지, 수치조정, 반전, 무효, 판정불가. 각각 초록, 파랑, 주황, 벽돌색, 회색으로 구분된다.">
+      <g class="c-good" transform="translate(24,20)">
+        <circle cx="56" cy="56" r="44" fill="none" stroke="currentColor" stroke-width="3"/>
+        <circle cx="56" cy="56" r="37" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/>
+        <text class="tx-h" x="56" y="62" text-anchor="middle" fill="currentColor">유지</text>
+        <text class="tx-b" x="56" y="132" text-anchor="middle">그대로 맞음</text>
+        <text class="tx-s" x="56" y="154" text-anchor="middle">지금 다시 해도</text>
+        <text class="tx-s" x="56" y="170" text-anchor="middle">같은 결론</text>
+      </g>
+      <g class="c-rev" transform="translate(190,20)">
+        <circle cx="56" cy="56" r="44" fill="none" stroke="currentColor" stroke-width="3"/>
+        <circle cx="56" cy="56" r="37" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/>
+        <text class="tx-h" x="56" y="62" text-anchor="middle" fill="currentColor">조정</text>
+        <text class="tx-b" x="56" y="132" text-anchor="middle">숫자만 바뀜</text>
+        <text class="tx-s" x="56" y="154" text-anchor="middle">방향은 맞으나</text>
+        <text class="tx-s" x="56" y="170" text-anchor="middle">값을 새로 제시</text>
+      </g>
+      <g class="c-warn" transform="translate(356,20)">
+        <circle cx="56" cy="56" r="44" fill="none" stroke="currentColor" stroke-width="3"/>
+        <circle cx="56" cy="56" r="37" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/>
+        <text class="tx-h" x="56" y="62" text-anchor="middle" fill="currentColor">반전</text>
+        <text class="tx-b" x="56" y="132" text-anchor="middle">거꾸로 갔음</text>
+        <text class="tx-s" x="56" y="154" text-anchor="middle">전망과 반대로</text>
+        <text class="tx-s" x="56" y="170" text-anchor="middle">전개됨</text>
+      </g>
+      <g class="c-bad" transform="translate(522,20)">
+        <circle cx="56" cy="56" r="44" fill="none" stroke="currentColor" stroke-width="3"/>
+        <circle cx="56" cy="56" r="37" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/>
+        <text class="tx-h" x="56" y="62" text-anchor="middle" fill="currentColor">무효</text>
+        <text class="tx-b" x="56" y="132" text-anchor="middle">전제가 사라짐</text>
+        <text class="tx-s" x="56" y="154" text-anchor="middle">법 폐지, 사업자</text>
+        <text class="tx-s" x="56" y="170" text-anchor="middle">소멸, 기술 단종</text>
+      </g>
+      <g class="c-unk" transform="translate(688,20)">
+        <circle cx="56" cy="56" r="44" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="6 5"/>
+        <text class="tx-h" x="56" y="62" text-anchor="middle" fill="currentColor">모름</text>
+        <text class="tx-b" x="56" y="132" text-anchor="middle">확인 못 함</text>
+        <text class="tx-s" x="56" y="154" text-anchor="middle">근거를 못 찾음</text>
+        <text class="tx-s" x="56" y="170" text-anchor="middle">— 지어내지 않음</text>
+      </g>
+      <line class="ln" x1="24" y1="206" x2="856" y2="206" opacity=".3"/>
+      <text class="tx-s" x="24" y="232">이 도장들을 모으면 “원 보고서의 무엇이 살아 있고 무엇이 죽었는가”가 한 장으로 나옵니다.</text>
+    </svg>
+    <figcaption>다섯 번째 도장이 가장 중요합니다. 근거를 못 찾았을 때 그럴듯하게 지어내는 것이 이런 작업의 가장 큰 위험이라, 하네스는 출처가 없으면 자동으로 “모름”으로 내립니다.</figcaption>
+  </figure>
+</section>
+
+<!-- 장면 5 -->
+<section class="scene">
+  <div class="scene-head">
+    <span class="step"><b>5</b>까다로운 경우</span>
+    <h2>설문을 다시 받아야 하면 어떻게 하나</h2>
+  </div>
+  <figure>
+    <svg viewBox="0 0 880 320" role="img" aria-label="옛 설문지의 네 문항을 각각 유지, 선택지 수정, 삭제, 신설로 판정해 새 설문지를 만드는 그림. 그 아래에 AI 모의응답은 참고용이며 실제 조사를 대체하지 않는다는 경고가 있다.">
+      <text class="tx-h" x="24" y="28">2021년 설문지</text>
+      <g transform="translate(24,44)">
+        <rect class="bx" x="0" y="0" width="234" height="38" rx="2"/><text class="tx-s" x="12" y="24">Q1. 귀하의 연령대는?</text>
+        <rect class="bx" x="0" y="46" width="234" height="38" rx="2"/><text class="tx-s" x="12" y="70">Q2. 주로 쓰는 OTT는?</text>
+        <rect class="bx" x="0" y="92" width="234" height="38" rx="2"/><text class="tx-s" x="12" y="116">Q3. DMB 이용 빈도는?</text>
+        <rect class="bx-2" x="0" y="138" width="234" height="38" rx="2" stroke-dasharray="4 4"/><text class="tx-s" x="12" y="162">(없음)</text>
+      </g>
+
+      <!-- 판정 화살표 -->
+      <g>
+        <path class="ln c-good" d="M270 67 H 352" marker-end="url(#ah2)"/>
+        <text class="tx-s c-good" x="284" y="58" fill="currentColor">그대로</text>
+        <path class="ln c-rev" d="M270 113 H 352" marker-end="url(#ah2)"/>
+        <text class="tx-s c-rev" x="278" y="104" fill="currentColor">보기 수정</text>
+        <path class="ln c-bad" d="M270 159 H 352" marker-end="url(#ah2)"/>
+        <text class="tx-s c-bad" x="290" y="150" fill="currentColor">삭제</text>
+        <path class="ln c-sig" d="M270 205 H 352" marker-end="url(#ah2)"/>
+        <text class="tx-s c-sig" x="290" y="196" fill="currentColor">신설</text>
+      </g>
+
+      <text class="tx-h c-sig" x="362" y="28" fill="currentColor">2026년 개정 설문지</text>
+      <g transform="translate(362,44)">
+        <rect class="bx" x="0" y="0" width="290" height="38" rx="2"/><text class="tx-s" x="12" y="24">Q1. 귀하의 연령대는?</text>
+        <rect class="bx" x="0" y="46" width="290" height="38" rx="2"/><text class="tx-s" x="12" y="70">Q2. 주 이용 OTT는? (합병 반영)</text>
+        <rect class="bx-2" x="0" y="92" width="290" height="38" rx="2" stroke-dasharray="4 4" opacity=".5"/><text class="tx-s" x="12" y="116" opacity=".55">— 삭제됨 —</text>
+        <rect class="bx" x="0" y="138" width="290" height="38" rx="2"/><text class="tx-s" x="12" y="162">Q4. 생성형 AI 추천 이용 경험은?</text>
+      </g>
+
+      <path class="ln c-sig" d="M664 111 H 706" marker-end="url(#ah2)"/>
+      <g class="c-sig" transform="translate(714,60)">
+        <rect x="0" y="0" width="142" height="102" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <text class="tx-b" x="71" y="34" text-anchor="middle" fill="currentColor">AI 모의응답</text>
+        <text class="tx-s" x="71" y="58" text-anchor="middle">“지금 조사하면</text>
+        <text class="tx-s" x="71" y="76" text-anchor="middle">대략 이렇게 나올 것”</text>
+      </g>
+
+      <!-- 경고 -->
+      <g class="c-warn" transform="translate(24,246)">
+        <rect x="0" y="0" width="832" height="52" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+        <circle cx="30" cy="26" r="11" fill="none" stroke="currentColor" stroke-width="2"/>
+        <text class="tx-b" x="30" y="31" text-anchor="middle" fill="currentColor">!</text>
+        <text class="tx-b" x="54" y="23" fill="currentColor">모의응답은 참고용입니다 — 실제 조사를 대체하지 않습니다.</text>
+        <text class="tx-s" x="54" y="42">그래서 개정 설문지와 함께 표본설계·예산·기간이 담긴 실조사 설계서를 반드시 같이 냅니다.</text>
+      </g>
+
+      <defs>
+        <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+    </svg>
+    <figcaption>설문 기반 보고서는 문항을 하나씩 판정합니다. 그대로 쓸지, 보기를 고칠지, 버릴지, 새로 넣을지. 실험계획이 들어간 연구도 같은 방식으로 프로토콜을 항목별로 판정합니다.</figcaption>
+  </figure>
+</section>
+
+<!-- 장면 6 -->
+<section class="scene">
+  <div class="scene-head">
+    <span class="step"><b>6</b>가장 큰 위험</span>
+    <h2>망가질 때는 “멈춤”이 아니라 “그럴듯한 거짓”으로 망가진다</h2>
+  </div>
+  <figure>
+    <svg viewBox="0 0 880 250" role="img" aria-label="새로운 주장이 출처 확인 관문을 통과하면 판정을 받고, 출처가 없으면 모름 도장으로 강등되는 그림. 그 뒤 다른 검사자가 판정을 재확인한다.">
+      <g transform="translate(24,88)">
+        <rect class="bx" x="0" y="0" width="128" height="58" rx="3"/>
+        <text class="tx-s" x="64" y="26" text-anchor="middle">새로 찾은</text>
+        <text class="tx-s" x="64" y="44" text-anchor="middle">숫자·사실</text>
+      </g>
+      <path class="ln" d="M160 117 H 212" marker-end="url(#ah3)"/>
+
+      <!-- 관문 -->
+      <g transform="translate(220,66)">
+        <path class="bx" d="M0 51 L62 0 L124 51 L62 102 Z"/>
+        <text class="tx-b" x="62" y="46" text-anchor="middle">출처가</text>
+        <text class="tx-b" x="62" y="64" text-anchor="middle">있나?</text>
+      </g>
+
+      <path class="ln c-good" d="M352 96 C 392 96, 392 56, 432 56" marker-end="url(#ah3)"/>
+      <text class="tx-s c-good" x="372" y="46" fill="currentColor">있음</text>
+      <path class="ln c-unk" d="M352 138 C 392 138, 392 182, 432 182" marker-end="url(#ah3)"/>
+      <text class="tx-s c-unk" x="372" y="200" fill="currentColor">없음</text>
+
+      <g class="c-good" transform="translate(440,30)">
+        <rect x="0" y="0" width="176" height="54" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <text class="tx-b" x="88" y="24" text-anchor="middle" fill="currentColor">판정으로 진행</text>
+        <text class="tx-s" x="88" y="42" text-anchor="middle">주소·발행처·날짜 첨부</text>
+      </g>
+      <g class="c-unk" transform="translate(440,156)">
+        <rect x="0" y="0" width="176" height="54" rx="3" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="6 5"/>
+        <text class="tx-b" x="88" y="24" text-anchor="middle" fill="currentColor">“모름”으로 강등</text>
+        <text class="tx-s" x="88" y="42" text-anchor="middle">보고서에 확인 필요로 표기</text>
+      </g>
+
+      <path class="ln" d="M624 57 C 664 57, 664 110, 700 110" marker-end="url(#ah3)"/>
+      <g class="c-sig" transform="translate(708,70)">
+        <rect x="0" y="0" width="148" height="80" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <text class="tx-b" x="74" y="30" text-anchor="middle" fill="currentColor">다른 검사자가</text>
+        <text class="tx-b" x="74" y="50" text-anchor="middle" fill="currentColor">재확인</text>
+        <text class="tx-s" x="74" y="68" text-anchor="middle">자기 것을 자기가</text>
+      </g>
+      <text class="tx-s c-sig" x="782" y="164" text-anchor="middle" fill="currentColor">승인하지 않음</text>
+
+      <defs>
+        <marker id="ah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+    </svg>
+    <figcaption>세 겹의 방어선입니다. 출처 없는 값은 자동 강등, 원문 인용은 요약 없이 그대로, 판정은 작성한 쪽이 아닌 다른 쪽이 검사합니다.</figcaption>
+  </figure>
+</section>
+
+<!-- 결정 -->
+<section class="decide">
+  <h2>지금 정해야 할 것</h2>
+  <p>설계는 여기까지입니다. 아래 다섯 가지가 정해지면 바로 짓기 시작할 수 있습니다.</p>
+  <dl class="qlist">
+    <div class="q">
+      <dt>만드는 방식</dt>
+      <dd>절차서 + 파이썬 스크립트 혼합. 계산은 <b>코드</b>가, 판단은 <b>클로드</b>가 맡습니다.</dd>
+    </div>
+    <div class="q">
+      <dt>설문 재수행</dt>
+      <dd>개정 설문지 설계 + AI 모의응답까지. <b>실제 조사 발주는 별도</b>입니다.</dd>
+    </div>
+    <div class="q">
+      <dt>이번 범위</dt>
+      <dd>하네스를 세우고 <b>1편을 끝까지</b> 통과시킨 뒤, 나머지 4편은 분류·진단까지.</dd>
+    </div>
+    <div class="q">
+      <dt>첫 대상</dt>
+      <dd><b>「디지털 전환에 따른 5G 모바일 시장전망 및 주파수 경제성 분석」</b> — 2030년 전망치와 시나리오가 명시돼 있어 빗나간 정도를 가장 선명하게 보여줍니다.</dd>
+    </div>
+    <div class="q">
+      <dt>산출물</dt>
+      <dd>변경점 대조표 · 한글 보고서 · 발표용 슬라이드 · 구조화 데이터. <b>대조표는 항상</b> 나옵니다.</dd>
+    </div>
+  </dl>
+</section>
+
+</div>

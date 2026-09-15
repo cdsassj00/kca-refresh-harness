@@ -1,0 +1,492 @@
+[
+ {
+  "conclusion_id": "R01-K-RQ-01",
+  "hit_premises": [
+   {
+    "premise_id": "P-18",
+    "event_ids": [
+     "E-network_5g6g-2025-06-3gpp_rel20_6g_study_start",
+     "E-spectrum-2025-12-reallocation_policy_370mhz_5g_sa",
+     "E-network_5g6g-2026-08-ai_era_network_investment_council_5g_sa"
+    ],
+    "effect": "강화",
+    "why": "5G 표준은 Release 17(2022.3) 이후 Rel-19로 5G-Advanced 2단계를 마무리하고 2025.6 Rel-20에서 6G 연구를 착수(서술 갱신 필요). 기구축 5G 무선국의 2026년 말 SA 코어 연결 의무화(E13)와 12월 5G SA 전국 개통 추진(E15)은 URLLC·슬라이싱 등 5G 융합서비스 기반을 강화. 이음5G의 저비용·QoS 보장 위치를 흔드는 사건은 없음."
+   },
+   {
+    "premise_id": "P-20",
+    "event_ids": [
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites"
+    ],
+    "effect": "강화",
+    "why": "국내 사업자 사례가 2022년 말 10여 개 기업에서 2023년 말 30개 기업·기관, 2024년 말 36개 사업자로 확대돼 사례 기반 전제를 지지. 다만 개별 사례 목록(1~10호)은 2022년 기준이므로 갱신 필요."
+   },
+   {
+    "premise_id": "P-22",
+    "event_ids": [
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2025-02-eum5g_smart_factory_program",
+     "E-spectrum-2024-09-korea_spectrum_plan_2024_2027"
+    ],
+    "effect": "강화",
+    "why": "2022년 5G+ 전략 이후에도 이음5G 제도개선(제출서류·신청절차 간소화, 기간통신사업 등록 시 외국인 지분 제한 제외), 부처협업형 스마트공장 지원, 스펙트럼 플랜의 디지털 혁신 서비스용 주파수(미이용 160㎒+신규 438㎒) 개방 등 이음5G 활성화 정책이 지속·확대. 5G+ 전략 명칭·계획은 후속 계획으로 대체되어 서술 갱신 필요."
+   },
+   {
+    "premise_id": "P-23",
+    "event_ids": [],
+    "effect": "무관",
+    "why": "독일(4건)·일본(8건) 특화망 사례를 갱신하는 사건 없음. L1 case_refresh 대상."
+   },
+   {
+    "premise_id": "P-24",
+    "event_ids": [
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2025-02-eum5g_smart_factory_program",
+     "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites"
+    ],
+    "effect": "강화",
+    "why": "수요 실현 조건 중 허가절차 간소화(2023년 제도개선), 정부 정책지원(실증 15건·부처협업 지원)이 실제 이행됐고, 업계는 '와이파이와 다른 이음5G만의 가치를 알려야 한다'며 홍보 필요성을 재확인(E08). 예측 불확실성이 크다는 단서도 실적 경로(26→54→74)로 재확인."
+   }
+  ],
+  "provisional": {
+   "keep_likelihood": "높음",
+   "expected_direction": "유지",
+   "needed_check": "연구질문 자체는 유효. 하위 결론의 L1 결과(Fc-04·Fc-06 backtest, Fc-07·Fc-08 model_rerun, R-01·R-02 policy_track)를 종합해 판정. 재수행(R3) 설계 시 기준연도를 2022년 말 26개소에서 2024년 말 74개소로 재설정하고 예측기간을 2025~2030년으로 조정."
+  },
+  "grade": "C"
+ },
+ {
+  "conclusion_id": "R01-K-F-01",
+  "hit_premises": [
+   {
+    "premise_id": "P-20",
+    "event_ids": [
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites"
+    ],
+    "effect": "강화",
+    "why": "국내 사업자 사례가 2022년 말 10여 개 기업에서 2023년 말 30개 기업·기관, 2024년 말 36개 사업자로 확대돼 사례 기반 전제를 지지. 다만 개별 사례 목록(1~10호)은 2022년 기준이므로 갱신 필요."
+   },
+   {
+    "premise_id": "P-22",
+    "event_ids": [
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2025-02-eum5g_smart_factory_program",
+     "E-spectrum-2024-09-korea_spectrum_plan_2024_2027"
+    ],
+    "effect": "강화",
+    "why": "2022년 5G+ 전략 이후에도 이음5G 제도개선(제출서류·신청절차 간소화, 기간통신사업 등록 시 외국인 지분 제한 제외), 부처협업형 스마트공장 지원, 스펙트럼 플랜의 디지털 혁신 서비스용 주파수(미이용 160㎒+신규 438㎒) 개방 등 이음5G 활성화 정책이 지속·확대. 5G+ 전략 명칭·계획은 후속 계획으로 대체되어 서술 갱신 필요."
+   }
+  ],
+  "provisional": {
+   "keep_likelihood": "높음",
+   "expected_direction": "유지",
+   "needed_check": "kpi_track — 과기정통부 발표(E05: 2022년 9개 분야 26개소)와 일치하므로 '2022년 말 기준' 시점 한정 사실로 유지. 표10 합계 26 vs 할당 18+지정 9=27 불일치는 KCA 이음5G 지원센터 원자료로 해소. 2023·2024·2025년 말 누적치를 이어 붙여 현황 서술을 갱신."
+  },
+  "grade": "C"
+ },
+ {
+  "conclusion_id": "R01-K-Fc-01",
+  "hit_premises": [
+   {
+    "premise_id": "P-18",
+    "event_ids": [
+     "E-network_5g6g-2025-06-3gpp_rel20_6g_study_start",
+     "E-spectrum-2025-12-reallocation_policy_370mhz_5g_sa",
+     "E-network_5g6g-2026-08-ai_era_network_investment_council_5g_sa"
+    ],
+    "effect": "강화",
+    "why": "5G 표준은 Release 17(2022.3) 이후 Rel-19로 5G-Advanced 2단계를 마무리하고 2025.6 Rel-20에서 6G 연구를 착수(서술 갱신 필요). 기구축 5G 무선국의 2026년 말 SA 코어 연결 의무화(E13)와 12월 5G SA 전국 개통 추진(E15)은 URLLC·슬라이싱 등 5G 융합서비스 기반을 강화. 이음5G의 저비용·QoS 보장 위치를 흔드는 사건은 없음."
+   },
+   {
+    "premise_id": "P-21",
+    "event_ids": [
+     "E-network_5g6g-2026-01-5g_subscribers_38_6m_growth_stall",
+     "E-network_5g6g-2026-08-ai_era_network_investment_council_5g_sa",
+     "E-spectrum-2023-05-skt_28ghz_cancel"
+    ],
+    "effect": "약화",
+    "why": "5G 가입은 요금제 기준 2023.11~2024.1 약 3,225만 명에서 정체, 단말 기준 2026.1 3,860만 8,413명(전월비 +0.4%)·트래픽 1,237,983TB(-5.8%)로 성장 둔화, 통신3사 설비투자는 2019년 9조6,000억원 → 2025년 6조200억원으로 감소, 28㎓는 전면 철수. '5G 진척도 최선두' 전제의 투자·확산 모멘텀이 약화(단, 옴디아·IITP 지표 자체를 갱신한 사건은 없음)."
+   }
+  ],
+  "provisional": {
+   "keep_likelihood": "중간",
+   "expected_direction": "불명",
+   "needed_check": "backtest — Ericsson Mobility Report 2024/2025판의 5G 가입 실적(2021년판 전망: 2021년 6.6억 → 2027년 44억대, 비중 8%→50%) 대조. IDC 5G/LTE IoT(2026년 83억달러), PwC(2030년 1,530조원·한국 35조원), KT(2018, 42.3조원)는 case_refresh. 국내 과점 유지(제4이통 취소 E06)·특화망 사업자 다변화(36개, E08)는 정성 부분 강화 후보."
+  },
+  "grade": "C"
+ },
+ {
+  "conclusion_id": "R01-K-Fc-02",
+  "hit_premises": [
+   {
+    "premise_id": "P-18",
+    "event_ids": [
+     "E-network_5g6g-2025-06-3gpp_rel20_6g_study_start",
+     "E-spectrum-2025-12-reallocation_policy_370mhz_5g_sa",
+     "E-network_5g6g-2026-08-ai_era_network_investment_council_5g_sa"
+    ],
+    "effect": "강화",
+    "why": "5G 표준은 Release 17(2022.3) 이후 Rel-19로 5G-Advanced 2단계를 마무리하고 2025.6 Rel-20에서 6G 연구를 착수(서술 갱신 필요). 기구축 5G 무선국의 2026년 말 SA 코어 연결 의무화(E13)와 12월 5G SA 전국 개통 추진(E15)은 URLLC·슬라이싱 등 5G 융합서비스 기반을 강화. 이음5G의 저비용·QoS 보장 위치를 흔드는 사건은 없음."
+   },
+   {
+    "premise_id": "P-26",
+    "event_ids": [
+     "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites",
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2025-02-eum5g_smart_factory_program"
+    ],
+    "effect": "강화",
+    "why": "국내 이음5G가 스마트제조·물류·의료 중심으로 확산하고 정부가 제조(스마트공장) 연계 지원을 시작해, 특화망 경제효과가 제조·교통(물류) 분야에 집중된다는 전제와 방향이 일치. 분야별 비중 수치는 없음(B등급 출처 포함)."
+   }
+  ],
+  "provisional": {
+   "keep_likelihood": "중간",
+   "expected_direction": "불명",
+   "needed_check": "case_refresh — Analysis Mason/GSA private network 수(2025년 약 14,000개 전망) 실적, Grand View(2027년 71억달러)·TBR(2024년 60억달러)·SNS(2023년 80억달러)·Mobile Expert(2025년 100억달러)·Polaris(아태 50%) 최신판, 노무라 일본 로컬5G(2026년 180억엔) 실적은 총무성 로컬5G 면허 건수로 대조. 국내 실적(74개소)만으로는 글로벌 전망을 판정할 수 없음."
+  },
+  "grade": "C"
+ },
+ {
+  "conclusion_id": "R01-K-Fc-03",
+  "hit_premises": [
+   {
+    "premise_id": "P-01",
+    "event_ids": [],
+    "effect": "무관",
+    "why": "15건 중 한국산업단지공단 공장등록 통계를 갱신하는 사건 없음. 2021.2 기준 수치의 시효 검토는 L1(FEMIS 최신치)로 이관."
+   },
+   {
+    "premise_id": "P-02",
+    "event_ids": [
+     "E-network_5g6g-2025-02-eum5g_smart_factory_program"
+    ],
+    "effect": "약화",
+    "why": "2025년 부처협업형(이음5G) 스마트공장 구축 지원사업이 중소·중견 제조기업을 대상으로 공고되어, 잠재수요처를 대기업·중견기업 공장으로 한정한 전제의 범위가 실제 정책 대상보다 좁을 가능성. 지원 기업 수·예산은 공고에 미기재라 규모는 불명."
+   },
+   {
+    "premise_id": "P-03",
+    "event_ids": [
+     "E-network_5g6g-2025-02-eum5g_smart_factory_program"
+    ],
+    "effect": "불명",
+    "why": "레벨-5 스마트공장 비율(대기업 20%·중견 5%)과 CAGR(20%/10%)을 직접 갱신하는 사건 없음. E10은 스마트공장-이음5G 연계 지원 개시만 확인. L1에서 중기부 스마트공장 수준확인제(고도화 단계) 통계로 검증 필요."
+   },
+   {
+    "premise_id": "P-04",
+    "event_ids": [
+     "E-network_5g6g-2025-02-eum5g_smart_factory_program",
+     "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites"
+    ],
+    "effect": "불명",
+    "why": "초기 수요가 대기업 중심이라는 전제에 대해 E08은 스마트제조 분야 확산을, E10은 중소·중견 기업 대상 지원을 보여주나 실제 도입 주체의 기업규모 분포 수치는 사건에 없음."
+   },
+   {
+    "premise_id": "P-05",
+    "event_ids": [
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites"
+    ],
+    "effect": "약화",
+    "why": "총 구축 개소는 2023년 말 54개소(표23 Medium 38~High 57 구간), 2024년 말 74개소(Medium 60~High 89 구간)로 수준은 시나리오 범위 안이지만, 2024년 신규 증가분(54→74, 20개소)이 2023년(26→54, 28개소)보다 줄어 채택비율 CAGR 39%가 함의하는 가속 경로와 반대 방향. 스마트공장 분야만의 분해치는 사건에 없어 채택비율 자체는 미검증."
+   },
+   {
+    "premise_id": "P-06",
+    "event_ids": [],
+    "effect": "무관",
+    "why": "글로벌 private 5G CAGR(38.8~49.7%)이나 일본 MRI 설문(도입희망 37%)을 갱신하는 사건 없음. L1 case_refresh 대상."
+   },
+   {
+    "premise_id": "P-12",
+    "event_ids": [],
+    "effect": "무관",
+    "why": "중기부 스마트공장 보급 누계(2021년 약 2만5천개, 2022년 말 3만개 전망)를 갱신하는 사건 없음."
+   },
+   {
+    "premise_id": "P-25",
+    "event_ids": [
+     "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites"
+    ],
+    "effect": "불명",
+    "why": "채택 장애요인(비용·인식 부족)에 관한 정성적 언급(E08 디지털데일리)만 있고 성장·장애요인의 상대적 크기를 보여주는 수치 사건은 없음."
+   }
+  ],
+  "provisional": {
+   "keep_likelihood": "중간",
+   "expected_direction": "불명",
+   "needed_check": "model_rerun — 중기부 스마트공장 수준확인제(고도화 단계) 통계로 레벨-5 공장 수 실측, FEMIS 최신 공장등록 현황으로 P-01 갱신, KCA 분야별(스마트공장) 실적으로 채택비율 역산. 수요처 범위(중소기업 포함, E10)는 상향 요인, 2024년 신규 둔화(E05·E08)는 하향 요인으로 상쇄되어 방향 미정."
+  },
+  "grade": "C"
+ },
+ {
+  "conclusion_id": "R01-K-Fc-04",
+  "hit_premises": [
+   {
+    "premise_id": "P-03",
+    "event_ids": [
+     "E-network_5g6g-2025-02-eum5g_smart_factory_program"
+    ],
+    "effect": "불명",
+    "why": "레벨-5 스마트공장 비율(대기업 20%·중견 5%)과 CAGR(20%/10%)을 직접 갱신하는 사건 없음. E10은 스마트공장-이음5G 연계 지원 개시만 확인. L1에서 중기부 스마트공장 수준확인제(고도화 단계) 통계로 검증 필요."
+   },
+   {
+    "premise_id": "P-05",
+    "event_ids": [
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites"
+    ],
+    "effect": "약화",
+    "why": "총 구축 개소는 2023년 말 54개소(표23 Medium 38~High 57 구간), 2024년 말 74개소(Medium 60~High 89 구간)로 수준은 시나리오 범위 안이지만, 2024년 신규 증가분(54→74, 20개소)이 2023년(26→54, 28개소)보다 줄어 채택비율 CAGR 39%가 함의하는 가속 경로와 반대 방향. 스마트공장 분야만의 분해치는 사건에 없어 채택비율 자체는 미검증."
+   }
+  ],
+  "provisional": {
+   "keep_likelihood": "중간",
+   "expected_direction": "불명",
+   "needed_check": "backtest — KCA 이음5G 허가현황의 분야별(스마트공장) 사이트 수 2023·2024·2025년 실적을 표15(2023년 High 22/Medium 15/Low 7, 2024년 35/23/12, 2025년 55/36/18)와 대조. 총량(54→74)만으로는 스마트공장 분야를 분리할 수 없어 분야별 원자료 필수. 2024년 총 신규 20개소 둔화는 하향 신호로 기록."
+  },
+  "grade": "C"
+ },
+ {
+  "conclusion_id": "R01-K-Fc-05",
+  "hit_premises": [
+   {
+    "premise_id": "P-07",
+    "event_ids": [
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites"
+    ],
+    "effect": "불명",
+    "why": "이음5G 적용 분야가 2022년 9개 → 2023년 14개(자동차·조선·철강·교육 추가)로 늘고 2024년에는 스마트제조·물류·의료·중대재해 예방·자율주행이 언급되나, 분야별 사이트 수·비중 수치가 사건에 없어 Omdia 비중(스마트공장 0.39, 에너지 0.24, 공공 0.10 등)의 국내 적용 타당성은 판단 불가."
+   },
+   {
+    "premise_id": "P-26",
+    "event_ids": [
+     "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites",
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2025-02-eum5g_smart_factory_program"
+    ],
+    "effect": "강화",
+    "why": "국내 이음5G가 스마트제조·물류·의료 중심으로 확산하고 정부가 제조(스마트공장) 연계 지원을 시작해, 특화망 경제효과가 제조·교통(물류) 분야에 집중된다는 전제와 방향이 일치. 분야별 비중 수치는 없음(B등급 출처 포함)."
+   }
+  ],
+  "provisional": {
+   "keep_likelihood": "중간",
+   "expected_direction": "불명",
+   "needed_check": "case_refresh + backtest — KCA 허가현황의 분야별(에너지·공공·의료·교육·소매·기타) 사이트 수 2023~2025년 실적을 표17~22와 대조하고, Omdia 최신 분야별 전망으로 상대비중(에너지 61.54%, 공공 25.64%, 의료 20.51%, 교육 17.95%, 소매·기타 15.38%) 재산정. Fc-04 재계산치를 입력으로 재산출."
+  },
+  "grade": "C"
+ },
+ {
+  "conclusion_id": "R01-K-Fc-06",
+  "hit_premises": [
+   {
+    "premise_id": "P-05",
+    "event_ids": [
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites"
+    ],
+    "effect": "약화",
+    "why": "총 구축 개소는 2023년 말 54개소(표23 Medium 38~High 57 구간), 2024년 말 74개소(Medium 60~High 89 구간)로 수준은 시나리오 범위 안이지만, 2024년 신규 증가분(54→74, 20개소)이 2023년(26→54, 28개소)보다 줄어 채택비율 CAGR 39%가 함의하는 가속 경로와 반대 방향. 스마트공장 분야만의 분해치는 사건에 없어 채택비율 자체는 미검증."
+   },
+   {
+    "premise_id": "P-07",
+    "event_ids": [
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites"
+    ],
+    "effect": "불명",
+    "why": "이음5G 적용 분야가 2022년 9개 → 2023년 14개(자동차·조선·철강·교육 추가)로 늘고 2024년에는 스마트제조·물류·의료·중대재해 예방·자율주행이 언급되나, 분야별 사이트 수·비중 수치가 사건에 없어 Omdia 비중(스마트공장 0.39, 에너지 0.24, 공공 0.10 등)의 국내 적용 타당성은 판단 불가."
+   },
+   {
+    "premise_id": "P-11",
+    "event_ids": [
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites",
+     "E-network_5g6g-2025-02-eum5g_smart_factory_program"
+    ],
+    "effect": "불명",
+    "why": "정부가 이음5G 확산 정책(제도개선·실증 15건·부처협업 지원)을 지속하고 있음은 확인되나, 2030년 누적 1,000개소 목표의 유지·변경 여부를 직접 언급한 사건은 없음. 2024년 말 실적은 74개소."
+   },
+   {
+    "premise_id": "P-24",
+    "event_ids": [
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2025-02-eum5g_smart_factory_program",
+     "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites"
+    ],
+    "effect": "강화",
+    "why": "수요 실현 조건 중 허가절차 간소화(2023년 제도개선), 정부 정책지원(실증 15건·부처협업 지원)이 실제 이행됐고, 업계는 '와이파이와 다른 이음5G만의 가치를 알려야 한다'며 홍보 필요성을 재확인(E08). 예측 불확실성이 크다는 단서도 실적 경로(26→54→74)로 재확인."
+   }
+  ],
+  "provisional": {
+   "keep_likelihood": "중간",
+   "expected_direction": "하향",
+   "needed_check": "backtest — 실적 누적 2023년 말 54개소(표23: High 57/Medium 38/Low 19), 2024년 말 74개소(High 89/Medium 60/Low 30)와 신규 2024년 20개소(표24: High 32/Medium 22/Low 11)를 대조. 2025년 말 KCA 공식 집계(미확인)를 확보한 뒤 2025~2030년 경로 재추정(model_rerun). 모델이 2022년 말 실적 26개소를 기준선으로 반영하지 않은 점(2023년 Low 19 < 2022년 실적 26) 앵커링 보정. 정부 2030년 1,000개소 목표 유지 여부 확인."
+  },
+  "grade": "C"
+ },
+ {
+  "conclusion_id": "R01-K-Fc-07",
+  "hit_premises": [
+   {
+    "premise_id": "P-08",
+    "event_ids": [
+     "E-network_5g6g-2023-08-oran_policy_oria"
+    ],
+    "effect": "불명",
+    "why": "사이트당 설비투자비 15억원과 연 3~10% 하락 가정을 검증할 국내 구축비 수치가 사건에 없음. 오픈랜 정책(E02)은 장비 공급구조·구축비용 구조 변화 요인이지만 이음5G 사이트당 capex 수치 근거는 아님."
+   },
+   {
+    "premise_id": "P-09",
+    "event_ids": [],
+    "effect": "무관",
+    "why": "Analysis Mason(2020) capex 대비 opex 비율(2023년 30%→2030년 90%)을 갱신하는 사건 없음. L1 case_refresh 대상."
+   }
+  ],
+  "provisional": {
+   "keep_likelihood": "중간",
+   "expected_direction": "하향",
+   "needed_check": "model_rerun — Fc-06 재추정 신규 사이트 수 × 사이트당 구축비 실측치(이음5G 실증사업 예산/사이트 수, 사업자 공시·보도) 적용. Analysis Mason capex 대비 opex 비율 최신 전망 확인. 오픈랜 장비 도입(E02) 시 사이트당 capex 하락률 가정(High 10%/Medium 5%/Low 3%) 검토."
+  },
+  "grade": "C"
+ },
+ {
+  "conclusion_id": "R01-K-Fc-08",
+  "hit_premises": [
+   {
+    "premise_id": "P-08",
+    "event_ids": [
+     "E-network_5g6g-2023-08-oran_policy_oria"
+    ],
+    "effect": "불명",
+    "why": "사이트당 설비투자비 15억원과 연 3~10% 하락 가정을 검증할 국내 구축비 수치가 사건에 없음. 오픈랜 정책(E02)은 장비 공급구조·구축비용 구조 변화 요인이지만 이음5G 사이트당 capex 수치 근거는 아님."
+   },
+   {
+    "premise_id": "P-09",
+    "event_ids": [],
+    "effect": "무관",
+    "why": "Analysis Mason(2020) capex 대비 opex 비율(2023년 30%→2030년 90%)을 갱신하는 사건 없음. L1 case_refresh 대상."
+   },
+   {
+    "premise_id": "P-10",
+    "event_ids": [],
+    "effect": "무관",
+    "why": "산업연관 유발계수(정우수·김사혁 2011)를 갱신하는 사건 없음. L1에서 한국은행 최신 산업연관표 계수로 재계산 필요."
+   }
+  ],
+  "provisional": {
+   "keep_likelihood": "중간",
+   "expected_direction": "하향",
+   "needed_check": "model_rerun — 한국은행 최신 산업연관표(정보통신·방송서비스 부문) 유발계수로 계수(생산 1.85, 부가가치 0.75, 고용 0.58)를 갱신한 뒤 Fc-07 재계산치(capex·opex)에 적용. 계수 갱신 방향은 미정이므로 사이트 수 하향과 상쇄 가능성 검토. 중기부 스마트공장 성과분석 최신판 case_refresh."
+  },
+  "grade": "C"
+ },
+ {
+  "conclusion_id": "R01-K-R-01",
+  "hit_premises": [
+   {
+    "premise_id": "P-15",
+    "event_ids": [
+     "E-network_5g6g-2023-08-oran_policy_oria",
+     "E-network_5g6g-2026-08-ai_era_network_investment_council_5g_sa"
+    ],
+    "effect": "강화",
+    "why": "정부가 벤더 종속 해소·오픈랜 생태계 조성을 국가 정책(3대 전략, K-OTIC 국제인증, ORIA 출범)으로 채택하고, 2026.8 민관협의체에서 AI-RAN 투자를 논의해 RAN 비용·닫힌 생태계 문제의식이 정책적으로 공유됨."
+   },
+   {
+    "premise_id": "P-16",
+    "event_ids": [],
+    "effect": "무관",
+    "why": "ATIS 기반 vertical 서비스별 KPI 요구조건을 바꾸는 사건 없음. 표준 추적(standard_track)은 L1로 이관."
+   },
+   {
+    "premise_id": "P-17",
+    "event_ids": [
+     "E-network_5g6g-2023-08-oran_policy_oria",
+     "E-network_5g6g-2025-06-3gpp_rel20_6g_study_start"
+    ],
+    "effect": "강화",
+    "why": "ORIA 출범·K-OTIC 인증체계·플러그페스트 연 2회 등으로 O-RAN 표준의 국내 제도화가 진전되고, 3GPP는 Rel-19(5G-Advanced 2단계)·Rel-20(6G 연구)으로 진화 중. O-RAN 아키텍처 서술 자체를 바꾸는 사건은 없음."
+   },
+   {
+    "premise_id": "P-19",
+    "event_ids": [],
+    "effect": "무관",
+    "why": "서비스형·하이브리드형·구축형 사업모델 분류(LG CNS 기준)를 바꾸는 사건 없음."
+   },
+   {
+    "premise_id": "P-23",
+    "event_ids": [],
+    "effect": "무관",
+    "why": "독일(4건)·일본(8건) 특화망 사례를 갱신하는 사건 없음. L1 case_refresh 대상."
+   }
+  ],
+  "provisional": {
+   "keep_likelihood": "높음",
+   "expected_direction": "유지",
+   "needed_check": "policy_track/standard_track — ORIA 활동·K-OTIC 인증 실적, 판교 테스트베드·플러그페스트 개최 실적, 국내 이음5G 오픈랜 장비 도입 사례(LG CNS 오픈랜 검증·경희대 테스트베드 후속), O-RAN Alliance 회원사 수·Open RAN 시장 점유율(Dell'Oro). 정책 채택·실적이 확인되면 '강화'로 상향."
+  },
+  "grade": "C"
+ },
+ {
+  "conclusion_id": "R01-K-R-02",
+  "hit_premises": [
+   {
+    "premise_id": "P-13",
+    "event_ids": [
+     "E-spectrum-2023-05-skt_28ghz_cancel",
+     "E-spectrum-2024-07-stagex_select_and_cancel",
+     "E-spectrum-2023-12-wrc23_6g_candidate_bands"
+    ],
+    "effect": "약화",
+    "why": "주요국 24~28㎓ 중심 할당이라는 서술과 달리 국내는 이통3사 모두 28㎓에서 철수(2023.5.31 SKT 할당취소 확정으로 완결)하고 신규사업자 낙찰(4,301억원)도 취소(2024.7.31)되어 mmWave 활용 전제가 국내에서 무너짐. 반면 WRC-23의 상위 6㎓(6425-7125㎒) IMT 지정은 6~7㎓ 추가 할당 추세 서술을 뒷받침. 2차 공유면허 관련 주요국 후속 사건은 없음."
+   },
+   {
+    "premise_id": "P-14",
+    "event_ids": [
+     "E-spectrum-2025-12-reallocation_policy_370mhz_5g_sa",
+     "E-spectrum-2025-01-new_entrant_policy_reform",
+     "E-spectrum-2024-09-korea_spectrum_plan_2024_2027"
+    ],
+    "effect": "약화",
+    "why": "2025.12 재할당 정책은 기준가격(약 3조6,000억원) 대비 14.8% 인하(약 3조1,000억원)에 더해 5G 실내 무선국 1만/2만국 이상 구축 시 추가 인하를 두어, 독점 이용의 경제적 지대 회수라는 단일 원리에 투자유인 연계가 추가됨. 신규사업자 제도(E09)는 할당대가 전액 일시납·최저경쟁가격 이상 자본금 요건으로 지대 회수 원리를 오히려 강화. 순수 지대회수 전제는 부분 수정 필요."
+   },
+   {
+    "premise_id": "P-21",
+    "event_ids": [
+     "E-network_5g6g-2026-01-5g_subscribers_38_6m_growth_stall",
+     "E-network_5g6g-2026-08-ai_era_network_investment_council_5g_sa",
+     "E-spectrum-2023-05-skt_28ghz_cancel"
+    ],
+    "effect": "약화",
+    "why": "5G 가입은 요금제 기준 2023.11~2024.1 약 3,225만 명에서 정체, 단말 기준 2026.1 3,860만 8,413명(전월비 +0.4%)·트래픽 1,237,983TB(-5.8%)로 성장 둔화, 통신3사 설비투자는 2019년 9조6,000억원 → 2025년 6조200억원으로 감소, 28㎓는 전면 철수. '5G 진척도 최선두' 전제의 투자·확산 모멘텀이 약화(단, 옴디아·IITP 지표 자체를 갱신한 사건은 없음)."
+   },
+   {
+    "premise_id": "P-22",
+    "event_ids": [
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2025-02-eum5g_smart_factory_program",
+     "E-spectrum-2024-09-korea_spectrum_plan_2024_2027"
+    ],
+    "effect": "강화",
+    "why": "2022년 5G+ 전략 이후에도 이음5G 제도개선(제출서류·신청절차 간소화, 기간통신사업 등록 시 외국인 지분 제한 제외), 부처협업형 스마트공장 지원, 스펙트럼 플랜의 디지털 혁신 서비스용 주파수(미이용 160㎒+신규 438㎒) 개방 등 이음5G 활성화 정책이 지속·확대. 5G+ 전략 명칭·계획은 후속 계획으로 대체되어 서술 갱신 필요."
+   },
+   {
+    "premise_id": "P-24",
+    "event_ids": [
+     "E-network_5g6g-2024-01-eum5g_54_sites",
+     "E-network_5g6g-2025-02-eum5g_smart_factory_program",
+     "E-network_5g6g-2024-12-eum5g_3yrs_36_operators_74_sites"
+    ],
+    "effect": "강화",
+    "why": "수요 실현 조건 중 허가절차 간소화(2023년 제도개선), 정부 정책지원(실증 15건·부처협업 지원)이 실제 이행됐고, 업계는 '와이파이와 다른 이음5G만의 가치를 알려야 한다'며 홍보 필요성을 재확인(E08). 예측 불확실성이 크다는 단서도 실적 경로(26→54→74)로 재확인."
+   }
+  ],
+  "provisional": {
+   "keep_likelihood": "중간",
+   "expected_direction": "하향",
+   "needed_check": "policy_track — 스펙트럼 플랜('24~'27) 후속 5G 추가 주파수(3.7㎓ 등 300㎒+α) 공급 결정 여부(2026-09-15 현재 미확인), 전파법 시행령 개정(신규사업자 자본금·일시납) 확정 내용, 이음5G 주파수 이용대가 산정 고시 개정 여부, 2차 공유면허·공유 기반 가격산정 제도 도입 여부(사건에서 미확인), 미국 FCC CBRS·캐나다 ISED 공유면허 현황. 28㎓ 관련 서술은 국내 철수 사실로 부분수정 확정적."
+  },
+  "grade": "C"
+ }
+]

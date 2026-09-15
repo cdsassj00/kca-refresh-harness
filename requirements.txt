@@ -1,0 +1,8 @@
+requests>=2.32
+jsonschema>=4.22
+PyYAML>=6.0
+python-dotenv>=1.0
+defusedxml>=0.7
+pypdf>=4.0
+markitdown>=0.1
+pytest>=8.2
