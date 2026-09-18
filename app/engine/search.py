@@ -1,6 +1,6 @@
 """웹 검색 공급자 통합. DESIGN.md 3절 web_search.
 
-provider="auto" 는 tavily → exa → naver(뉴스) → openrouter_online 순으로 키가 있는 첫 공급자를 쓴다.
+provider="auto" 는 tavily → exa → naver(뉴스+웹문서) → openrouter_online 순으로 키가 있는 첫 공급자를 쓴다.
 모든 공급자의 결과를 [{title, url, snippet, date, source}] 로 정규화한다.
 """
 from __future__ import annotations
@@ -17,17 +17,31 @@ PROVIDER_ORDER = ["tavily", "exa", "naver", "openrouter_online"]
 TIMEOUT = 20
 UA = "kca-refresh-app/0.1"
 
+# 네이버 검색은 2026년부터 NAVER API HUB(네이버 클라우드 플랫폼 중개)로 넘어갔다.
+# 주소에 `.json` 확장자가 없고, 헤더 이름이 NCP API Gateway 규칙을 따른다.
+NAVER_HUB_BASE = "https://naverapihub.apigw.ntruss.com/search/v1"
+NAVER_LEGACY_BASE = "https://openapi.naver.com/v1/search"
+# 신청하지 않은 API를 부르면 HTTP 401 과 함께 이 문구가 온다. 오류가 아니라 "그 API는 안 쓴다"는 뜻이다.
+NAVER_NOT_ENABLED = "활성화되어 있지 않습니다"
+
 
 class SearchError(Exception):
     """검색 공급자 오류. 메시지에 키 값은 넣지 않는다."""
 
 
 # ---------- 공통 ----------
+_TAG_RE = re.compile(r"<[^>]+>")
+# 엔티티(&lt;b&gt;)가 풀려 다시 태그가 된 경우만 한 번 더 걷어낸다. 부등호가 섞인 문장은 건드리지 않게 좁게 잡는다.
+_ENTITY_TAG_RE = re.compile(r"</?[A-Za-z][A-Za-z0-9]*(?:\s[^<>]*)?/?>")
+
+
 def _clean(text: Optional[str]) -> str:
+    """검색 결과의 `<b>` 강조 태그를 지우고 HTML 엔티티(&quot; 등)를 풀어 준다."""
     if not text:
         return ""
-    text = re.sub(r"<[^>]+>", "", str(text))
-    return _html.unescape(text).strip()
+    text = _TAG_RE.sub("", str(text))
+    text = _html.unescape(text)
+    return _ENTITY_TAG_RE.sub("", text).strip()
 
 
 def _norm(title, url, snippet, date, source) -> dict:
@@ -81,25 +95,89 @@ def _search_exa(query: str, since: Optional[str], max_results: int, lang: str, e
             for r in data.get("results", [])][:max_results]
 
 
-def _search_naver(query: str, since: Optional[str], max_results: int, lang: str, env: dict, llm=None) -> list:
-    resp = requests.get("https://openapi.naver.com/v1/search/news.json",
-                        params={"query": query, "display": min(max(max_results, 1), 100), "sort": "date"},
-                        headers={"X-Naver-Client-Id": env["NAVER_CLIENT_ID"],
-                                 "X-Naver-Client-Secret": env["NAVER_CLIENT_SECRET"], "User-Agent": UA},
-                        timeout=TIMEOUT)
+def naver_api_style(env: dict) -> str:
+    """`hub`(기본, NAVER API HUB) 또는 `legacy`(옛 개발자센터 openapi.naver.com)."""
+    style = str((env or {}).get("NAVER_API_STYLE") or "hub").strip().lower()
+    return "legacy" if style == "legacy" else "hub"
+
+
+def _naver_url(kind: str, style: str) -> str:
+    """kind 는 `news`(뉴스) 또는 `webkr`(웹문서)."""
+    if style == "legacy":
+        return f"{NAVER_LEGACY_BASE}/{kind}.json"
+    return f"{NAVER_HUB_BASE}/{kind}"
+
+
+def _naver_headers(env: dict, style: str) -> dict:
+    if style == "legacy":
+        return {"X-Naver-Client-Id": env["NAVER_CLIENT_ID"],
+                "X-Naver-Client-Secret": env["NAVER_CLIENT_SECRET"], "User-Agent": UA}
+    return {"X-NCP-APIGW-API-KEY-ID": env["NAVER_CLIENT_ID"],
+            "X-NCP-APIGW-API-KEY": env["NAVER_CLIENT_SECRET"], "User-Agent": UA}
+
+
+def _naver_body_text(resp) -> str:
+    try:
+        return resp.text or ""
+    except (AttributeError, ValueError):
+        return ""
+
+
+def _naver_fetch(kind: str, query: str, display: int, env: dict, style: str) -> Optional[list]:
+    """네이버 검색 한 종류를 부른다. 신청하지 않은 API(401 + 활성화 문구)면 None 을 돌려 건너뛰게 한다."""
+    params = {"query": query, "display": display}
+    if kind == "news":
+        params["sort"] = "date"          # 웹문서(webkr)는 sort 를 받지 않는다
+    resp = requests.get(_naver_url(kind, style), params=params,
+                        headers=_naver_headers(env, style), timeout=TIMEOUT)
+    if resp.status_code == 401 and NAVER_NOT_ENABLED in _naver_body_text(resp):
+        return None                      # 이 API는 신청하지 않았다 → 조용히 건너뛴다
     if resp.status_code != 200:
-        raise SearchError(f"naver HTTP {resp.status_code}")
-    out = []
-    for it in resp.json().get("items", []):
-        date = ""
-        try:
-            date = parsedate_to_datetime(it.get("pubDate", "")).strftime("%Y-%m-%d")
-        except (TypeError, ValueError):
-            pass
-        if since and date and date < since:
+        raise SearchError(f"naver {kind} HTTP {resp.status_code}")
+    data = resp.json()
+    items = data.get("items") if isinstance(data, dict) else None
+    return list(items or [])
+
+
+def _naver_date(value) -> str:
+    """뉴스의 pubDate(RFC 2822)를 YYYY-MM-DD 로. 없거나 못 읽으면 빈 문자열."""
+    if not value:
+        return ""
+    try:
+        return parsedate_to_datetime(str(value)).strftime("%Y-%m-%d")
+    except (TypeError, ValueError):
+        return ""
+
+
+def _search_naver(query: str, since: Optional[str], max_results: int, lang: str, env: dict, llm=None) -> list:
+    """네이버 뉴스 + 웹문서. 뉴스를 먼저 채우고 모자라면 웹문서로 보충한다.
+
+    웹문서(webkr)는 날짜가 없으므로 date 를 빈 문자열로 두고 since 필터에서 버리지 않는다.
+    """
+    style = naver_api_style(env)
+    limit = min(max(int(max_results or 8), 1), 100)
+    out, seen = [], set()
+    for kind, source in (("news", "naver_news"), ("webkr", "naver_webkr")):
+        if len(out) >= limit:
+            break
+        items = _naver_fetch(kind, query, limit, env, style)
+        if items is None:                # 신청하지 않은 API → 남은 결과로 진행
             continue
-        out.append(_norm(it.get("title"), it.get("originallink") or it.get("link"), it.get("description"), date, "naver"))
-    return out[:max_results]
+        for it in items:
+            if not isinstance(it, dict):
+                continue
+            date = _naver_date(it.get("pubDate")) if kind == "news" else ""
+            if since and date and date < since:
+                continue                 # 날짜가 있는 뉴스만 거른다. 날짜 없는 웹문서는 통과
+            url = (it.get("originallink") or it.get("link") or "").strip()
+            if url and url in seen:
+                continue
+            if url:
+                seen.add(url)
+            out.append(_norm(it.get("title"), url, it.get("description"), date, source))
+            if len(out) >= limit:
+                break
+    return out[:limit]
 
 
 def _search_openrouter_online(query: str, since: Optional[str], max_results: int, lang: str, env: dict, llm=None) -> list:

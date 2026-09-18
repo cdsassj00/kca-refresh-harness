@@ -104,6 +104,126 @@ def test_search_provider_fallback_order(monkeypatch):
         search_mod.search("q", provider="tavily", env={})
 
 
+# ---------------------------------------------------------------- 네이버(API HUB) 검색
+class _FakeResp:
+    """requests 응답 흉내. 네트워크는 쓰지 않는다."""
+
+    def __init__(self, status=200, payload=None):
+        self.status_code = status
+        self._payload = payload if payload is not None else {}
+        self.text = json.dumps(self._payload, ensure_ascii=False)
+
+    def json(self):
+        return self._payload
+
+
+NAVER_ENV = {"NAVER_CLIENT_ID": "id-값", "NAVER_CLIENT_SECRET": "secret-값"}
+NAVER_OFF = _FakeResp(401, {"error": {"errorCode": 401,
+                                      "message": "요청한 API는 이 Application에서 활성화되어 있지 않습니다."}})
+
+
+def _naver_news_item(idx=1, pub="Tue, 15 Sep 2026 09:00:00 +0900"):
+    return {"title": f"<b>이음5G</b> 뉴스 {idx}", "link": f"https://news.example/{idx}",
+            "description": "뉴스 설명", "pubDate": pub}
+
+
+def _naver_web_item(idx=1):
+    return {"title": f"<b>이음5G</b> 웹문서 {idx}", "link": f"https://web.example/{idx}",
+            "description": "웹문서 설명"}      # webkr 응답에는 pubDate 가 없다
+
+
+def _fake_naver(monkeypatch, responses: dict) -> list:
+    """kind(news|webkr) → 응답. 호출 기록을 돌려준다. 등록하지 않은 kind 를 부르면 실패."""
+    calls: list = []
+
+    def fake_get(url, params=None, headers=None, timeout=None):
+        kind = url.rsplit("/", 1)[-1].replace(".json", "")
+        calls.append({"url": url, "kind": kind, "params": params or {}, "headers": headers or {}})
+        assert kind in responses, f"예상하지 않은 호출: {url}"
+        return responses[kind]
+
+    monkeypatch.setattr(search_mod.requests, "get", fake_get)
+    return calls
+
+
+def test_naver_api_style_is_savable_env_key():
+    assert "NAVER_API_STYLE" in config.ENV_KEYS_APP
+
+
+def test_naver_hub_uses_ncp_headers_and_new_url(monkeypatch):
+    calls = _fake_naver(monkeypatch, {"news": _FakeResp(payload={"items": [_naver_news_item()]}),
+                                      "webkr": _FakeResp(payload={"items": []})})
+    out = search_mod._search_naver("이음5G", None, 3, "ko", dict(NAVER_ENV))
+    assert calls[0]["url"] == "https://naverapihub.apigw.ntruss.com/search/v1/news"
+    head = calls[0]["headers"]
+    assert head["X-NCP-APIGW-API-KEY-ID"] == "id-값" and head["X-NCP-APIGW-API-KEY"] == "secret-값"
+    assert "X-Naver-Client-Id" not in head and "X-Naver-Client-Secret" not in head
+    assert out == [{"title": "이음5G 뉴스 1", "url": "https://news.example/1", "snippet": "뉴스 설명",
+                    "date": "2026-09-15", "source": "naver_news"}]
+
+
+def test_naver_fills_with_webkr_when_news_is_short(monkeypatch):
+    calls = _fake_naver(monkeypatch, {
+        "news": _FakeResp(payload={"items": [_naver_news_item()]}),
+        "webkr": _FakeResp(payload={"items": [_naver_web_item(1), _naver_web_item(2), _naver_web_item(3)]}),
+    })
+    out = search_mod._search_naver("이음5G", "2026-01-01", 3, "ko", dict(NAVER_ENV))
+    assert [c["kind"] for c in calls] == ["news", "webkr"]
+    assert calls[1]["url"] == "https://naverapihub.apigw.ntruss.com/search/v1/webkr"
+    assert "sort" not in calls[1]["params"]          # webkr 은 sort 를 받지 않는다
+    assert [r["source"] for r in out] == ["naver_news", "naver_webkr", "naver_webkr"]
+    # 웹문서는 날짜가 없다 → since 필터에서 버리지 않고 빈 날짜로 통과시킨다
+    assert [r["date"] for r in out] == ["2026-09-15", "", ""]
+
+
+def test_naver_skips_webkr_when_news_is_enough(monkeypatch):
+    # webkr 을 등록하지 않았으므로 호출하면 실패한다
+    calls = _fake_naver(monkeypatch, {"news": _FakeResp(payload={"items": [_naver_news_item(1), _naver_news_item(2)]})})
+    out = search_mod._search_naver("이음5G", None, 2, "ko", dict(NAVER_ENV))
+    assert [c["kind"] for c in calls] == ["news"] and len(out) == 2
+
+
+def test_naver_ignores_api_not_enabled(monkeypatch):
+    """신청하지 않은 API(401 + '활성화되어 있지 않습니다')는 조용히 건너뛴다."""
+    _fake_naver(monkeypatch, {"news": _FakeResp(payload={"items": [_naver_news_item()]}), "webkr": NAVER_OFF})
+    out = search_mod._search_naver("이음5G", None, 5, "ko", dict(NAVER_ENV))
+    assert [r["source"] for r in out] == ["naver_news"]
+    # 뉴스 쪽이 미신청이어도 웹문서만으로 진행한다
+    _fake_naver(monkeypatch, {"news": NAVER_OFF, "webkr": _FakeResp(payload={"items": [_naver_web_item()]})})
+    out2 = search_mod._search_naver("이음5G", None, 5, "ko", dict(NAVER_ENV))
+    assert [r["source"] for r in out2] == ["naver_webkr"]
+
+
+def test_naver_other_401_raises(monkeypatch):
+    bad = _FakeResp(401, {"error": {"errorCode": 401, "message": "Unauthorized. Authentication failed."}})
+    _fake_naver(monkeypatch, {"news": bad, "webkr": bad})
+    with pytest.raises(search_mod.SearchError):
+        search_mod._search_naver("이음5G", None, 5, "ko", dict(NAVER_ENV))
+
+
+def test_naver_legacy_style_uses_old_url_and_headers(monkeypatch):
+    calls = _fake_naver(monkeypatch, {"news": _FakeResp(payload={"items": [_naver_news_item()]}),
+                                      "webkr": _FakeResp(payload={"items": [_naver_web_item()]})})
+    env = {**NAVER_ENV, "NAVER_API_STYLE": "legacy"}
+    out = search_mod._search_naver("이음5G", None, 5, "ko", env)
+    assert calls[0]["url"] == "https://openapi.naver.com/v1/search/news.json"
+    assert calls[1]["url"] == "https://openapi.naver.com/v1/search/webkr.json"
+    head = calls[0]["headers"]
+    assert head["X-Naver-Client-Id"] == "id-값" and head["X-Naver-Client-Secret"] == "secret-값"
+    assert "X-NCP-APIGW-API-KEY-ID" not in head
+    assert [r["source"] for r in out] == ["naver_news", "naver_webkr"]
+
+
+def test_naver_strips_bold_tags_and_entities(monkeypatch):
+    item = {"title": "<b>이음5G</b> &amp; 5G 특화망", "link": "https://news.example/9",
+            "description": "&lt;b&gt;주파수&lt;/b&gt; 할당 &quot;완료&quot;",
+            "pubDate": "Tue, 15 Sep 2026 09:00:00 +0900"}
+    _fake_naver(monkeypatch, {"news": _FakeResp(payload={"items": [item]}), "webkr": _FakeResp(payload={"items": []})})
+    out = search_mod._search_naver("이음5G", None, 3, "ko", dict(NAVER_ENV))
+    assert out[0]["title"] == "이음5G & 5G 특화망"
+    assert out[0]["snippet"] == '주파수 할당 "완료"'
+
+
 def test_openrouter_online_parses_json_array_or_empty():
     class L:
         def __init__(self, content):

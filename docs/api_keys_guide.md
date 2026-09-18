@@ -74,24 +74,73 @@
 
 ### 2-A. NAVER 검색 — 한국어 뉴스에 가장 강함 (추천)
 
+- **받는 곳** **NAVER API HUB** (네이버 클라우드 플랫폼이 중개합니다) **(확인함 2026-09-19)**
 - **변수 이름** `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` (두 개입니다)
-- **비용** 무료. 하루 25,000회
+- **비용** 무료 구간이 있습니다
 - **소요** 즉시
 
-> **이 포털은 화면이 자주 바뀝니다.** 메뉴 이름을 따라가기보다 **무엇을 얻어야 하는지**를 기억하세요.
-> **① 애플리케이션을 하나 만들고 ② 쓸 API 목록에 "검색"을 넣고 ③ Client ID와 Client Secret 두 값을 복사한다.** 이 셋만 하면 됩니다.
+**중요 — 네이버 검색은 NAVER API HUB 로 옮겨졌습니다. (확인함 2026-09-19)**
+예전의 개발자센터(`developers.naver.com`) 키로 예전 주소를 부르면 **401** 이 납니다.
+프로그램은 기본적으로 새 방식(API HUB)으로 부릅니다.
 
-**절차 (2026-09 기준)** **(확인 필요 — 화면이 다르면 알려 주세요)**
+**받아야 하는 값 두 개 (확인함 2026-09-19)**
 
-1. 네이버 계정으로 로그인합니다.
-2. **검색 API 제품 페이지**로 바로 갑니다. https://developers.naver.com/products/service-api/search/search.md
-3. 페이지 아래쪽의 **오픈 API 이용 신청** 버튼을 누릅니다.
-4. 애플리케이션 이름을 적습니다. 예: `kca-refresh`
-5. **사용 API** 에 **검색** 이 들어가 있는지 확인합니다. (제품 페이지로 들어오면 대개 미리 선택되어 있습니다.)
-6. **비로그인 오픈 API 서비스 환경** 에서 **WEB** 을 고르고 URL 칸에 `http://localhost` 를 적습니다. 실제로 접속하지 않는 값이라 아무거나 괜찮습니다.
-7. 등록하면 **내 애플리케이션** 화면에 **Client ID** 와 **Client Secret** 이 나옵니다. 둘 다 복사합니다.
+화면에는 예전과 같은 이름으로 나오지만, 실제 호출 때 붙는 헤더 이름이 다릅니다. **값만 그대로 복사하면 됩니다.**
 
-**길을 잃으면** 상단 메뉴에서 **Application → 애플리케이션 등록**(또는 **내 애플리케이션**)을 찾으세요. 예전 경로이고 지금도 같은 화면으로 이어집니다.
+| 화면에 보이는 이름 | `.env` 변수 이름 | 프로그램이 보내는 헤더 |
+|---|---|---|
+| Client ID | `NAVER_CLIENT_ID` | `X-NCP-APIGW-API-KEY-ID` |
+| Client Secret | `NAVER_CLIENT_SECRET` | `X-NCP-APIGW-API-KEY` |
+
+**어떤 API를 신청해야 하나 (확인함 2026-09-19)**
+
+API HUB 에서는 **쓰고 싶은 검색 API를 하나씩 따로 신청(활성화)** 합니다. 애플리케이션 하나에 다 딸려 오지 않습니다.
+
+| API | 신청 | 이유 |
+|---|---|---|
+| **News (뉴스)** | **필수** | 발간 이후 사건을 찾는 주 통로입니다 |
+| **Webkr (웹문서)** | **권장** | 뉴스가 모자랄 때 프로그램이 이걸로 채웁니다. 다만 **날짜가 없어서** 기간 필터가 걸리지 않습니다 |
+| 블로그·카페·지식iN·전문자료 등 | **신청 불필요** | 프로그램이 부르지 않습니다 |
+
+**신청하지 않은 API를 부르면 이런 응답이 옵니다. 고장이 아닙니다. (확인함 2026-09-19)**
+
+```json
+{"error":{"errorCode":401,"message":"요청한 API는 이 Application에서 활성화되어 있지 않습니다."}}
+```
+
+프로그램은 이 401 만 **조용히 건너뛰고** 나머지 결과로 진행합니다. 키가 틀렸을 때 나는 **다른 401 은 오류로 알려 드립니다.**
+예를 들어 Webkr 을 신청하지 않으셨다면 뉴스 결과만으로 돌아갑니다.
+
+**절차**
+
+1. 네이버 클라우드 플랫폼 계정으로 **NAVER API HUB** 에 로그인합니다.
+2. 애플리케이션을 하나 만듭니다. 예: `kca-refresh`
+3. 그 애플리케이션에서 **Search - News** 를 신청(활성화)합니다. **Search - Webkr** 도 함께 신청해 두시면 좋습니다.
+4. 애플리케이션 화면의 **Client ID** 와 **Client Secret** 두 값을 복사해 `.env` 에 넣습니다.
+5. 프로그램 **[설정]** 화면에서 저장 → **연결 확인**.
+
+**프로그램이 실제로 부르는 주소 (확인함 2026-09-19)** — 예전과 달리 `.json` 확장자가 없습니다.
+
+```
+https://naverapihub.apigw.ntruss.com/search/v1/news
+https://naverapihub.apigw.ntruss.com/search/v1/webkr
+```
+
+돌아오는 응답 모양은 예전과 같습니다(`lastBuildDate`, `total`, `start`, `display`, `items[]`).
+뉴스 `items` 에는 `title`·`link`·`description`·`pubDate` 가, 웹문서 `items` 에는 `title`·`link`·`description` 만 들어 있습니다.
+
+**예전 방식(개발자센터 키)을 쓰고 계시다면**
+
+`developers.naver.com` 에서 받은 옛 키가 아직 살아 있다면, `.env` 에 한 줄만 더 넣으시면 옛 주소·옛 헤더로 부릅니다.
+
+```
+NAVER_API_STYLE=legacy
+```
+
+- 넣지 않으면 기본값은 `hub` 입니다(새 방식).
+- 옛 방식은 주소가 `https://openapi.naver.com/v1/search/news.json` 이고, 헤더가 `X-Naver-Client-Id` · `X-Naver-Client-Secret` 입니다.
+- 옛 절차는 이랬습니다: 로그인 → 검색 API 제품 페이지(https://developers.naver.com/products/service-api/search/search.md) → **오픈 API 이용 신청** → 애플리케이션 이름 입력 → **사용 API** 에 **검색** 포함 → **비로그인 오픈 API 서비스 환경** 에서 **WEB** + `http://localhost` → **내 애플리케이션** 에서 Client ID·Secret 복사.
+- 새로 받으시는 분은 이 방식을 쓰지 마세요. **신규는 API HUB 입니다.**
 
 ### 2-B. Tavily — 영어 자료와 해외 정책에 강함
 
@@ -310,7 +359,7 @@ python scripts\evidence.py doctor
 | `오류` 또는 인증 실패 | 앞뒤 공백이나 따옴표가 붙어 들어갔는지. `KEY="abc"` 가 아니라 `KEY=abc` 입니다 |
 | 공공데이터포털에서 안 됨 | **Decoding** 키를 쓰셨는지 확인하세요. Encoding 키는 `%` 기호가 섞여 있습니다 |
 | 법제처에서 안 됨 | 긴 키가 아니라 **아이디**입니다. 이메일 앞부분만 넣으세요 |
-| 네이버에서 안 됨 | Client ID와 Secret 두 개를 모두 넣으셨는지 |
+| 네이버에서 안 됨 | Client ID와 Secret 두 개를 모두 넣으셨는지. 그래도 401 이면 **NAVER API HUB** 키가 맞는지(옛 개발자센터 키라면 `NAVER_API_STYLE=legacy` 를 넣으세요). "활성화되어 있지 않습니다" 401 은 정상이며 프로그램이 건너뜁니다(2-A) |
 | OpenRouter에서 잔액 오류 | Credits 메뉴에서 충전 상태와 키의 사용 한도를 함께 확인하세요 |
 
 ---
