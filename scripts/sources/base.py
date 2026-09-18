@@ -9,6 +9,10 @@ import requests
 
 GRADES = ("A", "B", "C")
 
+# 재시도 정책: 429·5xx 를 지수 백오프로 최대 3번 더 시도한다(1초 → 2초 → 4초).
+RETRY_MAX = 3
+RETRY_BASE_SECONDS = 1.0
+
 @dataclass
 class EvidenceRecord:
     source: str
@@ -67,8 +71,12 @@ class HttpClient:
             if time.time() - c["fetched_at"] < self.ttl and c["status"] == 200:
                 return c["body"]
         status, body = self._fetch(url, params, headers, timeout)
-        if status in (429, 503):  # 한도 초과·일시 장애: 3초 뒤 한 번만 재시도
-            time.sleep(3)
+        # 한도 초과(429)·일시 장애(5xx)는 지수 백오프로 다시 시도한다.
+        # 상대 서버에 부담을 주지 않겠다는 약속(각 API 이용 조건)을 코드로 지킨다.
+        for attempt in range(RETRY_MAX):
+            if status != 429 and not (500 <= status < 600):
+                break
+            time.sleep(RETRY_BASE_SECONDS * (2 ** attempt))  # 1초 → 2초 → 4초
             status, body = self._fetch(url, params, headers, timeout)
         if status != 200:
             raise requests.HTTPError(f"HTTP {status} for {url}")
