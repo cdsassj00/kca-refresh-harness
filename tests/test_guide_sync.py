@@ -82,8 +82,12 @@ def test_data_go_kr_per_api_keys_are_allowed(ROOT):
     assert keys == {"kci": "a", "_default": "b"}
 
 
-def test_guide_mentions_per_api_keys(ROOT):
-    """안내서가 '키가 하나'라고 잘못 알려 주지 않는지 고정한다."""
+def test_guide_states_one_account_key_for_data_go_kr(ROOT):
+    """공공데이터포털 설명을 고정한다 — 활용신청은 API 마다 따로, 인증키는 계정에 하나.
+
+    이 문장을 한 번 뒤집어 적었다가 되돌린 적이 있어(2026-09-19) 회귀를 막으려 검사한다.
+    """
     text = (ROOT / "docs" / "api_keys_guide.md").read_text(encoding="utf-8")
-    assert "DATA_GO_KR_KEY_" in text, "API 별 키 표기법이 안내서에 없다"
-    assert "데이터셋(API)마다" in text or "API마다" in text, "키가 API 마다 다르다는 설명이 없다"
+    assert "활용신청은 API마다 따로, 인증키는 계정에 하나" in text, "핵심 문장이 없다"
+    assert "일반 인증키(Decoding)" in text, "어느 키를 복사할지 안내가 없다"
+    assert "데이터셋(API)마다 인증키가 따로" not in text, "키가 API 마다 다르다는 잘못된 설명이 남아 있다"
