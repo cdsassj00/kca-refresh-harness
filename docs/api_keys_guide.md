@@ -29,7 +29,7 @@
 | **OpenRouter** | **바로 작동** | 없으면 독립 프로그램이 아무것도 못 합니다 |
 | **Tavily · Exa · NAVER** | **바로 작동** | 웹검색 도구에 즉시 연결되어 있습니다 |
 | **Semantic Scholar** | **바로 작동** | 논문 검색 한도가 올라갑니다 |
-| OpenAlex·Crossref 이메일 | **바로 작동** | 키가 아니라 이메일 한 줄. 속도 우대 |
+| OpenAlex·Crossref 이메일 | **바로 작동** | **키가 아닙니다.** 신청 없이 본인 이메일만 적으면 됩니다(3-A) |
 | KOSIS · 공공데이터포털 · 법제처 · 열린국회 · 한국은행 · KCI · 국회도서관 · ScienceON 등 | **아직 대기** | 키를 받아 `.env`에 넣어 두시면, 제가 연결 코드를 붙입니다. 그 전까지는 넣어도 아무 일이 일어나지 않습니다 |
 
 받아 두시는 건 낭비가 아닙니다. 발급에 며칠 걸리는 것도 있어서 미리 받아 두면 연결 작업이 바로 끝납니다.
@@ -115,10 +115,26 @@
 
 이미 키 없이도 논문 검색이 됩니다(OpenAlex, Crossref, arXiv, Semantic Scholar). 아래는 더 빠르고 넉넉하게 쓰기 위한 보강입니다.
 
-| 항목 | 변수 이름 | 받는 곳 | 효과 |
-|---|---|---|---|
-| 이메일 등록 | `OPENALEX_MAILTO`, `CROSSREF_MAILTO` | 발급 절차 없음. 본인 이메일을 그냥 적으면 됩니다 | 우대 통로로 처리되어 빨라집니다 |
-| Semantic Scholar | `S2_API_KEY` | https://www.semanticscholar.org/product/api 의 키 신청 폼 **(확인 필요)** | 호출 한도가 올라갑니다. 없으면 자주 막힙니다 |
+### 3-A. 이메일 두 줄 — **신청하는 것이 아닙니다**
+
+`OPENALEX_MAILTO` 와 `CROSSREF_MAILTO` 는 **키가 아니라 그냥 이메일 주소입니다. 가입도, 신청도, 승인도 없습니다.** 본인 메일 주소를 그대로 적으면 끝입니다.
+
+```
+OPENALEX_MAILTO=hong@kca.kr
+CROSSREF_MAILTO=hong@kca.kr
+```
+
+- **왜 적나** OpenAlex와 Crossref는 논문 정보를 누구에게나 무료로 엽니다. 키를 발급하지 않는 대신, 연락처를 남긴 요청은 **빠른 통로(polite pool)** 로 처리해 줍니다. 프로그램이 서버에 무리를 주면 그 주소로 연락이 올 수 있다는 뜻이기도 합니다.
+- **비워 두면** 논문 검색은 그대로 되지만 조금 느리고 가끔 대기가 걸립니다.
+- **같은 주소를 두 줄에 똑같이 적으셔도 됩니다.**
+
+### 3-B. Semantic Scholar — 이건 진짜 키입니다
+
+- **변수 이름** `S2_API_KEY`
+- **받는 곳** https://www.semanticscholar.org/product/api **(확인 필요)** 의 키 신청 폼
+- **절차** 폼에 용도를 적어 제출 → 메일로 키가 옵니다
+- **효과** 호출 한도가 올라갑니다. 없으면 조사 중에 자주 막힙니다
+- **소요** 며칠 걸릴 수 있습니다
 
 ---
 
@@ -232,7 +248,7 @@ DATA_GO_KR_API_KEY=<전용 키가 따로 없는 API 에 쓸 기본 키>
 - [ ] `OPENROUTER_API_KEY` — 필수. 사용 한도 설정까지 했는지 확인
 - [ ] 웹검색 중 하나: `NAVER_CLIENT_ID` + `NAVER_CLIENT_SECRET` / `TAVILY_API_KEY` / `EXA_API_KEY`
 - [ ] `S2_API_KEY`
-- [ ] `OPENALEX_MAILTO`, `CROSSREF_MAILTO` (이메일만 적으면 끝)
+- [ ] `OPENALEX_MAILTO`, `CROSSREF_MAILTO` — **신청 없음.** 본인 이메일 주소를 그대로 적으면 끝
 
 **받아 두면 제가 연결할 것**
 
