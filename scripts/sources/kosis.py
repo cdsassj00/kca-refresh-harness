@@ -22,6 +22,8 @@ SEARCH_API = "https://kosis.kr/openapi/statisticsSearch.do"          # KOSIS통�
 DATA_API = "https://kosis.kr/openapi/Param/statisticsParameterData.do"  # 통계자료(통계표선택)
 TABLE_PAGE = "https://kosis.kr/statHtml/statHtml.do"                 # 사람이 보는 통계표 화면
 
+AXIS_MAX = 8   # 분류축은 objL1~objL8 까지다(개발가이드)
+
 # 오류 코드 → 한국어 설명.
 # 미확인: 공식 PDF 의 전체 코드표를 화면으로 확인하지 못했다. 아래는 개발가이드·현장 사례에서
 #         반복 확인되는 값이며, 표에 없는 코드는 원문 errMsg 를 그대로 보여 준다.
@@ -133,18 +135,34 @@ class KosisSource(BaseSource):
         """통계표의 시점별 수치를 받는다. 레코드 하나 = 셀 하나(시점 × 항목 × 분류).
 
         obj_l: 분류축 값의 차례(objL1, objL2, ...). 통계표의 축 수와 개수가 같아야 한다.
+        **축 수는 통계표마다 다르고 검색 결과에 나오지 않는다.** 그래서 전부 "ALL" 로
+        맡기신 경우에는 err 20(모자람)이 오면 축을 하나씩 늘려 가며 스스로 맞춘다.
+        축 값을 직접 지정하신 경우에는 뜻을 바꾸지 않도록 그대로 보낸다.
         기간은 start_prd_de~end_prd_de(예: "2015"~"2025") 또는 newest_count(최근 n개) 중 하나.
         """
         p = {"orgId": org_id, "tblId": tbl_id, "itmId": itm_id, "prdSe": prd_se,
              "startPrdDe": start_prd_de, "endPrdDe": end_prd_de,
              "newEstPrdCnt": newest_count}
-        for i, v in enumerate(obj_l or (), start=1):
-            p[f"objL{i}"] = v
-        rows = self._call(DATA_API, p)
-        if isinstance(rows, dict):
-            if str(rows.get("err")) == "30":
+        axes = list(obj_l or ())
+        auto = bool(axes) and all(v == "ALL" for v in axes)
+        tried = []
+        while True:
+            for i, v in enumerate(axes, start=1):
+                p[f"objL{i}"] = v
+            rows = self._call(DATA_API, p)
+            if not isinstance(rows, dict):
+                break
+            err = str(rows.get("err"))
+            if err == "30":
                 return []
-            raise RuntimeError(f"KOSIS 통계자료 실패: {self._err_text(rows)}")
+            tried.append(len(axes))
+            if auto and err == "20" and len(axes) < AXIS_MAX:
+                axes.append("ALL")      # 축이 모자라다 → 하나 늘려 다시 물어본다
+                continue
+            detail = self._err_text(rows)
+            if auto and err == "20":
+                detail += f" (축 {tried[0]}~{AXIS_MAX}개까지 늘려 봤습니다)"
+            raise RuntimeError(f"KOSIS 통계자료 실패: {detail}")
         url = self._table_url(str(org_id), str(tbl_id))
         cls_names = [f"C{i}_NM" for i in range(1, 9)]
         out = []

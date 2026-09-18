@@ -1,3 +1,9 @@
 * text=auto eol=lf
+
+# Windows 배치 파일은 줄 끝이 반드시 CRLF 여야 한다.
+# LF 로 내려받으면 cmd 가 줄을 엉뚱한 데서 잘라, 블록(if ... ( )) 이 통째로 무너지고
+# 줄 조각을 명령으로 실행하려 든다("'st'은(는) 내부 또는 외부 명령...").
+*.bat text eol=crlf
+*.cmd text eol=crlf
 *.pdf binary
 *.png binary

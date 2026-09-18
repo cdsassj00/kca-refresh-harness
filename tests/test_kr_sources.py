@@ -423,3 +423,43 @@ def test_class_attributes_match_catalog(cls, env, kind, tmp_cache):
     assert cls.default_grade == "A"            # 정부·공공기관 1차 출처
     assert cls(env, HttpClient(tmp_cache)).is_configured() is True
     assert cls({}, HttpClient(tmp_cache)).is_configured() is False
+
+
+# ── KOSIS 분류축 자동 맞춤 ────────────────────────────────────────────────
+# 통계표마다 분류축(objL) 개수가 다른데, 검색 결과에는 그 개수가 나오지 않는다.
+# 모자라면 err 20, 넘치면 err 21 이라 호출하는 쪽이 맞힐 방법이 없다.
+# 그래서 전부 "ALL" 로 맡긴 경우에는 커넥터가 스스로 늘려 가며 맞춘다.
+def test_kosis_fetch_series_finds_axis_count_by_itself(tmp_cache):
+    s = _kosis(tmp_cache)
+    axis_counts = []
+
+    def fake(url, params=None, **kw):
+        axis_counts.append(len([k for k in (params or {}) if k.startswith("objL")]))
+        if axis_counts[-1] < 2:
+            return json.dumps({"err": "20", "errMsg": "축 부족"}, ensure_ascii=False)
+        return KOSIS_DATA
+
+    with patch.object(s.http, "get_text", side_effect=fake):
+        rows = s.fetch_series("101", "DT_1IN1502", obj_l=("ALL",), newest_count=1)
+    assert axis_counts == [1, 2]          # 1개로 물어보고, 모자라니 2개로 다시 물어봤다
+    assert rows and rows[0].extra["value"] == "51234567"
+
+
+def test_kosis_does_not_guess_when_axes_are_given_explicitly(tmp_cache):
+    """축 값을 직접 지정하면 뜻이 바뀌므로 임의로 늘리지 않고 그대로 알려 준다."""
+    s = _kosis(tmp_cache)
+    err20 = json.dumps({"err": "20", "errMsg": "축 부족"}, ensure_ascii=False)
+    with patch.object(s.http, "get_text", return_value=err20) as g:
+        with pytest.raises(RuntimeError, match="분류축"):
+            s.fetch_series("101", "DT_1IN1502", obj_l=("13102871A",), newest_count=1)
+    assert g.call_count == 1
+
+
+def test_kosis_axis_search_stops_at_the_limit(tmp_cache):
+    """objL 은 8개까지다. 계속 모자라다고 하면 8번에서 멈추고 사유를 알려 준다."""
+    s = _kosis(tmp_cache)
+    err20 = json.dumps({"err": "20", "errMsg": "축 부족"}, ensure_ascii=False)
+    with patch.object(s.http, "get_text", return_value=err20) as g:
+        with pytest.raises(RuntimeError, match="늘려 봤습니다"):
+            s.fetch_series("101", "DT_1IN1502", obj_l=("ALL",), newest_count=1)
+    assert g.call_count == 8
