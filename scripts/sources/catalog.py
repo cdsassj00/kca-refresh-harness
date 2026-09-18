@@ -8,14 +8,14 @@ CATALOG = [
     _c("crossref", "T0", "papers", [], "scripts.sources.crossref:CrossrefSource"),
     _c("semantic_scholar", "T0", "papers", [], "scripts.sources.semantic_scholar:SemanticScholarSource"),
     _c("arxiv", "T0", "papers", [], "scripts.sources.arxiv_src:ArxivSource"),
-    # T1 무료 키·국내 (커넥터는 P4)
-    _c("data_go_kr", "T1", "stats", ["DATA_GO_KR_API_KEY"]),
-    _c("kosis", "T1", "stats", ["KOSIS_API_KEY"]),
-    _c("law_go_kr", "T1", "law", ["LAW_GO_KR_OC"]),
-    _c("assembly", "T1", "bills", ["ASSEMBLY_API_KEY"]),
+    # T1 무료 키·국내
+    _c("data_go_kr", "T1", "stats", ["DATA_GO_KR_API_KEY"], "scripts.sources.data_go_kr:DataGoKrSource"),
+    _c("kosis", "T1", "stats", ["KOSIS_API_KEY"], "scripts.sources.kosis:KosisSource"),
+    _c("law_go_kr", "T1", "law", ["LAW_GO_KR_OC"], "scripts.sources.law_go_kr:LawGoKrSource"),
+    _c("assembly", "T1", "bills", ["ASSEMBLY_API_KEY"], "scripts.sources.assembly:AssemblySource"),
     _c("naver_news", "T1", "news", ["NAVER_CLIENT_ID", "NAVER_CLIENT_SECRET"]),
-    _c("ecos", "T1", "stats", ["ECOS_API_KEY"]),
-    _c("kci", "T1", "papers", ["KCI_API_KEY"]),
+    _c("ecos", "T1", "stats", ["ECOS_API_KEY"], "scripts.sources.ecos:EcosSource"),
+    _c("kci", "T1", "papers", ["KCI_API_KEY"], "scripts.sources.kci:KciSource"),
     _c("nanet", "T1", "papers", ["NANET_API_KEY"]),
     # T2 무료 키·선택
     _c("scienceon", "T2", "papers", ["SCIENCEON_API_KEY"]),
