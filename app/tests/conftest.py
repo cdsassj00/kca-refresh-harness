@@ -7,6 +7,19 @@
 - MockLLM: 정해진 응답 순서를 돌려주는 가짜 클라이언트(네트워크 없음).
 """
 from __future__ import annotations
+
+import os as _os
+import pathlib as _pathlib
+
+# 임시폴더를 이 프로젝트 전용 경로로 옮긴다(루트 tests/conftest.py 와 같은 이유).
+# 윈도우에서 다른 프로그램이 시스템 임시폴더를 함께 쓰면 pytest 정리 단계가 PermissionError 로 멈춘다.
+if not _os.environ.get("PYTEST_DEBUG_TEMPROOT"):
+    _tmproot = _pathlib.Path.home() / ".cache" / "kca-refresh" / "pytest"
+    try:
+        _tmproot.mkdir(parents=True, exist_ok=True)
+        _os.environ["PYTEST_DEBUG_TEMPROOT"] = str(_tmproot)
+    except OSError:
+        pass
 import atexit
 import copy
 import json

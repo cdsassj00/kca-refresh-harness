@@ -29,13 +29,20 @@ const DOMAIN_LABEL = {
   industry_economics: '산업경제', broadcast_media: '방송·미디어', emf_inspection: '전자파·검사',
   ict_qualification: 'ICT 자격', kca_management: '기관 경영',
 };
+/* 단계 목록은 app/engine/stages.py 의 STAGE_ORDER 와 같아야 한다.
+ * types: 이 단계를 켜는 결론 유형(03_argument_chains.json 의 conclusions[].types). 비면 유형과 무관.
+ * option: run_config.options 의 켜기·끄기 항목. */
 const STAGES = [
   { name: 'intake', ko: '접수', layer: '' },
   { name: 'classify', ko: '분류', layer: 'L0' },
-  { name: 'chains', ko: '논증사슬', layer: 'L0' },
-  { name: 'delta', ko: '사건 탐색', layer: 'L0' },
+  { name: 'chains', ko: '결론·사슬', layer: 'L0' },
+  { name: 'delta', ko: '사건 조사', layer: 'L0' },
   { name: 'impact', ko: '영향 전파', layer: 'L0' },
-  { name: 'verify', ko: '검증', layer: 'L1' },
+  { name: 'verify_forecast', ko: '전망 검증', layer: 'L1', types: ['F', 'B', 'G'] },
+  { name: 'verify_model', ko: '모형 재계산', layer: 'L1', types: ['M'] },
+  { name: 'verify_policy', ko: '정책 추적', layer: 'L1', types: ['P'] },
+  { name: 'design_survey', ko: '재설문 설계', layer: 'L1', types: ['S'], option: 'survey_redesign' },
+  { name: 'design_experiment', ko: '재실험 계획', layer: 'L1', types: ['T'], option: 'experiment_plan' },
   { name: 'brief', ko: '브리프', layer: 'L2' },
   { name: 'blind', ko: '블라인드', layer: 'L2' },
   { name: 'compare', ko: '비교 판정', layer: 'L2' },
@@ -43,6 +50,19 @@ const STAGES = [
   { name: 'critic', ko: '검토', layer: '' },
 ];
 const STATUS_KO = { running: '실행 중', done: '완료', skipped: '건너뜀', failed: '실패', cancelled: '취소됨', queued: '대기', pending: '대기' };
+/* 스테퍼 칸 수는 STAGES 길이를 따른다. style.css 는 건드리지 않고 여기서 규칙만 덧댄다. */
+function injectStepperStyle() {
+  if (document.getElementById('stepperStyle')) return;
+  const st = document.createElement('style');
+  st.id = 'stepperStyle';
+  st.textContent = `
+.stepper{grid-template-columns:repeat(${STAGES.length},1fr)}
+.step-note{font-size:10px; color:var(--muted); min-height:12px}
+.step[data-status="skipped"] .step-note{color:var(--muted)}
+@media (max-width:1100px){.stepper{grid-template-columns:repeat(5,1fr)}}
+@media (max-width:720px){.stepper{grid-template-columns:repeat(3,1fr)}}`;
+  document.head.appendChild(st);
+}
 
 /* ------------------------------------------------------------------ */
 /* 상태                                                                 */
@@ -476,12 +496,14 @@ async function submitIntake(e) {
 /* 3. 실행                                                              */
 /* ------------------------------------------------------------------ */
 function setupRun() {
+  injectStepperStyle();
   $('#stepper').innerHTML = STAGES.map(s => `
     <li class="step" data-stage="${s.name}" data-status="">
       <span class="step-layer">${esc(s.layer || ' ')}</span>
       <span class="step-bar"></span>
       <span class="step-name">${esc(s.ko)}</span>
       <span class="step-en">${esc(s.name)}</span>
+      <span class="step-note"></span>
     </li>`).join('');
   $('#runForce').innerHTML += STAGES.map(s => `<option value="${s.name}">${esc(s.ko)} (${s.name})부터</option>`).join('');
   $('#runReport').addEventListener('change', e => setCurrentReport(e.target.value, { rerender: false }));
@@ -550,15 +572,45 @@ async function startRun(e) {
     toast(err.status === 409 ? '이 보고서는 이미 실행 중입니다. 끝난 뒤 다시 시도하세요.' : '실행 요청 실패: ' + err.message, 'error');
   }
 }
+/* 이 실행에서 빠지는 단계(층·옵션·결론 유형) → {단계명: '해당 없음' 사유}. engine/stages.py stages_for 와 같은 규칙. */
+function skippedStages(cfg, chains) {
+  const out = {};
+  if (!cfg) return out;
+  const L = new Set(cfg.layers || []);
+  const opts = cfg.options || {};
+  const types = chainTypes(chains);
+  for (const s of STAGES) {
+    if (s.layer && !L.has(s.layer)) { out[s.name] = '층 제외'; continue; }
+    if ((s.name === 'brief' || s.name === 'blind') && opts.blind_rerun && !opts.blind_rerun.enabled) { out[s.name] = '옵션 끔'; continue; }
+    if (s.option && opts[s.option] === false) { out[s.name] = '옵션 끔'; continue; }
+    if (s.types && types && !s.types.some(t => types.has(t))) out[s.name] = '해당 유형 없음';
+  }
+  return out;
+}
+function chainTypes(chains) {
+  if (!chains || !Array.isArray(chains.conclusions)) return null;
+  const set = new Set();
+  for (const c of chains.conclusions) for (const t of (c && c.types) || []) if (t) set.add(String(t));
+  return set;
+}
 function attachJob(jobId, reportId, cfg) {
   detachJob();
-  state.job = { job_id: jobId, report_id: reportId, status: 'running', stages: {}, tokensIn: 0, tokensOut: 0, cost: 0, startedAt: Date.now(), cfg };
-  // 층에 없는 단계는 건너뜀으로 미리 표시
+  state.job = { job_id: jobId, report_id: reportId, status: 'running', stages: {}, notes: {}, seen: {}, tokensIn: 0, tokensOut: 0, cost: 0, startedAt: Date.now(), cfg };
+  // 층·옵션·결론 유형으로 빠지는 단계는 "해당 없음"으로 미리 표시
   if (cfg) {
-    const L = new Set(cfg.layers);
-    for (const s of STAGES) {
-      if (s.layer && !L.has(s.layer)) state.job.stages[s.name] = 'skipped';
-      if ((s.name === 'brief' || s.name === 'blind') && !cfg.options.blind_rerun.enabled) state.job.stages[s.name] = 'skipped';
+    const chains = (state.data[reportId] || {}).chains || null;
+    const skipped = skippedStages(cfg, chains);
+    for (const [name, why] of Object.entries(skipped)) { state.job.stages[name] = 'skipped'; state.job.notes[name] = why; }
+    if (!chains) {
+      api.get(`/api/reports/${reportId}/chains`).then(ch => {
+        if (!state.job || state.job.job_id !== jobId) return;
+        for (const [name, why] of Object.entries(skippedStages(cfg, ch))) {
+          if (state.job.seen[name]) continue;
+          state.job.stages[name] = 'skipped';
+          state.job.notes[name] = why;
+        }
+        renderJob();
+      }).catch(() => { /* chains 가 아직 없으면 전 단계를 돈다 */ });
     }
   }
   api.get(`/api/runs/${jobId}`).then(j => applyJobSnapshot(j)).catch(() => { /* ignore */ });
@@ -600,7 +652,11 @@ function tokOut(t) { return t ? Number(t.out ?? t.completion_tokens ?? t.tokens_
 function handleProgress(ev) {
   const job = state.job;
   if (!job) return;
-  if (ev.stage && ev.stage !== 'pipeline' && ev.stage !== '__end__') job.stages[ev.stage] = ev.status || 'running';
+  if (ev.stage && ev.stage !== 'pipeline' && ev.stage !== '__end__') {
+    job.stages[ev.stage] = ev.status || 'running';
+    job.seen[ev.stage] = true;
+    if (job.notes) delete job.notes[ev.stage];
+  }
   if (ev.tokens_total) { job.tokensIn = tokIn(ev.tokens_total); job.tokensOut = tokOut(ev.tokens_total); }
   else if (ev.tokens) { job.tokensIn += tokIn(ev.tokens); job.tokensOut += tokOut(ev.tokens); }
   if (ev.cost_total_usd != null) job.cost = Number(ev.cost_total_usd) || 0;
@@ -628,7 +684,14 @@ function appendLog(ev) {
 function finishJob(status) {
   if (!state.job) return;
   state.job.status = status === 'succeeded' ? 'done' : status;
-  for (const s of STAGES) if (state.job.stages[s.name] === 'running') state.job.stages[s.name] = status === 'done' ? 'done' : status;
+  for (const s of STAGES) {
+    if (state.job.stages[s.name] === 'running') state.job.stages[s.name] = status === 'done' ? 'done' : status;
+    // 끝났는데 한 번도 알려 오지 않은 단계는 이 실행에 없던 단계다
+    else if (status === 'done' && !state.job.stages[s.name] && !state.job.seen[s.name]) {
+      state.job.stages[s.name] = 'skipped';
+      state.job.notes[s.name] = '이 실행에 없음';
+    }
+  }
   if (state.es) { state.es.close(); state.es = null; }
   if (state.elapsedTimer) { clearInterval(state.elapsedTimer); state.elapsedTimer = null; }
   toast(status === 'done' ? '실행이 끝났습니다. 대조표와 산출물을 확인하세요.' : status === 'cancelled' ? '실행이 취소됐습니다.' : '실행이 실패했습니다. 로그를 확인하세요.', status === 'done' ? 'ok' : 'error');
@@ -654,7 +717,17 @@ function renderJob() {
   $('#runCancel').disabled = !running;
   $('#jobId').textContent = job ? job.job_id : '';
   $('#jobBadge').outerHTML = job ? statusBadge(job.status).replace('<span class="pill', '<span id="jobBadge" class="pill') : '<span class="badge" id="jobBadge">대기</span>';
-  $$('#stepper .step').forEach(li => { li.dataset.status = job ? (job.stages[li.dataset.stage] || '') : ''; });
+  $$('#stepper .step').forEach(li => {
+    const name = li.dataset.stage;
+    const st = job ? (job.stages[name] || '') : '';
+    li.dataset.status = st;
+    const note = li.querySelector('.step-note');
+    if (note) {
+      const why = job && job.notes ? job.notes[name] : '';
+      note.textContent = st === 'skipped' ? (why ? '해당 없음' : '건너뜀') : '';
+      note.title = st === 'skipped' && why ? why : '';
+    }
+  });
   renderTally();
 }
 function renderTally() {

@@ -1,10 +1,90 @@
-{"$schema":"http://json-schema.org/draft-07/schema#","title":"논증 사슬","type":"object",
- "required":["report_id","conclusions","premises","edges"],
- "properties":{"report_id":{"type":"string"},
-  "conclusions":{"type":"array","items":{"$ref":"conclusion.schema.json"}},
-  "premises":{"type":"array","items":{"type":"object","required":["premise_id","statement","section","page"],
-    "properties":{"premise_id":{"type":"string","pattern":"^P-\\d{2,3}$"},"statement":{"type":"string"},
-     "section":{"type":"string"},"page":{"type":"integer"},"indicator":{"type":"string"}}}},
-  "edges":{"type":"array","items":{"type":"object","required":["from","to","relation"],
-    "properties":{"from":{"type":"string"},"to":{"type":"string"},"relation":{"enum":["premise_of","evidence_of","supports","cites"]},
-     "confidence":{"type":"number","minimum":0,"maximum":1}}}}}}
+{
+ "$schema": "http://json-schema.org/draft-07/schema#",
+ "title": "논증 사슬",
+ "type": "object",
+ "required": [
+  "report_id",
+  "conclusions",
+  "premises",
+  "edges"
+ ],
+ "properties": {
+  "report_id": {
+   "type": "string"
+  },
+  "conclusions": {
+   "type": "array",
+   "items": {
+    "$ref": "conclusion.schema.json"
+   }
+  },
+  "premises": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "premise_id",
+     "statement",
+     "section",
+     "page"
+    ],
+    "properties": {
+     "premise_id": {
+      "type": "string",
+      "pattern": "^P-\\d{2,3}$"
+     },
+     "statement": {
+      "type": "string"
+     },
+     "section": {
+      "type": "string"
+     },
+     "page": {
+      "type": "integer"
+     },
+     "indicator": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "edges": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "from",
+     "to",
+     "relation"
+    ],
+    "properties": {
+     "from": {
+      "type": "string"
+     },
+     "to": {
+      "type": "string"
+     },
+     "relation": {
+      "enum": [
+       "premise_of",
+       "evidence_for",
+       "input_to",
+       "answers",
+       "baseline_of",
+       "motivates",
+       "supports",
+       "cites",
+       "evidence_of"
+      ],
+      "description": "간선의 뜻. premise_of 전제→결론 · evidence_for 근거→결론 · input_to 값→계산/다른 근거 · answers 결론→연구질문 · baseline_of 기준선→전망 · motivates 배경→연구질문 · supports 보조 근거 · cites 인용. evidence_of 는 evidence_for 의 옛 이름(호환용, 새로 쓰지 말 것)."
+     },
+     "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+     }
+    }
+   }
+  }
+ }
+}

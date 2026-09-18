@@ -166,6 +166,56 @@
   },
   "blind_new": {
    "type": "string"
+  },
+  "comparability": {
+   "enum": [
+    "직접비교 가능",
+    "대체지표 비교",
+    "비교 불가"
+   ],
+   "description": "선택. 과거 자료와 최신 자료를 같은 잣대로 볼 수 있는지. 비교기가 스스로 채운다."
+  },
+  "comparability_note": {
+   "type": "string",
+   "description": "선택. 무엇이 같고 무엇이 달라 그렇게 보았는지(정의·모집단·집계기준·단위·시점)."
+  },
+  "method_changed": {
+   "type": "boolean",
+   "description": "선택. 원 방법을 그대로 썼으면 false, 바꿨으면 true. 비교기가 스스로 채운다."
+  },
+  "method_change_note": {
+   "type": "string",
+   "description": "선택. 바꿨다면 무엇을 어떻게 바꿨는지(대체 지표·모형·파라미터·기준연도)."
+  },
+  "evidence_floor_ok": {
+   "type": "boolean",
+   "description": "선택. 이 판정이 C등급 추정만으로 내려진 것이 아님을 확인했으면 true. A/B 근거 없이 C만 있으면 false."
+  },
+  "approval": {
+   "type": [
+    "object",
+    "null"
+   ],
+   "description": "선택. 사람이 채우는 칸. 비교기·자동 도구는 비워 둔다(키를 만들지 않거나 null).",
+   "properties": {
+    "approver": {
+     "type": "string"
+    },
+    "approved_at": {
+     "type": "string",
+     "description": "ISO 8601 (예: 2026-09-18 또는 2026-09-18T14:30:00+09:00)"
+    },
+    "decision": {
+     "enum": [
+      "승인",
+      "보류",
+      "반려"
+     ]
+    },
+    "comment": {
+     "type": "string"
+    }
+   }
   }
  }
 }

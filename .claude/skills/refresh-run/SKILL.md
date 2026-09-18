@@ -38,8 +38,18 @@ argument-hint: <report_id> [<pdf>] [--from <단계>] [--to <단계>]
 | classify | `prompts/00_intake.md` 2단계 | general-purpose | 00_source, 01_meta | `02_classification.json` |
 | chains | `prompts/01_chains.md` | general-purpose | 00_source, 01_meta, 02_classification | `03_argument_chains.json` |
 | l0 | `02_delta.md`, `03_impact.md` (+ literature-scanner 규칙) | delta-researcher ∥ literature-scanner → impact-propagator | 01, 02, 03 | `L0/events.json`, `L0/environment_delta.md`, `L0/literature.json`(선택), `L0/provisional_verdicts.json`, `comparison_table.json`(v0), `L0/comparison_table_v0.json` |
-| l1 | `04_forecast_verify.md` (+ policy·model 규칙) | forecast-verifier ∥ model-reconstructor ∥ policy-tracker | 03, L0 | `L1/verdicts.json` (+ `L1/policy_tracking.md`, `L1/model_rerun.json`, `L2/traced/traced_conclusions.json`) |
-| l2 | `05_blind.md`, `06_compare.md` (+ survey·experiment 규칙) | 총괄(브리프) → blind-rerunner ∥ (L1 병행) → conclusion-comparator → survey-redesigner/experiment-planner | 03, L0, L1 | `L2/blind_input/brief.md`, `L2/compare/question_map.json`, `L2/blind_output/blind_conclusions.json`, `L2/traced/traced_conclusions.json`, `L2/compare/verdict_notes.md`, `comparison_table.json`(maturity L2), `L3/*.md`(R3만) |
+| l1 | `04_forecast_verify.md`, `04a_model.md`, `04b_survey.md`, `04c_experiment.md` | forecast-verifier ∥ model-reconstructor ∥ policy-tracker ∥ survey-redesigner ∥ experiment-planner | 03, L0 | `L1/verdicts.json` (+ `L1/model_rerun.json`, `L1/policy_tracking.md`, `L2/traced/traced_conclusions.json`, `L3/survey_index.json`, `L3/experiment_index.json`) |
+| l2 | `05_blind.md`, `06_compare.md` | 총괄(브리프) → blind-rerunner ∥ (L1 병행) → conclusion-comparator → survey-redesigner/experiment-planner(설계서) | 03, L0, L1 | `L2/blind_input/brief.md`, `L2/compare/question_map.json`, `L2/blind_output/blind_conclusions.json`, `L2/traced/traced_conclusions.json`, `L2/compare/verdict_notes.md`, `comparison_table.json`(maturity L2), `L3/survey_redesign_<K-ID>.md`·`L3/experiment_plan_<K-ID>.md`(R3만) |
+
+L1은 **결론 유형(`03_argument_chains.json`의 `conclusions[].types`)에 따라 켜고 끈다.** 해당 유형이 하나도 없으면 그 담당을 띄우지 않는다. 담당을 띄웠는데 대상이 없으면 각 프롬프트의 "빈 배열·빈 객체로 정상 종료" 규칙을 따른다.
+
+| 유형(taxonomy) | 담당 | 프롬프트 원본 |
+|---|---|---|
+| F 전망 · B 사례 · G 기관전략 | forecast-verifier | `prompts/04_forecast_verify.md` |
+| M 경제성·계량 | model-reconstructor | `prompts/04a_model.md` |
+| P 정책·제도(제언 kind R 포함) | policy-tracker | `prompts/04_forecast_verify.md`(정책 결론만 다루도록 한정해 지시) |
+| S 실태조사·설문 | survey-redesigner | `prompts/04b_survey.md` |
+| T 기술·표준·실험 | experiment-planner | `prompts/04c_experiment.md` |
 | report | `prompts/07_report.md` | 총괄(스크립트) → general-purpose(조립·점검) | 전부 | `07_report/comparison_table.html`, `07_report/report.md`, `07_report/report.html` |
 | critic | `prompts/08_critic.md` | refresh-critic | 전부(읽기만) | `07_report/critic_notes.md` |
 
@@ -73,12 +83,13 @@ chains와 delta가 모두 끝나면 **impact-propagator**: "`prompts/03_impact.m
 ### l1 근거 갱신 ∥ l2 블라인드 (병렬)
 L0가 끝나면 아래를 **동시에** 띄운다. L1은 원문·사슬을 읽고, 블라인드는 브리프만 읽으므로 서로 오염되지 않는다.
 
-**L1 — verify_method별로 나눠 병렬**(`03_argument_chains.json`의 claims를 verify_method로 묶어 각 담당에 ID 목록을 준다):
-- **forecast-verifier**: backtest · case_refresh · kpi_track. "`prompts/04_forecast_verify.md`를 읽고 따르라. 대상 claim/conclusion: `<ID 목록>`. 병렬 실행이므로 출력은 `L1/verdicts.forecast.json`, `L2/traced/traced.forecast.json`."
-- **model-reconstructor**: model_rerun(types M). 출력 `L1/model_rerun.json`, `L1/verdicts.model.json`, `L2/traced/traced.model.json`, 계산 스크립트 `L1/calc/`.
-- **policy-tracker**: policy_track · standard_track(kind R, types P). 출력 `L1/verdicts.policy.json`, `L1/policy_tracking.md`.
-- survey_map(types S)은 `survey_redesign` 옵션이 켜져 있으면 **survey-redesigner**가 대체 조사 탐색(R2)까지 여기서 하고 `L1/verdicts.survey.json`을 낸다. 재설문 설계서(R3)는 비교 뒤에 쓴다.
-- 담당이 하나뿐이면 부분 파일 없이 04의 경로에 바로 쓴다.
+**L1 — 결론 유형·verify_method별로 나눠 병렬**(`03_argument_chains.json`의 conclusions를 `types`로, claims를 `verify_method`로 묶어 각 담당에 ID 목록을 준다. 위 2절 유형표에서 **대상이 있는 담당만** 띄운다):
+- **forecast-verifier**: types F·B·G / backtest · case_refresh · kpi_track. "`prompts/04_forecast_verify.md`를 읽고 따르라. 대상 claim/conclusion: `<ID 목록>`. 병렬 실행이므로 출력은 `L1/verdicts.forecast.json`, `L2/traced/traced.forecast.json`."
+- **model-reconstructor**: types M / model_rerun. "`prompts/04a_model.md`를 읽고 따르라." 출력 `L1/model_rerun.json`, `L1/verdicts.model.json`, `L2/traced/traced.model.json`, 계산 스크립트 `L1/calc/`.
+- **policy-tracker**: types P / policy_track(kind R 제언 포함). "`prompts/04_forecast_verify.md`를 읽고 따르되 **정책·제도 결론과 제언만** 다루라." 출력 `L1/verdicts.policy.json`, `L1/policy_tracking.md`.
+- **survey-redesigner**: types S / survey_map. `survey_redesign` 옵션이 켜져 있을 때만. "`prompts/04b_survey.md`를 읽고 따르라." 대체 조사 탐색(R2)까지 여기서 하고 `L1/verdicts.survey.json`·`L3/survey_index.json`을 낸다. 재설문 설계서(R3)는 비교 뒤에 쓴다.
+- **experiment-planner**: types T / standard_track. `experiment_plan` 옵션이 켜져 있을 때만. "`prompts/04c_experiment.md`를 읽고 따르라." 표준·규격 추적(R1~R2)까지 여기서 하고 `L1/verdicts.experiment.json`·`L3/experiment_index.json`을 낸다. 재실험 계획서(R3)는 비교 뒤에 쓴다.
+- 담당이 하나뿐이면 부분 파일 없이 각 프롬프트에 적힌 경로에 바로 쓴다.
 - 모두 끝나면 총괄이 `L1/verdicts.*.json`을 claim_id 기준으로 합쳐 `L1/verdicts.json`, `L2/traced/traced.*.json`을 conclusion_id 기준으로 합쳐 `L2/traced/traced_conclusions.json`을 만든다(중복 ID는 나중 것이 아니라 등급이 높은 것). 스키마가 있으면 `python scripts/validate.py … --schema verdict`.
 
 **L2 트랙 B — 블라인드**(`blind_rerun.enabled`일 때):
@@ -90,8 +101,9 @@ L0가 끝나면 아래를 **동시에** 띄운다. L1은 원문·사슬을 읽�
 L1 합본과 블라인드가 모두 끝나면:
 1. **conclusion-comparator**: "`prompts/06_compare.md`를 읽고 따르라. 입력은 그 파일의 목록 + `L2/compare/question_map.json` + 블라인드 반복 파일(있으면). `L0/comparison_table_v0.json`의 old를 보존하라. 출력 `comparison_table.json`(덮어쓰기), `L2/compare/verdict_notes.md`."
 2. 비교 결과에서 status가 `R3 설계서`이거나 verdict가 `판정불가`인 결론을 types별로 나눠, 옵션이 켜진 것만 **동시에**:
-   - types S → **survey-redesigner** → `L3/survey_redesign_<K-ID>.md`
-   - types T → **experiment-planner** → `L3/experiment_plan_<K-ID>.md`
+   - types S → **survey-redesigner**(`prompts/04b_survey.md`) → `L3/survey_redesign_<K-ID>.md` + `L3/survey_index.json` 갱신
+   - types T → **experiment-planner**(`prompts/04c_experiment.md`) → `L3/experiment_plan_<K-ID>.md` + `L3/experiment_index.json` 갱신
+   - 양식은 `templates/survey_redesign.md`·`templates/experiment_plan.md`의 절 구성을 그대로 따른다.
    - 두 옵션이 모두 꺼져 있거나 대상이 없으면 건너뛴다. `synthetic_sim`이 꺼져 있으면 시뮬레이션 절을 만들지 말라고 명시한다.
 3. `python scripts/render_table.py <id>`로 대조표 HTML을 다시 만든다.
 

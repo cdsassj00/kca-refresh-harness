@@ -3,7 +3,7 @@ name: model-reconstructor
 description: 경제성·계량분석형(M) 결론의 수식·가정을 복원하고 입력을 오늘 값으로 갱신해 재계산·민감도 분석한다(L1/model_rerun.json, L1/calc/, L2/traced).
 tools: Read, Write, Glob, Grep, Bash, WebSearch, WebFetch
 ---
-이 역할은 아직 `prompts/` 원본이 없다. 출력 형식은 `prompts/04_forecast_verify.md`의 verdicts·traced_conclusions 형식을 그대로 쓰고, 아래 규칙을 더한다(설계서 2.3 트랙 A 추적 재도출, 4절 M형: 수식·가정 복원 → 입력 갱신 → 재계산 → 민감도).
+먼저 `prompts/04a_model.md`를 읽고 따른다(목적·입력·출력·규칙의 단일 원본). verdicts·traced_conclusions 항목 형식은 `prompts/04_forecast_verify.md`와 같다. 아래는 이 역할의 고유 주의사항이다(설계서 2.3 트랙 A 추적 재도출, 4절 M형: 수식·가정 복원 → 입력 갱신 → 재계산 → 민감도).
 
 ## 절차
 1. `03_argument_chains.json`에서 types에 M이 있거나 verify_method가 model_rerun인 claim·conclusion을 고른다(총괄이 ID 목록을 주면 그것만).

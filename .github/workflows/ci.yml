@@ -1,0 +1,66 @@
+name: CI
+
+# 매 push(main)·PR·수동 실행마다 "산출물이 규칙을 지키는가"를 자동으로 확인한다.
+#  - 루트 테스트: 계산기·스키마 + 불변식(tests/test_invariants.py) + 샘플 R01 회귀(tests/test_regression_r01.py)
+#  - 앱 테스트: 독립 프로그램(app/) 엔진·도구·서버·문서 파싱
+#  - 비밀값 스캔: 추적 파일에 실제 API 키로 보이는 문자열이 남지 않았는지
+# 네트워크가 필요한 테스트는 -m "not network" 로 제외한다(마커는 pytest.ini 에 등록).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: 테스트 (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - name: 저장소 내려받기
+        uses: actions/checkout@v4
+
+      - name: 파이썬 준비 (pip 캐시)
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            app/requirements.txt
+
+      - name: 하네스 의존 패키지 설치
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: 독립 프로그램 의존 패키지 설치
+        run: python -m pip install -r app/requirements.txt
+
+      # pytest.ini 의 addopts 가 이미 -q 다. 여기서 -q 를 또 주면 -qq 가 되어
+      # "N passed" 요약 줄이 사라지므로 붙이지 않는다(앱 테스트도 rootdir 가 저장소 루트라 같은 설정을 받는다).
+      - name: 루트 테스트 (계산기·스키마·불변식·R01 회귀)
+        run: python -m pytest -m "not network"
+
+      - name: 앱 테스트 (독립 프로그램)
+        working-directory: app
+        run: python -m pytest tests -m "not network"
+
+      - name: 비밀값 스캔 (추적 파일, 테스트 파일 제외)
+        shell: bash
+        run: |
+          set -uo pipefail
+          PATTERN='sk-or-v1-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|tvly-[A-Za-z0-9]{20,}'
+          if git grep -nIE "$PATTERN" -- . ':!tests/**' ':!app/tests/**'; then
+            echo "::error::실제 API 키로 보이는 문자열이 추적 파일에 있습니다. 위 위치의 값을 폐기하고 .env(또는 app/.env)로 옮기세요."
+            exit 1
+          fi
+          echo "비밀값 스캔 통과 — 테스트 파일 밖에서 키 패턴이 발견되지 않았습니다."

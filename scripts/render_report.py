@@ -162,6 +162,66 @@ def next_action(row: dict) -> str:
     return "—"
 
 
+# ---------- 사람의 승인 게이트(선택 필드) ----------
+# comparability / method_changed / evidence_floor_ok 는 비교기가, approval 은 사람이 채운다.
+# 셋 다 선택 필드이므로 없는 기존 산출물에서도 "미기재"·"미승인"으로 렌더된다.
+NOT_APPROVED = "미승인"
+APPROVAL_ORDER = ["승인", "보류", "반려", NOT_APPROVED]
+
+
+def comparability_text(row: dict) -> str:
+    v = s(row.get("comparability"), "미기재")
+    note = s(row.get("comparability_note"))
+    return f"{v} — {note}" if note else v
+
+
+def method_change_text(row: dict) -> str:
+    mc = row.get("method_changed")
+    label = "미기재" if mc is None else ("변경" if mc else "원 방법 유지")
+    note = s(row.get("method_change_note"))
+    return f"{label} — {note}" if note else label
+
+
+def evidence_floor_text(row: dict) -> str:
+    ok = row.get("evidence_floor_ok")
+    return "근거하한 미기재" if ok is None else ("근거하한 확인(A/B 있음)" if ok else "근거하한 미충족(C등급만)")
+
+
+def approval_decision(row: dict) -> str:
+    a = row.get("approval")
+    if not isinstance(a, dict):
+        return NOT_APPROVED
+    return s(a.get("decision")) or (NOT_APPROVED if not a.get("approver") else "기록")
+
+
+def approval_text(row: dict) -> str:
+    dec = approval_decision(row)
+    floor = evidence_floor_text(row)
+    if dec == NOT_APPROVED:
+        return f"{NOT_APPROVED} · {floor}"
+    a = row.get("approval") or {}
+    parts = [dec] + [x for x in (s(a.get("approver")), s(a.get("approved_at"))) if x]
+    if a.get("comment"):
+        parts.append(clip(a.get("comment"), 120))
+    parts.append(floor)
+    return " · ".join(parts)
+
+
+def approval_counts(rows) -> Counter:
+    c = Counter(approval_decision(r) for r in rows)
+    for k in APPROVAL_ORDER:
+        c.setdefault(k, 0)
+    return c
+
+
+def approval_line(rows) -> str:
+    c = approval_counts(rows)
+    extra = [k for k in c if k not in APPROVAL_ORDER]
+    body = " · ".join(f"{k} {c[k]}건" for k in APPROVAL_ORDER + sorted(extra))
+    return (f"승인 현황: 전체 {len(rows)}건 중 {body}. "
+            "승인 칸은 사람이 채우며, \"미승인\"은 아직 사람이 확인하지 않았다는 뜻이다(판정이 틀렸다는 뜻이 아니다).")
+
+
 # ---------- 블록 모델 ----------
 # ("h", level, text) / ("p", text) / ("ul", [items]) / ("table", headers, rows, pill_cols) / ("missing", text)
 def H(level, text):
@@ -202,6 +262,7 @@ def sec_summary(cmp, prov):
     out.append(P(f"결론 {total}건(원 연구 결론 + 신규결론)에 대한 판정 분포. 성숙도 {s(cmp.get('maturity'), '미기재')} · 비교 생성일 {s(cmp.get('generated_at'), '미기재')}."))
     ordered = [(k, summary.get(k, 0)) for k in VERDICT_ORDER] + [(k, v) for k, v in summary.items() if k not in VERDICT_ORDER]
     out.append(T(["판정", "건수"], [[k, v] for k, v in ordered], pill_cols={0}))
+    out.append(P(approval_line(rows)))
     picks = sorted(rows, key=lambda r: VERDICT_PRIORITY.get(r.get("verdict") or "", 9))[:3]
     if picks:
         out.append(H(3, "핵심 3건 (뒤집힘 → 신규결론 → 판정불가 순)"))
@@ -277,10 +338,14 @@ def sec_comparison(cmp):
         return out
     rows = as_list(cmp.get("conclusion_rows"))
     out.append(P("판정 어휘: 동일·강화·부분수정·약화·뒤집힘·신규결론·판정불가. 왜 = 달라진 이유의 위치(P 전제 / E 근거 / M 방법). "
-                 "\"현행(원 보고서)\" 열은 원문 요지이며 바꾸지 않았다. 등급 A 1차·공식 / B 2차 / C 추정·시뮬레이션·블라인드 결론."))
-    out.append(T(["결론 · 위치", "현행 (원 보고서)", "현행화(안) · 추적 재도출", "블라인드 재수행", "판정", "왜", "등급", "상태", "다음 조치"],
+                 "\"현행(원 보고서)\" 열은 원문 요지이며 바꾸지 않았다. 등급 A 1차·공식 / B 2차 / C 추정·시뮬레이션·블라인드 결론. "
+                 "비교가능성·방법변경은 비교기가 채우고, 승인은 사람이 채운다(빈 칸은 \"미승인\")."))
+    out.append(P(approval_line(rows)))
+    out.append(T(["결론 · 위치", "현행 (원 보고서)", "현행화(안) · 추적 재도출", "블라인드 재수행", "판정", "왜",
+                  "비교가능성", "방법변경", "등급", "상태", "다음 조치", "승인"],
                  [[f"{s(r.get('row_id'))} ({s(r.get('kind'))}) · {s(r.get('location'))}", r.get("old"), r.get("new"), r.get("blind_new") or "—",
-                   r.get("verdict") or "잠정", f"{'/'.join(r.get('reason_locus') or [])} · {s(r.get('reason'))}", r.get("grade"), r.get("status"), next_action(r)]
+                   r.get("verdict") or "잠정", f"{'/'.join(r.get('reason_locus') or [])} · {s(r.get('reason'))}",
+                   comparability_text(r), method_change_text(r), r.get("grade"), r.get("status"), next_action(r), approval_text(r)]
                   for r in rows], pill_cols={4}))
     return out
 

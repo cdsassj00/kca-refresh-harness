@@ -24,7 +24,7 @@ from typing import Callable, Optional
 import config
 from engine import brief as brief_mod
 from engine.llm import LLMClient, LLMError
-from engine.stages import STAGE_ORDER, StageSpec, get_stage, stages_for
+from engine.stages import STAGE_ORDER, StageSpec, base_name, get_stage, stages_for
 from engine.tools import ToolRegistry
 
 SYSTEM_PROMPT_PATH = Path(__file__).with_name("system_prompt.md")
@@ -241,6 +241,9 @@ def output_instructions(spec: StageSpec, tool_names: list) -> str:
         lines.append(f'- "{o}": {kind}{note}')
     for o in spec.optional_outputs:
         lines.append(f'- "{o}": 선택. 있으면 함께 돌려준다({"JSON 객체" if _output_kind(o) == "json" else "문자열"}).')
+    if spec.allow_files:
+        lines.append(f'- "files": 선택. {{"경로": "파일 내용"}} 맵. {spec.allow_files}. '
+                     f"경로는 reports/<id>/ 안의 상대경로만 되고 `..`·절대경로는 거부된다. 대상이 없으면 빈 객체 {{}}.")
     if tool_names:
         lines.append(f"사용 가능한 도구: {', '.join(tool_names)}. 근거는 도구 결과에서만 가져온다.")
     else:
@@ -267,6 +270,8 @@ def build_user_message(report_id: str, spec: StageSpec, settings: dict, run_conf
     if spec.prompt_file:
         prompt_text = (config.PROMPTS_DIR / spec.prompt_file).read_text(encoding="utf-8")
         parts.append(f"## 역할 지시서 (prompts/{spec.prompt_file})\n{prompt_text}")
+    if spec.guidance:
+        parts.append(f"## 이 단계의 한정\n{spec.guidance}")
     blocks = resolve_inputs(spec, report_id, settings, ctx)
     if blocks:
         parts.append("## 입력\n" + "\n\n".join(f"### 파일: {label}\n{text}" for label, text in blocks))
@@ -309,6 +314,50 @@ def _match_key(obj: dict, path: str, report_id: str):
     return hits[0] if len(hits) == 1 else None
 
 
+def collect_files(spec: StageSpec, obj, report_id: str) -> tuple:
+    """최종 JSON 의 `files` 키({경로: 내용})를 추가 출력으로 바꾼다. (outputs, errors)
+
+    경로는 reports/<id>/ 안으로만 허용한다(config.safe_join). `..`·절대경로는 오류로 되돌린다.
+    """
+    extra, errors = {}, []
+    files = obj.get("files") if isinstance(obj, dict) else None
+    if files is None or files == "" or files == {}:
+        return extra, errors
+    if not spec.allow_files:
+        return extra, ["files: 이 단계는 files 키를 쓸 수 없습니다(출력 경로로만 답하라)"]
+    if isinstance(files, str):
+        try:
+            files = json.loads(files)
+        except ValueError:
+            return extra, ['files: {"경로": "내용"} 형태의 JSON 객체여야 합니다']
+    if not isinstance(files, dict):
+        return extra, ['files: {"경로": "내용"} 형태의 JSON 객체여야 합니다']
+    rd = config.report_dir(report_id)
+    for raw, val in files.items():
+        rel = str(raw).replace("\\", "/").strip()
+        rel = re.sub(rf"^(\./)?(reports/{re.escape(report_id)}/)?", "", rel)
+        if not rel or rel.endswith("/"):
+            errors.append(f"files: 파일 경로가 아닙니다: {raw}")
+            continue
+        try:
+            config.safe_join(rd, rel)
+        except (PermissionError, ValueError, OSError):
+            errors.append(f"files: reports/{report_id}/ 밖으로 나가는 경로는 쓸 수 없습니다: {raw}")
+            continue
+        if isinstance(val, (dict, list)):
+            if _output_kind(rel) != "json":
+                errors.append(f"files: {rel} 의 내용은 마크다운 문자열이어야 합니다")
+                continue
+            extra[rel] = val
+            continue
+        text = "" if val is None else str(val)
+        if not text.strip():
+            errors.append(f"files: {rel} 의 내용이 비어 있습니다")
+            continue
+        extra[rel] = text
+    return extra, errors
+
+
 def normalize_outputs(spec: StageSpec, obj, report_id: str) -> tuple:
     """(outputs dict, errors list). JSON 출력이 문자열로 왔으면 풀고, 형식이 틀리면 오류로 적는다."""
     errors, outputs = [], {}
@@ -342,6 +391,9 @@ def normalize_outputs(spec: StageSpec, obj, report_id: str) -> tuple:
                 errors.append(f"{o}: 내용이 비어 있습니다")
                 continue
         outputs[o] = val
+    extra, file_errors = collect_files(spec, obj, report_id)
+    outputs.update(extra)
+    errors += file_errors
     return outputs, errors
 
 
@@ -542,8 +594,34 @@ def _post_stage(report_id: str, spec: StageSpec, outputs: dict, log: Callable) -
             cmp["generated_at"] = today_str()
 
 
+def merge_with_existing(report_id: str, spec: StageSpec, outputs: dict) -> list:
+    """여러 단계가 덧붙이는 출력(L1/verdicts.json 등)을 기존 파일과 키 기준으로 합친다. 중복은 나중 것이 이긴다."""
+    merged_paths = []
+    rd = config.report_dir(report_id)
+    for rel, key in (spec.merge_keys or {}).items():
+        new = outputs.get(rel)
+        if not isinstance(new, list):
+            continue
+        old = _load_json_if(rd / rel)
+        if not isinstance(old, list) or not old:
+            continue
+        keep, order = {}, []
+        for i, item in enumerate(list(old) + list(new)):
+            if not isinstance(item, dict):
+                continue
+            k = item.get(key)
+            k = str(k) if k not in (None, "") else f"__no_key_{i}"
+            if k not in keep:
+                order.append(k)
+            keep[k] = item
+        outputs[rel] = [keep[k] for k in order]
+        merged_paths.append(f"{rel}({len(old)}+{len(new)}→{len(outputs[rel])})")
+    return merged_paths
+
+
 def _pre_write(report_id: str, spec: StageSpec, outputs: dict) -> None:
-    """쓰기 직전 보정: 블라인드 files_opened 강제, 비교표 old 복원·summary 재집계 등."""
+    """쓰기 직전 보정: 블라인드 files_opened 강제, 덧붙임 출력 병합, 비교표 old 복원·summary 재집계 등."""
+    merge_with_existing(report_id, spec, outputs)
     if spec.isolated:
         for o in spec.outputs:
             val = outputs.get(o)
@@ -576,6 +654,15 @@ def _run_intake(report_id: str, run_config: dict, log: Callable) -> list:
     return [f"00_source/{report_id}.md", "01_meta.json"]
 
 
+def l3_design_files(report_id: str) -> list:
+    """L3/ 아래의 재설문 설계서·재실험 계획서 목록(색인 파일은 제외)."""
+    d = config.report_dir(report_id) / "L3"
+    if not d.is_dir():
+        return []
+    return sorted(p.name for p in d.glob("*.md")
+                  if p.is_file() and p.name.startswith(("survey_redesign_", "experiment_plan_")))
+
+
 def _run_report(report_id: str, log: Callable) -> list:
     import scripts.render_report as rr
     import scripts.render_table as rt
@@ -588,6 +675,10 @@ def _run_report(report_id: str, log: Callable) -> list:
         rr.main(report_id, config.CORE_DIR)
     cmp = _load_json_if(rd / "comparison_table.json") or {}
     maturity = str(cmp.get("maturity") or "L0")
+    designs = l3_design_files(report_id)
+    if designs:  # 설계서가 하나라도 붙었으면 L3
+        maturity = "L3"
+        log({"stage": "report", "event": "write", "name": "L3", "note": f"설계서 {len(designs)}건: " + ", ".join(designs[:5])})
     try:
         set_maturity(config.REGISTRY_CSV, report_id, maturity)
     except Exception as e:
@@ -787,18 +878,20 @@ def run_pipeline(report_id: str, run_config: dict, progress: Optional[Callable] 
     tools = tools or ToolRegistry(env=env, llm=llm, settings=settings)
     log = log or make_logger(report_id)
     cancel = cancel or threading.Event()
-    specs = stages_for(run_config)
+    specs = stages_for(run_config, report_id)
     force_idx = None
     if force_from:
         names = [s.name for s in specs]
-        base_names = [n.split("_")[0] for n in names]
+        base_names = [base_name(n) for n in names]
+        target = base_name(force_from)
         if force_from in names:
             force_idx = names.index(force_from)
-        elif force_from in base_names:
-            force_idx = base_names.index(force_from)
-        elif force_from in STAGE_ORDER:
+        elif target in base_names:
+            force_idx = base_names.index(target)
+        elif target in STAGE_ORDER:
             # 실행 목록에 없는 단계면 그 다음 순서의 단계부터 강제
-            later = [i for i, n in enumerate(base_names) if STAGE_ORDER.index(n) >= STAGE_ORDER.index(force_from)]
+            later = [i for i, n in enumerate(base_names)
+                     if n in STAGE_ORDER and STAGE_ORDER.index(n) >= STAGE_ORDER.index(target)]
             force_idx = later[0] if later else None
         else:
             raise ValueError(f"알 수 없는 force_from 단계: {force_from}")

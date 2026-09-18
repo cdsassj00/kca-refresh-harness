@@ -14,3 +14,6 @@ app/.env
 app/settings.json
 app/.venv/
 runs/uploads/
+
+# 실행 묶음(입력 해시·계산 코드·중간값). 각자 PC에만 남긴다
+reports/*/runs/

@@ -1,5 +1,7 @@
 # KCA 연구보고서 결론 재도출·현행화 하네스
 
+[![CI](https://github.com/cdsassj00/kca-refresh-harness/actions/workflows/ci.yml/badge.svg)](https://github.com/cdsassj00/kca-refresh-harness/actions/workflows/ci.yml)
+
 옛 연구보고서를 넣으면, 규칙과 절차 안에서 움직이는 AI 조사팀이 **발간 이후 바뀐 것**을 찾고 **결론 하나하나에 도장**(그대로 / 고칠 것 / 뒤집힘 / 재조사 필요)을 찍어 **신구 대조표**와 **다음 조치**로 내주는 도구입니다.
 
 새 보고서를 대신 써 주는 도구가 **아닙니다**. 어느 결론이 아직 살아 있고, 어느 연구를 다시 해야 하는지 근거를 갖고 가려내는 도구입니다.

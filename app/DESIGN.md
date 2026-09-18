@@ -70,6 +70,10 @@ OpenAI function-calling 형식. 각 도구는 `{"type":"function","function":{"n
 class StageSpec:
     name: str; prompt_file: str | None; inputs: list[str]; outputs: list[str]
     schema: str | None; tools: list[str]; isolated: bool = False; python: str | None = None; model_role: str = "main"
+    guidance: str = ""            # 같은 프롬프트를 나눠 쓰는 단계의 한정 지시(역할 지시서 뒤에 붙는다)
+    merge_keys: dict = {}         # {출력 경로: 병합 키} — 기존 파일과 합쳐 쓴다
+    types: list[str] = []         # 이 단계를 켜는 결론 유형(taxonomy code)
+    allow_files: str = ""         # 비면 files 키 금지, 채우면 설명 문구
 ```
 `inputs`는 `reports/<id>/` 기준 상대경로(존재하는 것만 인라인, 각 파일 앞에 `### 파일: <경로>` 머리말). `outputs`는 모델이 최종 응답 JSON의 **키**로 돌려줘야 하는 파일 경로(값은 문자열 또는 JSON 객체·배열; 러너가 파일로 쓴다).
 
@@ -80,14 +84,24 @@ class StageSpec:
 | `chains` | `01_chains.md` | `00_source/<id>.md`(≤ max_source_chars), `01_meta.json`, `02_classification.json` | `03_argument_chains.json` | `chain` | `read_report_file` | |
 | `delta` | `02_delta.md` | `01_meta.json`, `02_classification.json`, `03_argument_chains.json`(premises만 추려 인라인) + `kb/events/<domain>/*.md` | `L0/events.json`, `L0/environment_delta.md` | `event`(배열 원소) | `web_search`, `fetch_page`, `read_core_file` | 새 사건은 `kb/events/<domain>/`에도 복사 |
 | `impact` | `03_impact.md` | `03_argument_chains.json`, `L0/events.json`, `00_source/<id>.md`(≤40,000자) | `L0/provisional_verdicts.json`, `comparison_table.json` | `comparison_row`(conclusion_rows·body_rows 원소) | `read_report_file` | v0 사본을 `L0/comparison_table_v0.json`으로 |
-| `verify` | `04_forecast_verify.md` | `03_argument_chains.json`, `L0/events.json`, `L0/provisional_verdicts.json` | `L1/verdicts.json`, `L2/traced/traced_conclusions.json` | `verdict`(배열 원소) | `web_search`, `fetch_page`, `evidence_search`, `read_report_file` | |
+| `verify_forecast` | `04_forecast_verify.md` | `03_argument_chains.json`, `L0/events.json`, `L0/provisional_verdicts.json` | `L1/verdicts.json`, `L2/traced/traced_conclusions.json` | `verdict`(배열 원소) | `web_search`, `fetch_page`, `evidence_search`, `read_report_file` | 유형 F·B·G |
+| `verify_model` | `04a_model.md` | 위와 같음 | `L1/model_rerun.json` (+선택 `L2/traced/traced_conclusions.json`, `L1/verdicts.json`) | `verdict` | 위와 같음 | 유형 M. traced·verdicts 는 기존 파일과 병합 |
+| `verify_policy` | `04_forecast_verify.md` | 위와 같음 | `L1/policy_tracking.md` (+선택 `L1/verdicts.json`) | `verdict` | 위와 같음 | 유형 P·제언(kind R). `guidance` 로 정책 결론만 다루게 한정 |
+| `design_survey` | `04b_survey.md` | 위 + `templates/survey_redesign.md` | `L3/survey_index.json` (+선택 `L1/verdicts.json`, `files` 로 `L3/survey_redesign_<K-ID>.md`) | `verdict` | 위 + `read_core_file` | 유형 S. `options.survey_redesign=false` 면 생략 |
+| `design_experiment` | `04c_experiment.md` | 위 + `templates/experiment_plan.md` | `L3/experiment_index.json` (+선택 `L1/verdicts.json`, `files` 로 `L3/experiment_plan_<K-ID>.md`) | `verdict` | 위 + `read_core_file` | 유형 T. `options.experiment_plan=false` 면 생략 |
 | `brief` | `05a_brief.md`(신규) | `02_classification.json`, `03_argument_chains.json` | `L2/blind_input/brief.md` | – | – | 원 결론·수치 제거 규칙. model_role `cheap` |
 | `blind` | `05_blind.md` | **`L2/blind_input/brief.md` 만** | `L2/blind_output/blind_conclusions.json` | – | `web_search`, `fetch_page`, `evidence_search` | `isolated=True`: 대화에 브리프 외 어떤 보고서 내용도 넣지 않고, 파일 읽기 도구 없음. 러너가 `files_opened: ["L2/blind_input/brief.md"]`를 강제로 기록 |
 | `compare` | `06_compare.md` | `03_argument_chains.json`, `L2/traced/traced_conclusions.json`, `L2/blind_output/blind_conclusions.json`, `L1/verdicts.json`, `L0/provisional_verdicts.json`, `comparison_table.json`, `templates/verdict_rules.yaml` | `comparison_table.json`, `L2/compare/verdict_notes.md` | `comparison_row` | `read_report_file` | |
-| `report` | – | – | `07_report/*` | – | – | `python`: `scripts.render_table.main`, `scripts.render_report.main`, 이후 `registry.set_maturity` |
+| `report` | – | – | `07_report/*` | – | – | `python`: `scripts.render_table.main`, `scripts.render_report.main`, 이후 `registry.set_maturity`(`L3/` 아래 `survey_redesign_*.md`·`experiment_plan_*.md`가 하나라도 있으면 `L3`) |
 | `critic` | `08_critic.md` | `comparison_table.json`, `07_report/report.md`, `L2/blind_output/blind_conclusions.json` | `07_report/critic_notes.md` | – | `read_report_file` | 읽기 전용 |
 
-층 매핑: `L0` = classify·chains·delta·impact, `L1` = verify, `L2` = brief·blind·compare, 항상 마지막에 report·critic. `run_config.layers`에 없는 층은 건너뛴다. `options.blind_rerun.enabled=false`면 brief·blind 생략.
+층 매핑: `L0` = classify·chains·delta·impact, `L1` = verify_forecast·verify_model·verify_policy·design_survey·design_experiment, `L2` = brief·blind·compare, 항상 마지막에 report·critic. `run_config.layers`에 없는 층은 건너뛴다. `options.blind_rerun.enabled=false`면 brief·blind 생략, `options.survey_redesign`/`experiment_plan=false`면 해당 design 단계 생략.
+
+**유형 기반 조건부 라우팅**: `stages_for(run_config, report_id)`는 `reports/<id>/03_argument_chains.json`의 모든 `conclusions[].types`를 모아, 해당 유형이 있는 L1 단계만 목록에 넣는다(F·B·G→`verify_forecast`, M→`verify_model`, P→`verify_policy`, S→`design_survey`, T→`design_experiment`). chains 파일이 아직 없으면(첫 실행) 전부 넣고, 대상이 없는 단계는 각 프롬프트의 "빈 배열·빈 객체로 정상 종료" 규칙으로 처리한다.
+
+**덧붙임 출력**: `StageSpec.merge_keys`(예: `{"L1/verdicts.json": "claim_id"}`)가 있는 출력은 러너가 기존 파일을 읽어 키 기준으로 합쳐 쓴다(중복은 나중 것이 이김). 그래서 여러 L1 단계가 같은 `L1/verdicts.json`에 항목을 덧붙일 수 있다.
+
+**`files` 키**: `StageSpec.allow_files`가 설정된 단계는 최종 JSON에 `"files": {"경로": "내용"}`을 넣어 고정 경로가 아닌 산출물(설계서·계획서)을 추가로 쓸 수 있다. 경로는 `config.safe_join`으로 `reports/<id>/` 안으로 제한하며 `..`·절대경로는 검증 오류다.
 
 시스템 프롬프트(모든 단계 공통, `engine/system_prompt.md`): 루트 `CLAUDE.md`의 "규칙" 절을 옮긴 것 + "최종 응답은 outputs 키를 가진 JSON 객체 하나로만. 설명 문장을 붙이지 말 것. 파일 내용이 마크다운이면 문자열로, JSON이면 객체로." + 오늘 날짜.
 
