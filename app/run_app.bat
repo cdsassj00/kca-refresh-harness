@@ -44,7 +44,7 @@ echo.
 echo 서버를 시작합니다: http://127.0.0.1:8765
 echo 브라우저가 3초 뒤 자동으로 열립니다. 끝내려면 이 창에서 Ctrl+C 를 누르거나 창을 닫으세요.
 echo.
-start "" /b cmd /c "timeout /t 3 /nobreak >nul && start http://127.0.0.1:8765"
+start "" /b cmd /c "ping -n 4 127.0.0.1 >nul && start http://127.0.0.1:8765"
 python -m uvicorn server.main:app --host 127.0.0.1 --port 8765
 if errorlevel 1 (
   echo.
