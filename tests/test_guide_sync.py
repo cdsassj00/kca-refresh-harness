@@ -91,3 +91,14 @@ def test_guide_states_one_account_key_for_data_go_kr(ROOT):
     assert "활용신청은 API마다 따로, 인증키는 계정에 하나" in text, "핵심 문장이 없다"
     assert "일반 인증키(Decoding)" in text, "어느 키를 복사할지 안내가 없다"
     assert "데이터셋(API)마다 인증키가 따로" not in text, "키가 API 마다 다르다는 잘못된 설명이 남아 있다"
+
+
+def test_guide_law_oc_is_not_email_prefix(ROOT):
+    """법제처 OC 설명을 고정한다 — 이메일 앞부분이 아니라 인증키관리 화면의 값.
+
+    '이메일의 @ 앞부분'으로 잘못 적었다가 실제 화면(OC=기관 약칭)으로 정정했다(2026-09-19).
+    """
+    text = (ROOT / "docs" / "api_keys_guide.md").read_text(encoding="utf-8")
+    assert "usrOcInfoMod" in text, "OC 확인 화면 주소가 없다"
+    assert "이메일 앞부분이 아닙니다" in text, "이메일 앞부분이 아니라는 경고가 없다"
+    assert "이메일의 @ 앞부분" not in text, "잘못된 설명이 남아 있다"
