@@ -21,7 +21,7 @@
 - 도메인 6개 식별자: `spectrum, emf_inspection, broadcast_media, network_5g6g, ict_qualification, kca_management`.
 - 보고서 ID는 `R01`~`R07`(reports/ PDF 번호 순: 01→R01 … 예비06→R06, 예비07→R07).
 - 캐시는 `kb/cache/`, 기본 TTL 7일. 네트워크 테스트는 모두 mock. 실제 호출은 마지막 스모크 태스크에서만.
-- 작업 디렉터리: `C:\Users\value\Desktop\파일럿프로젝트\[클로드]한국방송통신전파지흥원딥리서치` (아래 `$ROOT`).
+- 작업 디렉터리: `<저장소 루트>` (아래 `$ROOT`).
 
 ---
 
