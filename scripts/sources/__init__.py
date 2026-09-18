@@ -35,7 +35,7 @@ def source_statuses(env: Mapping[str, str], http: Optional[HttpClient], do_ping:
         if not configured:
             detail = "키 없음: " + ", ".join(c["env_vars"])
         elif not implemented:
-            detail = "키 있음, 커넥터는 P4에서 구현"
+            detail = "키 있음, 커넥터는 다음 단계"
         elif do_ping:
             try:
                 ok, detail = _cls(c["impl"])(env, http).ping()

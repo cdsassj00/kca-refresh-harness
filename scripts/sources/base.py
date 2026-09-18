@@ -64,8 +64,15 @@ class HttpClient:
         return resp.status_code, resp.text
 
     def get_text(self, url: str, params: Optional[dict] = None, headers: Optional[dict] = None,
-                 timeout: int = 20) -> str:
-        p = self._key(url, params)
+                 timeout: int = 20, cache_url: Optional[str] = None) -> str:
+        """cache_url: 캐시 키·캐시 기록에 남길 주소.
+
+        ECOS처럼 **인증키가 주소 경로에 들어가는** API는 키를 가린 주소를 넘긴다.
+        그러면 캐시 파일에 키가 글자 그대로 남지 않는다(질의 문자열에 든 키는
+        원래도 해시로만 쓰이고 기록되지 않는다). 안 넘기면 예전과 똑같이 동작한다.
+        """
+        ck = cache_url or url
+        p = self._key(ck, params)
         if not self.no_cache and p.exists():
             c = json.loads(p.read_text(encoding="utf-8"))
             if time.time() - c["fetched_at"] < self.ttl and c["status"] == 200:
@@ -81,13 +88,13 @@ class HttpClient:
         if status != 200:
             raise requests.HTTPError(f"HTTP {status} for {url}")
         if not self.no_cache:
-            p.write_text(json.dumps({"fetched_at": time.time(), "status": status, "url": url,
+            p.write_text(json.dumps({"fetched_at": time.time(), "status": status, "url": ck,
                                      "body": body}, ensure_ascii=False), encoding="utf-8")
         return body
 
     def get_json(self, url: str, params: Optional[dict] = None, headers: Optional[dict] = None,
-                 timeout: int = 20) -> dict:
-        return json.loads(self.get_text(url, params, headers, timeout))
+                 timeout: int = 20, cache_url: Optional[str] = None) -> dict:
+        return json.loads(self.get_text(url, params, headers, timeout, cache_url))
 
 class BaseSource:
     name: str = ""; tier: str = ""; kind: str = ""; env_vars: list = []; default_grade: str = "B"
