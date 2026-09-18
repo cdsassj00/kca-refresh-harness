@@ -102,3 +102,9 @@ def test_guide_law_oc_is_not_email_prefix(ROOT):
     assert "usrOcInfoMod" in text, "OC 확인 화면 주소가 없다"
     assert "이메일 앞부분이 아닙니다" in text, "이메일 앞부분이 아니라는 경고가 없다"
     assert "이메일의 @ 앞부분" not in text, "잘못된 설명이 남아 있다"
+
+
+def test_guide_assembly_uses_portal_url(ROOT):
+    """열린국회정보는 최상위 주소가 아니라 별도 포털 주소로 안내한다(2026-09-19 확인)."""
+    text = (ROOT / "docs" / "api_keys_guide.md").read_text(encoding="utf-8")
+    assert "open.assembly.go.kr/portal/openapi/main.do" in text, "API 포털 주소가 없다"
