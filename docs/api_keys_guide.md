@@ -1,167 +1,279 @@
-# 근거 소스 API 키 발급 가이드 (초안)
+# API 키 받기 — 차근차근 체크리스트
 
-상태: **초안**. 포털 메뉴 이름·승인 시간은 2026-09 기준 기억과 공개 안내를 바탕으로 적었으며, P0 단계에서 각 포털을 실제로 열어 확인하고 `python scripts/evidence.py doctor`로 호출까지 검증한 뒤 확정본으로 바꾼다.
+하나씩 받으시면 됩니다. 순서대로 따라가되, **1단계만 해도 프로그램이 돌아갑니다.** 나머지는 조사 품질을 올리는 보강입니다.
 
-## 0. OpenRouter (독립 프로그램 필수) · Tavily · Exa
+- 마지막 손질: 2026-09-19
+- 표시 규칙: 절차는 포털이 개편되면 메뉴 이름이 조금 다를 수 있습니다. 제가 화면으로 확인한 항목에는 **(확인함)**, 공개 안내와 경험으로 적은 항목에는 **(확인 필요)** 를 붙였습니다. 다르면 알려 주세요. 바로 고치겠습니다.
 
-독립 프로그램(`app/`)은 **OpenRouter 키 하나만 있으면** 돌아간다. 아래 1~3절의 근거 소스 키는 모두 선택이다. Claude Code 하네스 방식은 OpenRouter 키가 필요 없다.
+---
 
-### 0-1. OpenRouter — `OPENROUTER_API_KEY` (독립 프로그램 필수)
-- 발급처: https://openrouter.ai
-- 절차: **가입**(Google·GitHub·이메일) → 오른쪽 위 계정 메뉴 → **Keys** → **Create Key** → 이름 입력(예: `kca-refresh`) → **Credit limit**(이 키가 쓸 수 있는 금액 상한, 월 예산으로 두기를 권장) 입력 → 생성 → `sk-or-…` 로 시작하는 키를 **그 자리에서 복사**(다시 볼 수 없음)
-- 결제: 선불 크레딧. **Credits** 메뉴에서 카드로 충전(소액부터). 잔액이 0이면 호출이 거부된다.
-- 넣는 곳: 브라우저 **[설정]** 화면의 `OPENROUTER_API_KEY` → 저장 → **연결 확인**. 또는 `app/.env`에 `OPENROUTER_API_KEY=sk-or-…`
-- 모델: 같은 키로 OpenRouter의 모든 모델을 쓴다. [설정]의 모델 목록에서 고른다. 단가는 모델마다 다르며 목록에 표시된다.
-- 데이터: 계정 설정 › **Privacy**에서 학습에 쓰는 공급자 허용 여부와 로그 보관을 정할 수 있다. 기관 방침에 맞춰 확인한다.
-- 직접 연결: OpenRouter를 거치지 않고 특정 제공사(OpenAI 호환)나 사내 서버를 쓰려면 [설정]의 `LLM_BASE_URL`을 그 주소로, `OPENROUTER_API_KEY` 자리에 그 제공사 키를 넣는다.
-- 소요: 즉시
+## 0. 먼저 알아 둘 것 세 가지
 
-### 0-2. Tavily 웹 검색 — `TAVILY_API_KEY` (선택, 검색 품질 향상)
-- 발급처: https://app.tavily.com
-- 절차: 가입 → 대시보드 **API Keys** → 키 복사(`tvly-…`). 무료 구간(월 호출 한도)이 있고 넘으면 유료.
-- 용도: 사건·실적 검색(`web_search` 도구). 없으면 Exa → NAVER → OpenRouter 웹 플러그인 순으로 대체된다.
-- 소요: 즉시
+### (1) 키를 넣는 곳은 두 군데입니다
 
-### 0-3. Exa 웹 검색 — `EXA_API_KEY` (선택)
-- 발급처: https://dashboard.exa.ai
-- 절차: 가입 → **API Keys** → Create → 키 복사. 무료 크레딧 후 종량제.
-- 용도: 리서치 특화 검색(논문·기사 카테고리 필터). Tavily가 없을 때 두 번째 순위.
-- 소요: 즉시
+| 어디에 | 무엇을 위해 | 넣는 방법 |
+|---|---|---|
+| `app/.env` | **독립 프로그램**(브라우저 화면) | 프로그램을 켜고 **[설정]** 화면에서 입력 → 저장. 파일을 직접 열어 적어도 됩니다 |
+| `.env` (저장소 맨 위) | **Claude Code 하네스** | 메모장으로 열어 `키이름=값` 형태로 적습니다 |
 
-셋 다 [설정] 화면에서 넣고 **doctor** 표의 `llm`·`search` 행으로 확인한다.
+둘 다 쓰신다면 같은 값을 양쪽에 넣으시면 됩니다. **두 파일 모두 깃에 올라가지 않습니다.**
 
-## 공통 규칙 (근거 소스 키)
-- 키는 `.env`에만 적는다. Claude Code 하네스는 프로젝트 루트 `.env`, 독립 프로그램은 `app/.env`(브라우저 [설정]에서 저장하면 여기에 쓰인다). 둘 다 `.gitignore`에 들어가며, UI나 보고서에 키가 노출되지 않는다.
-- 키가 없는 소스는 하네스가 자동으로 건너뛴다. 아래 순서대로 발급하면 빨리 효과가 난다.
-- 발급 후 `python scripts/evidence.py doctor` 를 실행하면 소스별 연결 상태가 표로 나온다.
-- 대부분 무료이며 개인 계정으로 신청 가능하다. "기관" 표시가 있는 것만 기관 구독이 필요하다.
+### (2) 지금 바로 효과가 나는 키와, 받아 두는 키가 다릅니다
 
-## 1. 권장 최소 세트 (이 넷이면 Layer 0 전체 + 전망·정책 검증이 돈다)
+이게 가장 중요합니다. 지금 코드에 연결까지 끝난 것만 즉시 작동합니다.
 
-### 1-1. 공공데이터포털 — `DATA_GO_KR_API_KEY`
-- 발급처: https://www.data.go.kr
-- 절차: 회원가입 → 로그인 → 검색창에 데이터셋명 → 상세 페이지의 **활용신청** → 활용목적 입력(예: 연구·정책분석) → 대부분 즉시 자동승인 → 마이페이지 › 데이터활용 › Open API › 인증키 발급현황에서 **일반 인증키(Decoding)** 복사
-- 특징: 계정당 인증키 하나로 활용신청한 모든 API에 공통 사용. 데이터셋마다 활용신청만 추가하면 된다.
-- 이 프로젝트에서 활용신청할 데이터셋(1차): 한국연구재단_KCI 논문정보서비스, 한국연구재단_KCI 학술지정보서비스, 행정안전부_정책연구 과제정보(PRISM). 도메인 프로파일 확정 시 과기정통부·방송 통계 데이터셋을 추가한다.
-- 한도: 개발계정 일 1,000~10,000회(데이터셋별 표기). 운영계정 전환 시 상향.
-- 소요: 즉시(일부 데이터셋은 제공기관 승인 1~3일)
+| 키 | 지금 넣으면 | 비고 |
+|---|---|---|
+| **OpenRouter** | **바로 작동** | 없으면 독립 프로그램이 아무것도 못 합니다 |
+| **Tavily · Exa · NAVER** | **바로 작동** | 웹검색 도구에 즉시 연결되어 있습니다 |
+| **Semantic Scholar** | **바로 작동** | 논문 검색 한도가 올라갑니다 |
+| OpenAlex·Crossref 이메일 | **바로 작동** | 키가 아니라 이메일 한 줄. 속도 우대 |
+| KOSIS · 공공데이터포털 · 법제처 · 열린국회 · 한국은행 · KCI · 국회도서관 · ScienceON 등 | **아직 대기** | 키를 받아 `.env`에 넣어 두시면, 제가 연결 코드를 붙입니다. 그 전까지는 넣어도 아무 일이 일어나지 않습니다 |
 
-### 1-2. KOSIS 국가통계포털 — `KOSIS_API_KEY`
-- 발급처: https://kosis.kr/openapi
-- 절차: 회원가입 → 상단 **공유서비스** › OpenAPI → **활용신청** → 활용목적 입력 → 인증키 즉시 발급(마이페이지에서 확인)
-- 용도: 통계표(통계자료) 시계열 조회. 전망형 결론의 백테스트에 핵심.
-- 한도: 분당·일 호출 제한 있음(신청 화면 표기). HTTP는 종료, HTTPS만 사용.
-- 소요: 즉시
+받아 두시는 건 낭비가 아닙니다. 발급에 며칠 걸리는 것도 있어서 미리 받아 두면 연결 작업이 바로 끝납니다.
 
-### 1-3. 법제처 국가법령정보 공동활용 — `LAW_GO_KR_OC`
-- 발급처: https://open.law.go.kr
-- 절차: 회원가입 → **OPEN API 신청** → 이용목적·활용 URL 입력 → 승인 후 사용. 요청 파라미터 `OC` 값은 **회원 ID(이메일의 @ 앞부분)** 이다. 별도 키 문자열이 아니다.
-- 용도: 법령 본문·개정 연혁·신구조문 대비, 행정규칙·고시. 정책제언의 채택·입법 추적에 핵심.
-- 한도: 명시 한도 없음(과도 호출 시 제한)
-- 소요: 보통 1~2 업무일
+### (3) 보안 규칙 두 줄
 
-### 1-4. NAVER 검색 API — `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET`
-- 발급처: https://developers.naver.com
-- 절차: 네이버 로그인 → Application › **애플리케이션 등록** → 이름 입력 → 사용 API에서 **검색** 선택 → 비로그인 오픈 API 서비스 환경에 WEB 설정(URL은 `http://localhost` 등 임의) → 등록 즉시 Client ID·Client Secret 표시
-- 용도: 뉴스 검색으로 발간일 이후 사건 타임라인 구성
-- 한도: 일 25,000회
-- 소요: 즉시
+- 키 값을 문서·발표자료·메신저에 붙여 넣지 마세요. 노출되면 그 포털에서 삭제하고 새로 받으세요.
+- OpenRouter처럼 **돈이 나가는 키**는 반드시 사용 한도를 걸어 두세요. 아래 1단계에 방법이 있습니다.
 
-## 2. 국내 추가 소스 (무료)
+---
 
-### 2-1. 열린국회정보 — `ASSEMBLY_API_KEY`
-- 발급처: https://open.assembly.go.kr → 회원가입 → **인증키 신청** → 즉시 발급
-- 용도: 의안 발의·처리 상태, 위원회 회의록 검색. 제언의 입법 추적.
-- 한도: 일 호출 제한(신청 화면 표기)
+## 1단계 (필수) · OpenRouter — 프로그램의 두뇌
 
-### 2-2. 한국은행 ECOS — `ECOS_API_KEY`
-- 발급처: https://ecos.bok.or.kr/api → 회원가입 → 인증키 신청 → 즉시
-- 용도: 거시 변수(GDP·물가·환율). 경제성 분석 재계산 입력.
+이거 하나만 있으면 독립 프로그램이 돌아갑니다. 소요 5분.
 
-### 2-3. KCI 한국학술지인용색인 직접 API — `KCI_API_KEY`
-- 발급처: https://www.kci.go.kr → 로그인 → OpenAPI 메뉴 → 신청 → 개발계정 트래픽 5,000 → 키 발급
-- 참고: 공공데이터포털 경유(1-1)로도 같은 논문정보를 받을 수 있으므로, 1-1이 되면 생략 가능.
+- **받는 곳** https://openrouter.ai/keys **(확인함)**
+- **변수 이름** `OPENROUTER_API_KEY`
+- **무엇에 쓰나** AI 모델 호출 전부. 분류, 결론 추출, 사건 조사, 판정까지 모든 단계
 
-### 2-4. 국회도서관 Open API — `NANET_API_KEY`
-- 발급처: https://www.nanet.go.kr → 도서관소개 › 정보공개 › Open API → 신청서 작성 → 승인 후 인증키
-- 용도: 학술논문·정책자료 통합검색
-- 한도: 1회 100건, 일 1,000회. 승인까지 최대 7 업무일
+**절차**
 
-### 2-5. ScienceON (KISTI) — `SCIENCEON_API_KEY`
-- 발급처: https://scienceon.kisti.re.kr/apigateway → 회원가입 → API 신청 → 승인 → 키·토큰
-- 용도: 국내 논문·특허·연구보고서·NTIS 과제 통합검색. 후속 문헌 스캔 폭 확장.
+1. https://openrouter.ai 에 가입합니다. 구글이나 깃허브 계정으로 바로 됩니다.
+2. **Credits** 메뉴에서 카드로 크레딧을 충전합니다. **소액부터 하세요.** 보고서 한 편에 모델에 따라 700원에서 3만원 정도가 듭니다.
+3. https://openrouter.ai/keys 로 가서 **Create Key** 를 누릅니다.
+4. 이름을 적습니다. 예: `kca-refresh`
+5. **Credit limit(사용 한도)을 반드시 설정하세요.** **(확인함)** 이 키가 쓸 수 있는 금액의 상한입니다. 일·주·월 단위로 걸 수 있습니다. 한도를 넘으면 호출이 거부되므로 사고가 나지 않습니다.
+6. 만들면 `sk-or-` 로 시작하는 키가 **한 번만** 보입니다. 그 자리에서 복사하세요. 다시 볼 수 없습니다.
+7. 프로그램 **[설정]** 화면에 붙여 넣고 저장 → **연결 확인** 을 누릅니다.
 
-## 3. 해외 논문 소스
+**알아 둘 것**
 
-### 3-1. 키 없이 사용
-- **OpenAlex**: 키 불필요. `.env`의 `OPENALEX_MAILTO`에 이메일을 넣으면 우대 속도(polite pool). 1차 논문 검색 엔진.
-- **Crossref**: 키 불필요. `CROSSREF_MAILTO` 선택.
-- **arXiv**: 키 불필요. 기존 `arxiv-search` 스킬 재사용.
-- **OECD / World Bank**: 키 불필요.
+- 같은 키 하나로 OpenRouter에 있는 모든 모델을 씁니다. 설정 화면의 모델 목록에서 고르시면 됩니다. 단가는 모델마다 다르고 목록에 나옵니다.
+- 가입 직후 체험용 크레딧이 붙는 경우가 있습니다. 기한이 있으니 설정 화면에서 잔액을 확인하세요.
+- 계정 설정의 **Privacy** 에서 학습에 쓰는 공급자를 허용할지, 로그를 남길지 정할 수 있습니다. **기관 방침에 맞춰 반드시 확인하세요.**
+- OpenRouter를 거치지 않고 특정 회사와 직접 계약한 API나 사내 서버를 쓰시려면, 설정 화면의 `LLM_BASE_URL` 을 그 주소로 바꾸고 키 자리에 그쪽 키를 넣으면 됩니다.
 
-### 3-2. 무료 키
-- **Semantic Scholar** — `S2_API_KEY`: https://www.semanticscholar.org/product/api 의 키 신청 폼 → 이메일로 발급. 없어도 동작하나 쿼터가 낮다.
-- **IEEE Xplore Metadata** — `IEEE_API_KEY`: https://developer.ieee.org 회원가입 → 애플리케이션 등록 → 키. 무료 계정은 일 호출 한도가 작고, 기관 구독이 있으면 전체 메타데이터. 통신·전파 공학 논문에 유용.
-- **CORE** — `CORE_API_KEY`: https://core.ac.uk/services/api 등록 → 키. 오픈액세스 원문.
-- **Springer Nature** — `SPRINGER_API_KEY`: https://dev.springernature.com 등록 → 키.
-- **Lens.org** — `LENS_API_TOKEN`: https://www.lens.org 계정 → API 토큰 신청(비상업 무료).
+---
 
-### 3-3. 유료·기관 구독 (있으면 넣고, 없으면 비워 둔다)
-- **Scopus (Elsevier)** — `ELSEVIER_API_KEY`, `ELSEVIER_INSTTOKEN`: https://dev.elsevier.com. 기관 구독 IP 또는 InstToken 필요.
-- **Web of Science (Clarivate)** — `WOS_API_KEY`: https://developer.clarivate.com. Starter는 제한적 무료, Expanded는 구독.
-- **Dimensions** — `DIMENSIONS_API_KEY`: 구독.
-- **Exa / Tavily / Perplexity Sonar** — `EXA_API_KEY` / `TAVILY_API_KEY` / `PERPLEXITY_API_KEY`: 각 사이트에서 결제 후 키. 리서치 특화 웹검색(논문 카테고리 필터). Tavily·Exa 발급 절차는 0절.
-- **SerpAPI (Google Scholar)** — `SERPAPI_API_KEY`: 결제 후 키.
-- **DBpia / BigKinds** — `DBPIA_API_KEY` / `BIGKINDS_API_KEY`: 기관 계약·별도 신청.
+## 2단계 (권장) · 웹검색 — 셋 중 하나만
 
-## 4. `.env` 작성 예
-```
-# 권장 최소 세트
-DATA_GO_KR_API_KEY=
-KOSIS_API_KEY=
-LAW_GO_KR_OC=
-NAVER_CLIENT_ID=
-NAVER_CLIENT_SECRET=
-# 국내 추가
-ASSEMBLY_API_KEY=
-ECOS_API_KEY=
-KCI_API_KEY=
-NANET_API_KEY=
-SCIENCEON_API_KEY=
-# 해외
-OPENALEX_MAILTO=
-CROSSREF_MAILTO=
-S2_API_KEY=
-IEEE_API_KEY=
-CORE_API_KEY=
-SPRINGER_API_KEY=
-LENS_API_TOKEN=
-# 유료
-ELSEVIER_API_KEY=
-ELSEVIER_INSTTOKEN=
-WOS_API_KEY=
-DIMENSIONS_API_KEY=
-EXA_API_KEY=
-TAVILY_API_KEY=
-PERPLEXITY_API_KEY=
-SERPAPI_API_KEY=
-DBPIA_API_KEY=
-BIGKINDS_API_KEY=
-```
+발간 이후 무슨 일이 있었는지 찾는 데 씁니다. 없으면 OpenRouter의 검색 기능으로 대신하지만, 따로 두는 쪽이 검색어를 우리가 통제할 수 있어 정확합니다. **셋 중 하나만 받으셔도 됩니다.**
 
-## 5. 확인
-```bash
-python scripts/evidence.py doctor
-```
-소스별로 `OK / 키 없음 / 키 오류 / 한도 초과` 가 표로 나온다. `OK`인 소스만 파이프라인이 사용한다.
+### 2-A. NAVER 검색 — 한국어 뉴스에 가장 강함 (추천)
 
-## 6. 발급 우선순위와 예상 소요
-| 순서 | 소스 | 소요 | 이유 |
+- **받는 곳** https://developers.naver.com **(확인 필요)**
+- **변수 이름** `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` (두 개입니다)
+- **비용** 무료. 하루 25,000회
+- **소요** 즉시
+
+**절차**
+
+1. 네이버 계정으로 로그인합니다.
+2. 상단 **Application** → **애플리케이션 등록** 을 누릅니다.
+3. 애플리케이션 이름을 적습니다. 예: `kca-refresh`
+4. **사용 API** 에서 **검색** 을 고릅니다.
+5. **비로그인 오픈 API 서비스 환경** 에서 **WEB** 을 고르고 URL 칸에 `http://localhost` 를 적습니다. 실제로 쓰지 않는 값이라 아무거나 괜찮습니다.
+6. 등록하면 **Client ID** 와 **Client Secret** 이 바로 나옵니다. 둘 다 복사합니다.
+
+### 2-B. Tavily — 영어 자료와 해외 정책에 강함
+
+- **받는 곳** https://app.tavily.com **(확인 필요)**
+- **변수 이름** `TAVILY_API_KEY`
+- **비용** 무료 구간이 있고 넘으면 유료
+- **절차** 가입 → 대시보드의 **API Keys** → 키 복사. `tvly-` 로 시작합니다.
+
+### 2-C. Exa — 논문·기사 분류 검색
+
+- **받는 곳** https://dashboard.exa.ai **(확인 필요)**
+- **변수 이름** `EXA_API_KEY`
+- **비용** 무료 크레딧 후 종량제
+- **절차** 가입 → **API Keys** → Create → 복사
+
+**셋을 다 넣으면** 프로그램이 Tavily → Exa → NAVER 순으로 있는 것부터 씁니다. 하나도 없으면 OpenRouter 검색으로 넘어갑니다.
+
+---
+
+## 3단계 (권장) · 논문 검색 보강 — 5분
+
+이미 키 없이도 논문 검색이 됩니다(OpenAlex, Crossref, arXiv, Semantic Scholar). 아래는 더 빠르고 넉넉하게 쓰기 위한 보강입니다.
+
+| 항목 | 변수 이름 | 받는 곳 | 효과 |
 |---|---|---|---|
-| 1 | NAVER 검색 | 즉시 | 사건 타임라인 즉시 가동 |
-| 2 | KOSIS | 즉시 | 백테스트 |
-| 3 | 공공데이터포털 | 즉시~3일 | KCI 논문 + 통계 데이터셋 |
-| 4 | 법제처 | 1~2일 | 제언 추적 |
-| 5 | 열린국회정보, ECOS | 즉시 | 입법·거시 |
-| 6 | Semantic Scholar, IEEE, ScienceON | 수일 | 문헌 스캔 폭 |
-| 7 | 국회도서관 | 최대 7일 | 정책자료 |
+| 이메일 등록 | `OPENALEX_MAILTO`, `CROSSREF_MAILTO` | 발급 절차 없음. 본인 이메일을 그냥 적으면 됩니다 | 우대 통로로 처리되어 빨라집니다 |
+| Semantic Scholar | `S2_API_KEY` | https://www.semanticscholar.org/product/api 의 키 신청 폼 **(확인 필요)** | 호출 한도가 올라갑니다. 없으면 자주 막힙니다 |
+
+---
+
+## 4단계부터 · 국내 공식자료 (받아 두기)
+
+**여기부터는 지금 넣어도 작동하지 않습니다.** 키를 받아 `.env`에 넣어 두시면 제가 연결 코드를 붙입니다. 발급이 오래 걸리는 것부터 신청해 두시는 게 좋습니다.
+
+우선순위는 우리 판정에 얼마나 중요한지로 매겼습니다.
+
+### 4-1. KOSIS 국가통계포털 — 전망 검증의 핵심
+
+- **변수 이름** `KOSIS_API_KEY`
+- **받는 곳** https://kosis.kr/openapi **(확인함: 활용신청 → OPEN API 인증키 신청 순서)**
+- **왜 중요한가** "2025년에 얼마가 될 것"이라는 전망을 실제 통계와 맞춰 보는 데 씁니다. 전망형 결론 판정의 근거가 여기서 나옵니다.
+- **절차** 회원가입 → 상단 **공유서비스** 또는 **활용신청** → **OPEN API 인증키 신청** → 활용 목적 입력(예: 연구·정책분석) → 인증키 발급
+- **소요** 즉시 **(확인 필요)**
+
+### 4-2. 공공데이터포털 — 논문·정책연구 목록·부처 통계
+
+- **받는 곳** https://www.data.go.kr **(확인 필요)**
+- **왜 중요한가** 한국연구재단 KCI 논문정보, 행정안전부 정책연구 과제정보, 과기정통부 통계를 여기서 받습니다.
+
+> **주의: 키가 하나가 아닙니다.** 공공데이터포털은 **데이터셋(API)마다 인증키가 따로 나오는 경우가 많습니다.** 계정에 공통 인증키가 있어도 API에 따라 전용 키를 쓰라고 나오는 경우가 있으니, **신청한 API마다 상세 화면에 적힌 키를 그대로 가져오세요.**
+
+- **절차**
+  1. 회원가입 후 로그인
+  2. 검색창에 데이터셋 이름을 넣습니다. 우선 신청할 것: **한국연구재단_KCI 논문정보서비스**, **행정안전부_정책연구 과제정보**
+  3. 상세 페이지에서 **활용신청** → 활용 목적 입력 → 대부분 즉시 자동승인
+  4. **마이페이지 → 데이터활용 → Open API → 개발계정 상세보기** 로 들어가 그 API의 **일반 인증키(Decoding)** 를 복사합니다. `%` 기호가 섞인 Encoding 키가 아니라 **Decoding** 쪽입니다.
+  5. 신청한 API마다 4번을 반복합니다.
+
+- **적는 법** 받은 키마다 이름을 붙여 줄을 늘리면 됩니다. 이름은 알아보기 쉬운 영문 대문자로 아무렇게나 지으셔도 됩니다.
+
+```
+DATA_GO_KR_KEY_KCI=<KCI 논문정보서비스에서 받은 키>
+DATA_GO_KR_KEY_PRISM=<정책연구 과제정보에서 받은 키>
+DATA_GO_KR_API_KEY=<전용 키가 따로 없는 API 에 쓸 기본 키>
+```
+
+  나중에 API를 더 신청하시면 `DATA_GO_KR_KEY_` 뒤에 이름만 바꿔 한 줄씩 추가하시면 됩니다. 프로그램이 자동으로 알아봅니다.
+
+- **소요** 즉시부터 3일 (제공기관 승인이 필요한 데이터셋이 있음)
+
+### 4-3. 법제처 국가법령정보 — 정책 제언 추적의 핵심
+
+- **변수 이름** `LAW_GO_KR_OC`
+- **받는 곳** https://open.law.go.kr **(확인 필요)**
+- **왜 중요한가** "이 정책을 도입해야 한다"는 제언이 실제로 법으로 만들어졌는지 추적합니다. 정책형 결론 판정의 근거입니다.
+- **절차** 회원가입 → **OPEN API 신청** → 이용목적과 활용 URL 입력 → 승인
+- **주의** 여기는 긴 키 문자열이 아니라 **회원 ID(이메일의 @ 앞부분)** 를 그대로 씁니다. 예를 들어 `hong@kca.kr` 이면 `LAW_GO_KR_OC=hong` 입니다.
+- **소요** 1~2 업무일
+
+### 4-4. 열린국회정보 — 의안 처리 추적
+
+- **변수 이름** `ASSEMBLY_API_KEY`
+- **받는 곳** https://open.assembly.go.kr **(확인 필요)**
+- **왜** 제언이 법안으로 발의됐는지, 통과됐는지 봅니다.
+- **절차** 회원가입 → **인증키 신청** → 즉시 발급
+
+### 4-5. 한국은행 ECOS — 경제성 재계산 입력
+
+- **변수 이름** `ECOS_API_KEY`
+- **받는 곳** https://ecos.bok.or.kr/api **(확인 필요)**
+- **왜** 물가·환율·성장률처럼 경제성 분석을 다시 계산할 때 넣는 값입니다.
+- **절차** 회원가입 → 인증키 신청 → 즉시
+
+---
+
+## 5단계 (선택) · 문헌 조사 넓히기
+
+발간 이후 나온 논문을 더 넓게 훑고 싶을 때만 받으시면 됩니다.
+
+| 소스 | 변수 이름 | 받는 곳 | 소요 | 비고 |
+|---|---|---|---|---|
+| ScienceON (KISTI) | `SCIENCEON_API_KEY` | https://scienceon.kisti.re.kr/apigateway | 수일 | 국내 논문·특허·연구보고서·국가R&D 과제 |
+| 국회도서관 | `NANET_API_KEY` | https://www.nanet.go.kr 정보공개 → Open API | 최대 7일 | 학술논문·정책자료. 하루 1,000회 |
+| KCI 직접 | `KCI_API_KEY` | https://www.kci.go.kr OpenAPI 메뉴 | 수일 | 4-2로 같은 자료를 받을 수 있어 **생략 가능** |
+| IEEE Xplore | `IEEE_API_KEY` | https://developer.ieee.org | 수일 | 통신·전파 공학 논문. 무료 계정은 한도가 작음 |
+| CORE | `CORE_API_KEY` | https://core.ac.uk/services/api | 즉시 | 오픈액세스 원문 |
+| Springer Nature | `SPRINGER_API_KEY` | https://dev.springernature.com | 즉시 | |
+| Lens.org | `LENS_API_TOKEN` | https://www.lens.org | 수일 | 논문 + 특허. 비상업 무료 |
+
+---
+
+## 6단계 (유료·기관구독) · 필요할 때만
+
+기관이 이미 구독 중이면 계정을 받아 넣으시면 되고, 아니면 건너뛰세요. **없어도 파이프라인은 완전히 돌아갑니다.**
+
+| 소스 | 변수 이름 | 조건 |
+|---|---|---|
+| Scopus | `ELSEVIER_API_KEY`, `ELSEVIER_INSTTOKEN` | 기관 구독 필요 |
+| Web of Science | `WOS_API_KEY` | Starter는 제한적 무료 |
+| Dimensions | `DIMENSIONS_API_KEY` | 구독 |
+| Perplexity Sonar | `PERPLEXITY_API_KEY` | 결제 |
+| SerpAPI (구글 스칼라) | `SERPAPI_API_KEY` | 결제 |
+| DBpia | `DBPIA_API_KEY` | 기관 계약 |
+| BigKinds | `BIGKINDS_API_KEY` | 별도 신청 |
+
+---
+
+## 진행 기록표
+
+받으신 순서대로 체크하세요.
+
+**지금 바로 효과가 나는 것**
+
+- [ ] `OPENROUTER_API_KEY` — 필수. 사용 한도 설정까지 했는지 확인
+- [ ] 웹검색 중 하나: `NAVER_CLIENT_ID` + `NAVER_CLIENT_SECRET` / `TAVILY_API_KEY` / `EXA_API_KEY`
+- [ ] `S2_API_KEY`
+- [ ] `OPENALEX_MAILTO`, `CROSSREF_MAILTO` (이메일만 적으면 끝)
+
+**받아 두면 제가 연결할 것**
+
+- [ ] `KOSIS_API_KEY`
+- [ ] `DATA_GO_KR_API_KEY`
+- [ ] `LAW_GO_KR_OC`
+- [ ] `ASSEMBLY_API_KEY`
+- [ ] `ECOS_API_KEY`
+- [ ] `SCIENCEON_API_KEY` (선택)
+- [ ] `NANET_API_KEY` (선택)
+
+---
+
+## 받은 뒤 확인하는 법
+
+### 방법 1. 화면에서 (쉬움)
+
+프로그램을 켜고 **[설정]** 화면 → 키를 넣고 **저장** → **연결 확인**. 소스별로 상태가 표로 나옵니다.
+
+### 방법 2. 명령으로
+
+```bat
+python scripts\evidence.py doctor
+```
+
+소스마다 이렇게 나옵니다.
+
+| 표시 | 뜻 |
+|---|---|
+| `OK` | 키가 맞고 실제 호출까지 성공 |
+| `키 없음` | 아직 안 넣음 |
+| `키 있음, 커넥터는 다음 단계` | 키는 인식됐고 연결 코드를 붙이면 됩니다 |
+| `한도 초과` | 잠시 뒤 다시 하거나 한도를 올리세요 |
+| `오류` | 키를 잘못 복사했을 가능성이 큽니다 |
+
+**키 값 자체는 화면에 절대 찍히지 않습니다.** 앞뒤 몇 글자만 가려서 보여 줍니다.
+
+---
+
+## 잘 안 될 때
+
+| 증상 | 확인할 것 |
+|---|---|
+| 키를 넣었는데 `키 없음` | 변수 이름의 철자. 이 문서의 이름과 글자 하나까지 같아야 합니다 |
+| `오류` 또는 인증 실패 | 앞뒤 공백이나 따옴표가 붙어 들어갔는지. `KEY="abc"` 가 아니라 `KEY=abc` 입니다 |
+| 공공데이터포털에서 안 됨 | **Decoding** 키를 쓰셨는지 확인하세요. Encoding 키는 `%` 기호가 섞여 있습니다 |
+| 법제처에서 안 됨 | 긴 키가 아니라 **아이디**입니다. 이메일 앞부분만 넣으세요 |
+| 네이버에서 안 됨 | Client ID와 Secret 두 개를 모두 넣으셨는지 |
+| OpenRouter에서 잔액 오류 | Credits 메뉴에서 충전 상태와 키의 사용 한도를 함께 확인하세요 |
+
+---
+
+## 한 줄 요약
+
+**OpenRouter 하나만 받으면 오늘 바로 돌려 볼 수 있습니다.** 네이버 검색까지 받으면 국내 사건 조사가 정확해집니다. 나머지는 천천히 받아 두시면 제가 연결하겠습니다.

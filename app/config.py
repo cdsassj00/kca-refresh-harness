@@ -45,6 +45,33 @@ ENV_KEYS_SOURCES = [
     "DIMENSIONS_API_KEY", "PERPLEXITY_API_KEY", "SERPAPI_API_KEY", "DBPIA_API_KEY", "BIGKINDS_API_KEY",
 ]
 ENV_KEYS = ENV_KEYS_APP + ENV_KEYS_SOURCES
+
+# 공공데이터포털(data.go.kr)은 API(데이터셋)마다 인증키가 따로 나오는 경우가 많다.
+# 그래서 `DATA_GO_KR_KEY_<이름>` 형태의 변수를 자유롭게 추가할 수 있게 한다.
+# 예: DATA_GO_KR_KEY_KCI, DATA_GO_KR_KEY_PRISM
+# `DATA_GO_KR_API_KEY` 는 데이터셋 전용 키가 없을 때 쓰는 기본값이다.
+ENV_KEY_PREFIXES = ("DATA_GO_KR_KEY_",)
+
+
+def is_allowed_env_key(name: str) -> bool:
+    """`.env` 에 저장을 허용하는 이름인지. 고정 목록이거나 허용 접두사로 시작하면 참."""
+    if name in ENV_KEYS:
+        return True
+    return any(name.startswith(p) and len(name) > len(p) for p in ENV_KEY_PREFIXES)
+
+
+def data_go_kr_keys(env: Mapping[str, str] | None = None) -> dict:
+    """공공데이터포털 키를 {짧은이름: 값} 으로 모은다. 기본키는 '_default' 로 담는다."""
+    env = env if env is not None else load_env()
+    out = {}
+    for k, v in env.items():
+        if k.startswith("DATA_GO_KR_KEY_") and v:
+            out[k[len("DATA_GO_KR_KEY_"):].lower()] = v
+    if env.get("DATA_GO_KR_API_KEY"):
+        out["_default"] = env["DATA_GO_KR_API_KEY"]
+    return out
+
+
 SECRET_HINTS = ("KEY", "SECRET", "TOKEN", "_OC")
 
 
@@ -67,6 +94,9 @@ def load_env() -> dict:
     for k in ENV_KEYS:
         if k not in env and os.environ.get(k):
             env[k] = os.environ[k]
+    for k, v in os.environ.items():           # DATA_GO_KR_KEY_* 처럼 접두사로 허용한 것
+        if k not in env and v and is_allowed_env_key(k):
+            env[k] = v
     return {k: v for k, v in env.items() if v}
 
 
@@ -74,7 +104,7 @@ def save_env_values(values: Mapping[str, str], path: Path = ENV_PATH) -> dict:
     """허용 목록의 키만 .env 에 반영. 빈 문자열이면 삭제. 나머지 줄은 보존."""
     current = _read_env_file(path)
     for k, v in values.items():
-        if k not in ENV_KEYS:
+        if not is_allowed_env_key(k):
             raise ValueError(f"허용되지 않은 설정 키: {k}")
         if v is None or str(v).strip() == "":
             current.pop(k, None)
@@ -84,6 +114,8 @@ def save_env_values(values: Mapping[str, str], path: Path = ENV_PATH) -> dict:
     for k in ENV_KEYS:
         if k in current:
             lines.append(f"{k}={current[k]}")
+    for k in sorted(k for k in current if k not in ENV_KEYS and is_allowed_env_key(k)):
+        lines.append(f"{k}={current[k]}")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return load_env()
 
