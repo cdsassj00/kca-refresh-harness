@@ -373,3 +373,37 @@ tr.is-selected .clamp{-webkit-line-clamp:unset}
   .app{display:block}
   .main{padding:0}
 }
+
+/* ── 화면마다 붙는 "읽는 법" 칸 ────────────────────────────────
+   등급·상태·판정은 줄인 말이라 설명 없이는 읽을 수 없다.
+   화면 맨 위에 접었다 폈다 하는 칸으로 둔다(접힘은 브라우저에만 기억). */
+.p-accent{background:var(--accent-soft); color:var(--accent-ink)}
+.helpbox{background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--accent);
+  border-radius:var(--r); box-shadow:var(--shadow); margin-bottom:14px}
+.helpbox>summary{cursor:pointer; list-style:none; padding:11px 16px; font-weight:600; font-size:13.5px;
+  color:var(--accent-ink); display:flex; align-items:center; gap:8px; user-select:none}
+.helpbox>summary::-webkit-details-marker{display:none}
+.helpbox>summary::after{content:"펼치기"; margin-left:auto; font-weight:400; font-size:12px; color:var(--muted)}
+.helpbox[open]>summary::after{content:"접기"}
+.helpbox>summary:hover{background:var(--surface-2)}
+.help-ico{display:inline-grid; place-items:center; width:18px; height:18px; border-radius:50%;
+  background:var(--accent); color:#fff; font-size:12px; font-weight:700}
+.help-body{padding:2px 16px 14px; border-top:1px solid var(--line-soft)}
+.help-lead{margin:12px 0 8px; font-size:14px}
+.help-what{margin:0 0 10px; color:var(--muted)}
+.help-how{margin:0; padding-left:20px}
+.help-how li{margin:5px 0}
+.lg-wrap{display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:14px; margin-top:14px}
+.lg{background:var(--surface-2); border:1px solid var(--line-soft); border-radius:8px; padding:10px 12px; min-width:0}
+.lg h4{margin:0 0 4px; font-size:13px}
+.lg-note{margin:0 0 6px; font-size:12px}
+.lg-tbl{font-size:12.5px}
+.lg-tbl td{padding:5px 8px; border-top:1px solid var(--line-soft); vertical-align:top}
+.lg-tbl tr:first-child td{border-top:0}
+.lg-tbl td:first-child{width:1%; white-space:nowrap}
+.lg-short{font-weight:600; white-space:nowrap}
+.lg-desc{color:var(--muted)}
+@media (max-width:720px){ .lg-wrap{grid-template-columns:1fr} .lg-short{white-space:normal} }
+
+/* 로그 안의 구분선 — 실행 회차를 눈으로 가를 수 있게 */
+.log .divider{color:var(--accent-ink); opacity:.75}

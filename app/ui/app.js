@@ -506,16 +506,29 @@ function setupRun() {
       <span class="step-note"></span>
     </li>`).join('');
   $('#runForce').innerHTML += STAGES.map(s => `<option value="${s.name}">${esc(s.ko)} (${s.name})부터</option>`).join('');
-  $('#runReport').addEventListener('change', e => setCurrentReport(e.target.value, { rerender: false }));
+  $('#runReport').addEventListener('change', e => {
+    setCurrentReport(e.target.value, { rerender: false });
+    // 보고서가 바뀌면 화면의 기록도 그 보고서 것으로 갈아 끼운다.
+    $('#log').textContent = '';
+    $('#log').dataset.loadedFor = '';
+    loadPastLog(e.target.value);
+  });
   $('#optSim').addEventListener('change', e => { $('#optSimRow').hidden = !e.target.checked; $('#optSimWarn').hidden = !e.target.checked; });
   $('#optBlind').addEventListener('change', e => { $('#optRepeats').disabled = !e.target.checked; });
   $('#runForm').addEventListener('submit', startRun);
   $('#runCancel').addEventListener('click', cancelRun);
-  $('#logClear').addEventListener('click', () => { $('#log').textContent = ''; });
+  $('#logClear').addEventListener('click', () => {
+    // 화면만 비운다. 파일(reports/<id>/logs/app_run.jsonl)은 그대로 남는다.
+    $('#log').textContent = '';
+    $('#log').dataset.loadedFor = '';
+  });
 }
 async function renderRun() {
   syncReportSelectors();
   const r = currentReport();
+  // 실행 화면을 열면 그 보고서의 지난 기록을 먼저 올린다(같은 보고서면 한 번만).
+  // 처음 열 때는 state.currentId 가 아직 비어 있을 수 있어 선택 상자 값도 본다.
+  loadPastLog(state.currentId || ($('#runReport') && $('#runReport').value));
   if (r && !$('#runSince').value) $('#runSince').value = r.published ? `${r.published}-01` : '';
   if (!$('#runUntil').value) $('#runUntil').value = todayISO();
   if (state.settings == null) { try { state.settings = await api.get('/api/settings'); } catch (_) { /* ignore */ } }
@@ -564,7 +577,9 @@ async function startRun(e) {
   $('#runSubmit').disabled = true;
   try {
     const res = await api.post('/api/runs', body);
-    $('#log').textContent = '';
+    // 예전에는 여기서 로그를 지웠다. 다시 실행할 때마다 지금까지 한 일이 사라져
+    // "아까 뭐가 됐더라" 를 볼 수 없었다. 이제 구분선만 긋고 이어서 쌓는다.
+    logDivider(`실행 시작 ${res.job_id}`);
     attachJob(res.job_id, cfg.report_id, cfg);
     toast(`실행 시작: ${res.job_id}`, 'ok');
   } catch (err) {
@@ -685,6 +700,39 @@ function handleProgress(ev) {
   else if (ev.status === 'failed' && ev.fatal) finishJob('failed');
   renderJob();
 }
+function logDivider(text) {
+  const log = $('#log');
+  if (log.textContent.trim()) log.appendChild(document.createTextNode('\n'));
+  log.appendChild(el(`<span class="ln"><span class="divider">──────── ${esc(text)} ────────</span></span>`));
+  log.appendChild(document.createTextNode('\n'));
+  if ($('#logAutoscroll').checked) log.scrollTop = log.scrollHeight;
+}
+
+/* 지난 실행 기록을 파일에서 불러와 화면에 올린다.
+   기록은 이미 reports/<id>/logs/app_run.jsonl 에 계속 쌓이고 있었는데,
+   화면이 실행할 때마다 비워져서 볼 수가 없었다. 보고서를 열 때 한 번 올려 준다. */
+async function loadPastLog(reportId, { max = 1200 } = {}) {
+  const log = $('#log');
+  if (!reportId || log.dataset.loadedFor === reportId) return;
+  log.dataset.loadedFor = reportId;
+  let text = '';
+  try {
+    const q = new URLSearchParams({ path: 'logs/app_run.jsonl' });
+    text = await api.text(`/api/reports/${encodeURIComponent(reportId)}/file?${q}`);
+  } catch (e) { return; }                 // 기록이 아직 없으면 조용히 넘어간다
+  const lines = text.split('\n').filter(Boolean);
+  const shown = lines.slice(-max);
+  if (!shown.length) return;
+  log.textContent = '';
+  logDivider(`지난 기록 ${shown.length}줄${lines.length > shown.length ? ` (전체 ${lines.length}줄 중 최근만)` : ''}`);
+  shown.forEach(l => {
+    let d; try { d = JSON.parse(l); } catch (e) { return; }
+    appendLog({ ts: d.ts, stage: d.stage, step: d.step,
+                message: d.note || d.event || '', status: d.event === 'error' ? 'failed' : '' });
+  });
+  logDivider('여기부터 이번 실행');
+}
+
 function appendLog(ev) {
   const log = $('#log');
   const ts = ev.ts ? new Date(ev.ts) : new Date();
