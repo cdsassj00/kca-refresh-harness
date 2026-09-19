@@ -483,6 +483,38 @@ def outputs_exist(report_id: str, spec: StageSpec) -> bool:
     return bool(spec.outputs) and all((rd / o.replace("<id>", report_id)).exists() for o in spec.outputs)
 
 
+def empty_outputs(report_id: str, spec: StageSpec) -> list:
+    """파일은 있는데 **속이 빈** 산출물의 이름. 건너뛰기 판단은 파일 존재만 보므로,
+    빈 채로 남은 단계를 그냥 건너뛰면 뒤 단계가 비빌 근거 없이 실패한다.
+
+    실제로 그랬다: L1/verdicts.json 과 comparison_table.json 이 빈 배열인 채
+    "완료"로 표시됐고, compare 가 근거 없이 돌다 검증에 걸렸다.
+    다만 **비어 있는 게 맞는 경우도 있다**(설문형 결론이 없으면 L3/survey_index.json 은 빈다).
+    그래서 막지는 않고, 어느 것이 비었는지 알려 주기만 한다.
+    """
+    rd = config.report_dir(report_id)
+    out = []
+    for o in spec.outputs or []:
+        p = rd / o.replace("<id>", report_id)
+        if not p.is_file():
+            continue
+        text = p.read_text(encoding="utf-8", errors="ignore").strip()
+        if not text:
+            out.append(o)
+            continue
+        if p.suffix.lower() == ".json":
+            try:
+                d = json.loads(text)
+            except ValueError:
+                continue
+            if isinstance(d, list) and not d:
+                out.append(o)
+            elif isinstance(d, dict) and not any(
+                    v not in (None, "", [], {}) for v in d.values()):
+                out.append(o)   # 값이 하나도 채워지지 않은 객체
+    return out
+
+
 def backup_outputs(report_id: str, spec: StageSpec) -> list:
     rd = config.report_dir(report_id)
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -758,7 +790,14 @@ def run_stage(report_id: str, stage, settings: dict, llm: Optional[LLMClient], t
     # 재개 규칙
     if not force and outputs_exist(report_id, spec):
         res.outputs = list(spec.outputs)
-        log({"stage": spec.name, "event": "skip", "note": "산출물이 모두 있어 건너뜀"})
+        empties = empty_outputs(report_id, spec)
+        note = "산출물이 모두 있어 건너뜀"
+        if empties:
+            # 건너뛰기는 파일이 있는지만 본다. 속이 빈 채 남아 있으면 뒤 단계가 근거 없이 실패한다.
+            note += (f" — 다만 속이 빈 산출물이 있습니다: {', '.join(empties)}. "
+                     f"내용이 필요하면 '강제 재실행 시작 단계'를 '{spec.name}' 으로 두고 다시 실행하세요")
+        log({"stage": spec.name, "event": "skip", "note": note})
+        emit("skipped", note, res.steps)
         return finish("skipped")
     if force and outputs_exist(report_id, spec) and not spec.is_python:
         moved = backup_outputs(report_id, spec)
