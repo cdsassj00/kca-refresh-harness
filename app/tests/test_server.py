@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import queue
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -202,23 +203,35 @@ def test_report_file_and_traversal_block(client):
     assert "attachment" in r.headers.get("content-disposition", "")
 
 
+def _next_report_id(sandbox) -> str:
+    """registry 의 가장 큰 번호 + 1.
+
+    번호를 코드에 박아 두면 사람이 보고서를 하나 접수하는 것만으로 검사가 깨진다
+    (실제로 R08 을 접수하자 이 검사가 실패했다). 그래서 그때그때 계산한다.
+    """
+    text = (sandbox["tmp"] / "registry.csv").read_text(encoding="utf-8-sig")
+    nums = [int(m) for m in re.findall(r"^R(\d{2,3})", text, flags=re.M)]
+    return "R%02d" % ((max(nums) if nums else 0) + 1)
+
+
 def test_intake_upload_txt(client, sandbox):
+    nid = _next_report_id(sandbox)
     content = "접수 테스트 본문입니다.\n둘째 줄".encode("utf-8")
     files = {"file": ("10_[2022.07]_업로드_테스트.txt", content, "text/plain")}
     r = client.post("/api/reports/intake", files=files, data={"title": "", "published": ""})
     assert r.status_code == 200, r.text
     body = r.json()
-    assert body["report_id"] == "R08"                       # registry 최대 R07 + 1
+    assert body["report_id"] == nid                         # registry 최대 번호 + 1
     meta = body["meta"]
     assert meta["published"] == "2022-07" and meta["title"] == "업로드 테스트"
     assert meta["format"] == "txt" and meta["scanned"] is False and meta["chars"] > 0
-    assert (sandbox["reports"] / "R08" / "00_source" / "R08.md").is_file()
-    assert (sandbox["reports"] / "R08" / "01_meta.json").is_file()
+    assert (sandbox["reports"] / nid / "00_source" / f"{nid}.md").is_file()
+    assert (sandbox["reports"] / nid / "01_meta.json").is_file()
     assert (sandbox["tmp"] / "runs" / "uploads").is_dir()
-    assert not (config.APP_DIR.parent / "reports" / "R08").exists() or config.REPORTS_DIR != config.APP_DIR.parent / "reports"
+    assert not (config.APP_DIR.parent / "reports" / nid).exists() or config.REPORTS_DIR != config.APP_DIR.parent / "reports"
     # 레지스트리·목록에 반영
     ids = [x["id"] for x in client.get("/api/reports").json()]
-    assert "R08" in ids
+    assert nid in ids
     # 명시 ID·제목·발간연월
     r = client.post("/api/reports/intake", files={"file": ("memo.txt", b"abc", "text/plain")},
                     data={"report_id": "R12", "title": "직접 제목", "published": "2019.12"})

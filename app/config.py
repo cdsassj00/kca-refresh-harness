@@ -101,22 +101,43 @@ def load_env() -> dict:
 
 
 def save_env_values(values: Mapping[str, str], path: Path = ENV_PATH) -> dict:
-    """허용 목록의 키만 .env 에 반영. 빈 문자열이면 삭제. 나머지 줄은 보존."""
-    current = _read_env_file(path)
-    for k, v in values.items():
+    """허용 목록의 키만 .env 에 반영한다. 빈 값이면 그 키를 비운다(줄은 남긴다).
+
+    **줄 차례와 주석을 그대로 둔다.** 예전에는 파일을 통째로 다시 썼는데, 그러면
+      - 사람이 편집기에 열어 둔 내용과 어긋나 저장이 막히고
+        (VS Code "파일의 내용이 최신입니다. 버전을 파일 내용과 비교하거나…")
+      - 주석과 구역이 사라져 견본과 배치가 달라진다
+    실제로 두 가지가 다 일어났다. 그래서 있는 줄은 값만 바꾸고, 없는 키만 끝에 덧붙인다.
+    """
+    for k in values:
         if not is_allowed_env_key(k):
             raise ValueError(f"허용되지 않은 설정 키: {k}")
-        if v is None or str(v).strip() == "":
-            current.pop(k, None)
+
+    def _clean(v) -> str:
+        return "" if v is None else str(v).strip()
+
+    lines = path.read_text(encoding="utf-8").splitlines() if path.exists() else [
+        "# 독립 프로그램 설정. 이 파일은 git에 올라가지 않는다. 키 값은 화면·로그에 마스킹된다."]
+    out, seen = [], set()
+    for line in lines:
+        s = line.strip()
+        if not s or s.startswith("#") or "=" not in s:
+            out.append(line)
+            continue
+        k = s.split("=", 1)[0].strip()
+        if k in values:
+            seen.add(k)
+            out.append(f"{k}={_clean(values[k])}")
         else:
-            current[k] = str(v).strip()
-    lines = ["# 독립 프로그램 설정. 이 파일은 git에 올라가지 않는다. 키 값은 화면·로그에 마스킹된다."]
-    for k in ENV_KEYS:
-        if k in current:
-            lines.append(f"{k}={current[k]}")
-    for k in sorted(k for k in current if k not in ENV_KEYS and is_allowed_env_key(k)):
-        lines.append(f"{k}={current[k]}")
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+            out.append(line)
+    added = [k for k in ENV_KEYS if k in values and k not in seen and _clean(values[k])]
+    added += [k for k in sorted(values)
+              if k not in ENV_KEYS and k not in seen and _clean(values[k])]
+    if added:
+        out.append("")
+        out.append("# ── 설정 화면에서 추가한 키 ──")
+        out += [f"{k}={_clean(values[k])}" for k in added]
+    path.write_text("\n".join(out) + "\n", encoding="utf-8")
     return load_env()
 
 
