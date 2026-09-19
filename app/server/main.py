@@ -828,11 +828,30 @@ code{background:#eef2f6;padding:2px 6px;border-radius:4px}</style></head><body><
 </div></body></html>"""
 
 
+_ASSET_REF = re.compile(r'(src|href)="(?!https?:|//|/)([^"?#]+\.(?:js|css))"')
+
+
+def _bust_cache(html: str) -> str:
+    """index.html 이 부르는 js·css 주소 뒤에 파일이 바뀐 시각을 붙인다.
+
+    붙이지 않으면 브라우저가 예전 파일을 계속 쓴다. 실제로 이것 때문에
+    고쳐 놓은 화면이 안 바뀌고, 심지어 문법이 깨진 app.js 가 멀쩡해 보이기까지 했다.
+    (사용자는 "새로고침해도 그대로" 로 겪는다.)
+    """
+    def sub(m):
+        attr, rel = m.group(1), m.group(2)
+        p = UI_DIR / rel
+        ver = int(p.stat().st_mtime) if p.is_file() else 0
+        return f'{attr}="{rel}?v={ver}"'
+    return _ASSET_REF.sub(sub, html)
+
+
 @app.get("/", include_in_schema=False)
 def index():
     idx = UI_DIR / "index.html"
     if idx.is_file():
-        return FileResponse(str(idx), media_type="text/html; charset=utf-8")
+        html = _bust_cache(idx.read_text(encoding="utf-8"))
+        return HTMLResponse(html, headers={"Cache-Control": "no-store"})
     return HTMLResponse(_UI_PLACEHOLDER)
 
 

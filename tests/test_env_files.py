@@ -67,3 +67,47 @@ def test_example_is_git_tracked_and_env_is_not(path):
     if real.exists():
         assert not tracked(real), (
             f"{real.relative_to(ROOT)} 가 git 에 올라가 있습니다. 즉시 빼고 키를 새로 발급하세요")
+
+
+def test_no_real_key_value_appears_in_tracked_files():
+    """git 에 올라가는 파일 어디에도 실제 키 값(또는 그 꼬리)이 없어야 한다.
+
+    실제로 한 번 새어 나갈 뻔했다. 화면 도움말에 "이미 들어 있는 키는 이렇게 보입니다"
+    예시를 쓰면서 **진짜 키의 끝 4자리**를 그대로 적었다. 공개 저장소이므로 그대로
+    올라갔으면 키 조각이 인터넷에 남았을 것이다.
+
+    실제 키 파일(.env)은 각자 PC 에만 있으므로, 없으면 이 검사는 건너뛴다.
+    """
+    import subprocess
+
+    from dotenv import dotenv_values
+
+    envs = [p for p in (ROOT / "app" / ".env", ROOT / ".env") if p.is_file()]
+    if not envs:
+        pytest.skip("실제 키 파일(.env)이 없어 대조할 것이 없다")
+    secrets = {}
+    for p in envs:
+        for k, v in dotenv_values(p).items():
+            v = (v or "").strip()
+            if len(v) >= 12 and "@" not in v:      # 이메일은 키가 아니다
+                secrets[k] = v
+
+    tracked = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True,
+                             text=True, encoding="utf-8").stdout.split("\n")
+    leaks = []
+    for rel in filter(None, tracked):
+        f = ROOT / rel
+        try:
+            if not f.is_file() or f.stat().st_size > 2_000_000:
+                continue
+            text = f.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        for k, v in secrets.items():
+            if v in text:
+                leaks.append(f"{rel}: {k} 값 전체")
+            elif len(v) >= 8 and v[-4:] in text and v[:5] in text:
+                leaks.append(f"{rel}: {k} 앞뒤 조각")
+    assert not leaks, (
+        "git 에 올라가는 파일에 실제 키가 들어 있습니다: " + "; ".join(leaks[:5])
+        + ". 지우고, 이미 커밋했다면 그 키를 새로 발급하세요")
