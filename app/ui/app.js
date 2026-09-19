@@ -657,10 +657,28 @@ function handleProgress(ev) {
     job.seen[ev.stage] = true;
     if (job.notes) delete job.notes[ev.stage];
   }
+  // 서버가 보내는 ev.tokens / ev.cost_usd 는 **그 단계의 누적값**이고, 단계 하나가 진행되는 동안
+  // 여러 번 온다. 그대로 더하면 같은 값을 반복해 더해 40배쯤 부풀려진다
+  // (실제 $0.77 · 111만 토큰짜리 실행이 화면에는 $6.98 · 4,525만 토큰으로 나왔다).
+  // 그래서 단계별 마지막 값을 기억해 **늘어난 만큼만** 더한다.
   if (ev.tokens_total) { job.tokensIn = tokIn(ev.tokens_total); job.tokensOut = tokOut(ev.tokens_total); }
-  else if (ev.tokens) { job.tokensIn += tokIn(ev.tokens); job.tokensOut += tokOut(ev.tokens); }
+  else if (ev.tokens) {
+    job.lastSeen = job.lastSeen || {};
+    const k = ev.stage || '';
+    const prev = job.lastSeen[k] || { in: 0, out: 0 };
+    const cur = { in: tokIn(ev.tokens), out: tokOut(ev.tokens) };
+    job.tokensIn += Math.max(0, cur.in - prev.in);
+    job.tokensOut += Math.max(0, cur.out - prev.out);
+    job.lastSeen[k] = cur;
+  }
   if (ev.cost_total_usd != null) job.cost = Number(ev.cost_total_usd) || 0;
-  else if (ev.cost_usd != null) job.cost += Number(ev.cost_usd) || 0;
+  else if (ev.cost_usd != null) {
+    job.lastCost = job.lastCost || {};
+    const k = ev.stage || '';
+    const cur = Number(ev.cost_usd) || 0;
+    job.cost += Math.max(0, cur - (job.lastCost[k] || 0));
+    job.lastCost[k] = cur;
+  }
   appendLog(ev);
   const terminal = (ev.stage === 'pipeline' || ev.stage === '__end__') && ['done', 'failed', 'cancelled'].includes(ev.status);
   if (terminal) finishJob(ev.status);

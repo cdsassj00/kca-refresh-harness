@@ -430,6 +430,39 @@ def validate_outputs(spec: StageSpec, outputs: dict) -> list:
     return errors[:40]
 
 
+def summarize_errors(errors: list, limit: int = 10) -> list:
+    """같은 오류가 배열 항목마다 반복되므로 첨자를 묶어 "몇 군데"로 줄인다.
+
+    16행 × 근거 3개 × 필수 2개 = 96줄짜리 오류 목록을 그대로 던지면, 작은 모델은
+    무엇을 고쳐야 하는지 놓치고 같은 실수를 되풀이한다. 종류별로 묶어서 보여 준다.
+    """
+    from collections import Counter
+    grouped = Counter(re.sub(r"\[\d+\]", "[*]", re.sub(r"/\d+\b", "/*", e)) for e in errors)
+    out = [f"{msg} ({n}곳)" if n > 1 else msg for msg, n in grouped.most_common(limit)]
+    if len(grouped) > limit:
+        out.append(f"… 그 밖에 {len(grouped) - limit}종류 더")
+    return out
+
+
+def schemas_for(spec: StageSpec) -> str:
+    """이 단계 산출물의 스키마를 글자로. 재요청할 때 붙여 준다.
+
+    "url 이 필수" 라고만 말하면 작은 모델은 어디에 무엇을 넣어야 할지 모른다.
+    스키마를 직접 보여 주는 편이 훨씬 잘 고친다.
+    """
+    from scripts.validate import _load_schema
+    seen, parts = set(), []
+    for _o, schema, _sel in spec.validations:
+        if schema in seen:
+            continue
+        seen.add(schema)
+        try:
+            parts.append(f"[{schema}]\n" + json.dumps(_load_schema(schema), ensure_ascii=False, indent=1))
+        except Exception:
+            continue
+    return "\n\n".join(parts)[:6000]
+
+
 def write_outputs(report_id: str, outputs: dict) -> list:
     """문자열은 그대로, 객체·배열은 ensure_ascii=False indent=1 로 쓴다."""
     written = []
@@ -821,11 +854,19 @@ def run_stage(report_id: str, stage, settings: dict, llm: Optional[LLMClient], t
         if errors:
             if repairs < MAX_REPAIRS:
                 repairs += 1
+                brief = summarize_errors(errors)
+                ask = ["이전 응답에 아래 문제가 있다. 지적된 곳을 **빠짐없이** 고쳐 "
+                       "**같은 JSON 객체 전체**를 다시, JSON만 답하라.", ""]
+                ask += [f"- {m}" for m in brief]
+                schema_text = schemas_for(spec)
+                if schema_text:
+                    # 필수 항목 이름만 알려 주면 작은 모델은 어디에 무엇을 넣을지 모른다.
+                    # 스키마를 그대로 보여 주는 편이 훨씬 잘 고친다.
+                    ask += ["", "이 산출물이 지켜야 하는 스키마다. required 를 특히 확인하라.", schema_text]
                 messages.append({"role": "assistant", "content": last_content})
-                messages.append({"role": "user", "content": "이전 응답에 아래 문제가 있다. 지적된 부분을 고쳐 **같은 JSON 객체 전체**를 다시, JSON만 답하라.\n- "
-                                 + "\n- ".join(errors)})
+                messages.append({"role": "user", "content": "\n".join(ask)})
                 log({"stage": spec.name, "model": res.model, "step": res.steps, "event": "error",
-                     "note": f"검증 실패 → 재요청 {repairs}/{MAX_REPAIRS}: " + " | ".join(errors[:5])})
+                     "note": f"검증 실패 → 재요청 {repairs}/{MAX_REPAIRS}: " + " | ".join(brief[:5])})
                 emit("running", f"검증 실패 재요청 {repairs}/{MAX_REPAIRS}", res.steps)
                 continue
             log({"stage": spec.name, "model": res.model, "step": res.steps, "event": "error",
