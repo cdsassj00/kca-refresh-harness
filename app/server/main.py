@@ -214,6 +214,11 @@ async def put_settings(request: Request):
     if settings is not None:
         if not isinstance(settings, dict):
             raise _err(400, "settings 는 객체여야 합니다")
+        for field, label in (("model", "현재 모델"), ("model_cheap", "저렴 모델")):
+            mid = str(settings.get(field) or "")
+            if _is_batch_only(mid):
+                raise _err(400, f"{label} '{mid}' 는 배치 전용이라 이 프로그램에서 쓸 수 없습니다. "
+                                f"뒤의 ':batch' 를 뗀 '{mid.rsplit(':', 1)[0]}' 를 고르세요")
         config.save_settings(settings)
     if env is not None:
         if not isinstance(env, dict):
@@ -296,6 +301,17 @@ def doctor(deep: int = 0):
     return {"llm": llm, "search": search, "sources": sources, "parsers": parsers}
 
 
+# OpenRouter 모델 이름 뒤에 붙는 꼬리표 중, 실시간 호출(chat/completions)이 아예 안 되는 것.
+# 목록에는 나오지만 고르면 404 가 난다.
+#   "This model is only available through the Batch API. Use the /api/v1/batches endpoint instead."
+# 사람이 고를 수 없게 목록에서 뺀다. 이 프로그램은 배치 API 를 쓰지 않는다.
+BATCH_ONLY_SUFFIXES = (":batch",)
+
+
+def _is_batch_only(model_id: str) -> bool:
+    return str(model_id or "").endswith(BATCH_ONLY_SUFFIXES)
+
+
 @app.get("/api/models")
 def list_models(refresh: int = 0):
     env = config.load_env()
@@ -311,6 +327,9 @@ def list_models(refresh: int = 0):
         raise _err(502, f"모델 목록 조회 실패: {type(e).__name__}: {e}")
     items = []
     for m in raw or []:
+        mid = str(m.get("id") or "")
+        if _is_batch_only(mid):
+            continue        # 고를 수는 있는데 절대 안 도는 모델은 아예 보여 주지 않는다
         pricing = m.get("pricing") or {}
         items.append({
             "id": m.get("id"), "name": m.get("name") or m.get("id"),
